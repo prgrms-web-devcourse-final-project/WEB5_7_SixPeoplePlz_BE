@@ -1,12 +1,10 @@
 package me.jinjjahalgae.domain.auth;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import me.jinjjahalgae.domain.auth.enums.Provider;
 import me.jinjjahalgae.domain.common.BaseEntity;
 
 @Entity
@@ -17,7 +15,8 @@ public class Auth extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // auth id
 
-    private String provider; // 써드파티 제공자
+    @Enumerated(EnumType.STRING)
+    private Provider provider; // 써드파티 제공자
 
     private String oauthId; // 써드파티 식별자
 
@@ -26,7 +25,7 @@ public class Auth extends BaseEntity {
     private Long userId; // 유저 id (FK)
 
     @Builder
-    public Auth(Long id, String provider, String oauthId, String refreshToken, Long userId) {
+    public Auth(Long id, Provider provider, String oauthId, String refreshToken, Long userId) {
         this.id = id;
         this.provider = provider;
         this.oauthId = oauthId;
