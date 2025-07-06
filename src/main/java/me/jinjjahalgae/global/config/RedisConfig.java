@@ -32,7 +32,6 @@ public class RedisConfig {
     }
 
     @Bean
-    //토큰 값만 받아올 예정이기 때문에 단순 스트링으로 받아오는 방식도 괜찮아 보입니다!
     public RedisTemplate<String, Object> redisTemplate(){
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
