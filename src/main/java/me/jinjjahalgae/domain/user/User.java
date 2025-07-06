@@ -21,7 +21,7 @@ public class User extends BaseEntity {
 
     private String nickname; // 닉네임
 
-    private String email; // 이메일
+    private String email; // (Optional) 이메일
 
     @Builder
     public User(Long id, String name, String nickname, String email) {
