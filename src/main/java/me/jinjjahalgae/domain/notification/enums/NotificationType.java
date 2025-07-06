@@ -1,6 +1,6 @@
 package me.jinjjahalgae.domain.notification.enums;
 
-public enum NotificationStatus {
+public enum NotificationType {
     SUPERVISOR_ADDED, // 감독자 추가
     SUPERVISOR_WITHDRAWN, // 감독자 포기
 
