@@ -46,7 +46,7 @@ public class Proof extends BaseEntity {
 
     private Long contractId;    // 계약 ID (FK)
 
-    private Long proofId;   // 재인증 ID (FK)
+    private Long proofId;   // 원본 인증 ID (FK)
 
     @OneToMany(mappedBy = "proof", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProofImage> proofImages = new ArrayList<>();
