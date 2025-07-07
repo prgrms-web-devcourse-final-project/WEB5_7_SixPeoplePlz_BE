@@ -1,7 +1,8 @@
 package me.jinjjahalgae.domain.contract.repository;
 
-import me.jinjjahalgae.domain.contract.entity.Signature;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import me.jinjjahalgae.domain.signature.entity.Signature;
 
 public interface SignatureRepository extends JpaRepository<Signature, Long> {
 }

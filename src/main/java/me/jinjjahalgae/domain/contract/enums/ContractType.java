@@ -5,5 +5,5 @@ public enum ContractType {
     CASUAL, //캐주얼
     CHILD, //유치원
     STUDENT, //초딩
-    PAST //무협
+    JOSEON //조선시대
 }

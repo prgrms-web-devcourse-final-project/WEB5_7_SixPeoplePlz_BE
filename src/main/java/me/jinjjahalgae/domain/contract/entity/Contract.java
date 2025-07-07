@@ -46,6 +46,8 @@ public class Contract {
 
     private int totalSupervisor; //감독자 수
 
+    private boolean oneOff; //단발성 여부
+
     @Enumerated(EnumType.STRING)
     private ContractStatus status; //계약 상태
 
@@ -54,7 +56,7 @@ public class Contract {
 
     @Builder
     public Contract(Long userId, LocalDate startDate, LocalDate endDate, String title, String goal, String penalty, String reward, int life,
-                    int proofPerWeek, ContractType type) {
+                    int proofPerWeek, boolean oneOff, ContractType type) {
         this.userId = userId;
         this.uuid = UUID.randomUUID().toString();
         this.startDate = startDate;
@@ -68,6 +70,7 @@ public class Contract {
         this.totalProof = calculateTotalProof(startDate, endDate, proofPerWeek);
         this.currentProof = 0;
         this.totalSupervisor = 0;
+        this.oneOff = oneOff;
         this.status = ContractStatus.PENDING;
         this.type = type;
     }

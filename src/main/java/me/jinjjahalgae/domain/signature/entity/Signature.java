@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.contract.entity;
+package me.jinjjahalgae.domain.signature.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
