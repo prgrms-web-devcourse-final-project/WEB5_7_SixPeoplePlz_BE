@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.contract.repository;
+package me.jinjjahalgae.domain.signature.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
