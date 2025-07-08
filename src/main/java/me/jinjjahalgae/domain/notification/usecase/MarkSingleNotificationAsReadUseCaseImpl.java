@@ -15,12 +15,19 @@ public class MarkSingleNotificationAsReadUseCaseImpl implements MarkSingleNotifi
 
     private final NotificationRepository notificationRepository;
 
+    /**
+     *  개별 알림 읽음 처리
+     *  알림id를 받고, 상태변경된 알림id를 반환한다
+     *
+     * @param notificationId 읽음처리할 알림 id
+     * @return 읽음처리된 알림 id
+     */
     @Override
     public Long execute(Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> ErrorCode.NOTIFICATION_NOT_FOUND.serviceException("존재하지 않는 알림 id입니다."));
 
-        notification.read();
+        notification.markRead();
 
         return notification.getId();
     }
