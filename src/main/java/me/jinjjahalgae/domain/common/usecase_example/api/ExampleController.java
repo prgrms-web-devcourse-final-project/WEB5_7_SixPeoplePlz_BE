@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.common.usecase_example.usecase.interfaces.ExampleUseCase;
 import me.jinjjahalgae.domain.common.usecase_example.dto.ExampleRequest;
 import me.jinjjahalgae.domain.common.usecase_example.dto.ExampleResponse;
-import me.jinjjahalgae.global.common.ApiResponse;
-import me.jinjjahalgae.global.exception.ErrorResponse;
+import me.jinjjahalgae.global.common.CommonResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,17 +19,17 @@ public class ExampleController {
     private final ExampleUseCase exampleUseCase;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ExampleResponse>> example(ExampleRequest req){
+    public ResponseEntity<CommonResponse<ExampleResponse>> example(ExampleRequest req){
         ExampleResponse result = exampleUseCase.execute(req);
 
-        return ResponseEntity.status(201).body(ApiResponse.success(result));
+        return ResponseEntity.status(201).body(CommonResponse.success(result));
     }
 
     @PostMapping("/2")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<ExampleResponse> example2(ExampleRequest req){
+    public CommonResponse<ExampleResponse> example2(ExampleRequest req){
         ExampleResponse result = exampleUseCase.execute(req);
         
-        return ApiResponse.success(result);
+        return CommonResponse.success(result);
     }
 }

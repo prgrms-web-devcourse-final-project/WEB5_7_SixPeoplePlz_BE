@@ -6,10 +6,10 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import java.io.IOException;
 
-public class ApiResponseSerializer extends JsonSerializer<ApiResponse<?>> {
+public class CommonResponseSerializer extends JsonSerializer<CommonResponse<?>> {
 
     @Override
-    public void serialize(ApiResponse<?> value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+    public void serialize(CommonResponse<?> value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         gen.writeStartObject();
 
         gen.writeBooleanField("success", value.isSuccess());

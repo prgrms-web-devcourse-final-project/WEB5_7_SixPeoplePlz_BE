@@ -1,7 +1,7 @@
 package me.jinjjahalgae.presentation.api;
 
 import lombok.RequiredArgsConstructor;
-import me.jinjjahalgae.global.common.ApiResponse;
+import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
 import me.jinjjahalgae.global.security.jwt.JwtTokenProvider;
 import me.jinjjahalgae.global.security.jwt.Token;
@@ -23,18 +23,18 @@ public class TestController {
 
     @GetMapping("/token")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Token> getTestToken() {
-        return ApiResponse.success(jwtTokenProvider.generateToken(1L));
+    public CommonResponse<Token> getTestToken() {
+        return CommonResponse.success(jwtTokenProvider.generateToken(1L));
     }
 
     @GetMapping("/token2")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Token> getTestToken2() {
-        return ApiResponse.success(jwtTokenProvider.generateToken(2L));
+    public CommonResponse<Token> getTestToken2() {
+        return CommonResponse.success(jwtTokenProvider.generateToken(2L));
     }
 
     @GetMapping("/me")
-    public ApiResponse<Long> getMyInfo(@AuthenticationPrincipal CustomJwtPrincipal principal) {
-        return ApiResponse.success(principal.getUserId());
+    public CommonResponse<Long> getMyInfo(@AuthenticationPrincipal CustomJwtPrincipal principal) {
+        return CommonResponse.success(principal.getUserId());
     }
 }

@@ -5,7 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import me.jinjjahalgae.global.common.ApiResponse;
+import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import me.jinjjahalgae.global.exception.ErrorResponse;
 import org.springframework.security.core.AuthenticationException;
@@ -38,7 +38,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
         ErrorResponse errorResponseDto = ErrorResponse.from(errorCode);
 
-        ApiResponse<Object> errorResponse = ApiResponse.error(errorResponseDto);
+        CommonResponse<Object> errorResponse = CommonResponse.error(errorResponseDto);
 
         // json으로 response
         response.getWriter().write(objectMapper.writeValueAsString(errorResponse));

@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.auth.dto.login.SocialLoginRequest;
 import me.jinjjahalgae.domain.auth.dto.login.SocialLoginResponse;
 import me.jinjjahalgae.domain.auth.usecase.interfaces.SocialLoginUseCase;
-import me.jinjjahalgae.global.common.ApiResponse;
+import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.security.jwt.JwtProperties;
 import me.jinjjahalgae.presentation.util.CookieGenerator;
 import org.springframework.http.HttpStatus;
@@ -25,17 +25,17 @@ public class AuthController {
 
     @PostMapping("/login/social/body")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<SocialLoginResponse> socialLoginForBody(
+    public CommonResponse<SocialLoginResponse> socialLoginForBody(
             @Valid @RequestBody SocialLoginRequest req
     ) {
         SocialLoginResponse result = socialLoginUseCase.execute(req);
 
-        return ApiResponse.success(result);
+        return CommonResponse.success(result);
     }
 
     @PostMapping("/login/social/cookie")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<String> socialLoginForCookie(
+    public CommonResponse<String> socialLoginForCookie(
             @Valid @RequestBody SocialLoginRequest req,
             HttpServletResponse servletResponse // 쿠키 담기 위함
     ) {
@@ -52,6 +52,6 @@ public class AuthController {
         servletResponse.addCookie(accessTokenCookie);
         servletResponse.addCookie(refreshTokenCookie);
 
-        return ApiResponse.success("로그인 성공");
+        return CommonResponse.success("로그인 성공");
     }
 }

@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jinjjahalgae.global.common.ApiResponse;
+import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.exception.AppException;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import me.jinjjahalgae.global.exception.ErrorResponse;
@@ -83,8 +83,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         response.setCharacterEncoding("UTF-8");
 
         ErrorResponse errorResponseDto = ErrorResponse.from(errorCode);
-        ApiResponse<Object> apiResponse = ApiResponse.error(errorResponseDto);
+        CommonResponse<Object> commonResponse = CommonResponse.error(errorResponseDto);
 
-        response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
+        response.getWriter().write(objectMapper.writeValueAsString(commonResponse));
     }
 }
