@@ -1,3 +1,5 @@
+
+
 package me.jinjjahalgae.domain.contract.entity;
 
 import jakarta.persistence.*;
@@ -11,6 +13,20 @@ import me.jinjjahalgae.domain.user.User;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+/**
+ * 계약과 유저 : 관계 매핑
+ * 계약서 정보가 필요한 상황에서는
+ * 유저의 이름이나 닉네임이 항상 필요할 것으로 생각됨.
+ * 때문에 관계 매핑을 통해 조인.
+ *
+ * 외래키로 단순하게 연결할 경우 N+1 문제를 방지할 수 있지만
+ * 닉네임이 필요한 순간마다
+ * 계속 userRepository를 사용하는 것 보다는
+ * contract.getUser.getNickname 한 줄로 사용(한줄로 처리)
+ *
+ * 또한 지연 로딩을 사용하여 N+1 문제 방지
+ */
 
 @Entity
 @Getter
