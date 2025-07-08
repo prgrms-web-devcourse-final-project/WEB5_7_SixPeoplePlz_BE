@@ -33,12 +33,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        if (isExcludedUrl(req)) {
-            filterChain.doFilter(req, res);
-
-            return;
-        }
-
         //Authorization 헤더에서 Bearer 토큰 추출
         String accessToken = jwtTokenProvider.resolveToken(req);
 
@@ -68,12 +62,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             setErrorResponse(res, ErrorCode.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    private boolean isExcludedUrl(HttpServletRequest req) {
-        String uri = req.getRequestURI();
-
-        return uri.startsWith("/api/auth/");
     }
 
     // 에러 응답을 생성

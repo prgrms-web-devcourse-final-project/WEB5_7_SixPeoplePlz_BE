@@ -18,15 +18,15 @@ public class SwaggerConfig {
                 .type(SecurityScheme.Type.HTTP)
                 .scheme("bearer")
                 .bearerFormat("JWT")
+                .in(SecurityScheme.In.HEADER)
                 .name("Authorization");
 
-        SecurityRequirement securityRequirement = new SecurityRequirement().addList("Authorization");
+        Components components = new Components()
+                .addSecuritySchemes("bearerAuth", securityScheme);
 
         return new OpenAPI()
-                .components(new Components())
-                .info(apiInfo())
-                .addSecurityItem(securityRequirement)
-                .schemaRequirement("Authorization", securityScheme);
+                .components(components)
+                .info(apiInfo());
     }
 
     private Info apiInfo() {

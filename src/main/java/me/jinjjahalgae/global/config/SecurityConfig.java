@@ -24,10 +24,17 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
+    // 스웨거 문서 경로
     private final String[] SWAGGER_PATHS = {
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/docs/**",
+    };
+
+    // 회원가입, 로그인, 리프레시 경로
+    private final String[] LOGIN_PATHS = {
+            "/api/auth/login/social/body",
+            "/api/auth/login/social/cookie",
     };
 
     @Bean
@@ -40,7 +47,7 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 사용 안함
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(LOGIN_PATHS).permitAll()
                         .requestMatchers(SWAGGER_PATHS).permitAll()
                         .anyRequest().authenticated()
                 )

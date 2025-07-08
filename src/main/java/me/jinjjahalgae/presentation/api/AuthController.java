@@ -8,11 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.auth.dto.login.SocialLoginRequest;
 import me.jinjjahalgae.domain.auth.dto.login.SocialLoginResponse;
 import me.jinjjahalgae.domain.auth.usecase.interfaces.SocialLoginUseCase;
+import me.jinjjahalgae.domain.auth.usecase.interfaces.LogoutUseCase;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.security.jwt.JwtProperties;
+import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
 import me.jinjjahalgae.presentation.api.docs.auth.AuthControllerDocs;
 import me.jinjjahalgae.presentation.util.CookieGenerator;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -20,9 +23,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController implements AuthControllerDocs {
-    private final SocialLoginUseCase socialLoginUseCase;
     private final CookieGenerator cookieGenerator;
     private final JwtProperties jwtProperties;
+
+    private final SocialLoginUseCase socialLoginUseCase;
+    private final LogoutUseCase logoutUseCase;
 
     @Override
     @PostMapping("/login/social/body")
@@ -56,5 +61,15 @@ public class AuthController implements AuthControllerDocs {
         servletResponse.addCookie(refreshTokenCookie);
 
         return CommonResponse.success("로그인 성공");
+    }
+
+    @Override
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.OK)
+    public CommonResponse<Void> logout(@AuthenticationPrincipal CustomJwtPrincipal user) {
+
+        log.info("userId = {}", user.getUserId());
+        logoutUseCase.execute(user.getUserId());
+        return CommonResponse.success();
     }
 }
