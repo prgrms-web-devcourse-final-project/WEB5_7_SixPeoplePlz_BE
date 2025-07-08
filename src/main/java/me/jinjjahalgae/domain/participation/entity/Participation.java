@@ -53,4 +53,8 @@ public class Participation extends BaseEntity {
                 .validate(validate)
                 .build();
     }
+
+    public void setContract(Contract contract) {
+        this.contract = contract;
+    }
 }

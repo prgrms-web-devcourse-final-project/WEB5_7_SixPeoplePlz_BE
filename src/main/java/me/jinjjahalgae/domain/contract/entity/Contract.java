@@ -77,7 +77,7 @@ public class Contract extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ContractType type; //계약서 템플릿 타입
 
-    @OneToMany(mappedBy = "contract")
+    @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Participation> participations = new ArrayList<>();
 
     @Builder
@@ -121,7 +121,16 @@ public class Contract extends BaseEntity {
         return contract;
     }
 
+    public void addParticipation(Participation participation) {
+        this.participations.add(participation);
+        participation.setContract(this);
+    }
+
     private int calculateTotalProof(LocalDateTime startDate, LocalDateTime endDate, int proofPerWeek) {
+        if (oneOff) {
+            return 1;
+        }
+
         long totalDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1;
         long totalWeeks = (totalDays + 6) / 7; // 프론트에서 날짜 선택을 막으면 몇주인지 올림하여 계산하기만 하면 되기 때문에 6을 더해서 항상 올림 처리
         return (int) (totalWeeks * proofPerWeek);
