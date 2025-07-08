@@ -1,7 +1,7 @@
 package me.jinjjahalgae.global.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import me.jinjjahalgae.global.common.ApiResponse;
+import me.jinjjahalgae.global.common.CommonResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class GlobalExceptionHandler {
     @ExceptionHandler(AppException.class)
-    public ResponseEntity<ApiResponse<ErrorResponse>> handleBusinessException(AppException ex) {
+    public ResponseEntity<ErrorResponse> handleBusinessException(AppException ex) {
         ErrorCode errorCode = ex.getErrorCode();
 
         log.error("[{}] {} - {}",
@@ -23,11 +23,11 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
-                .body(ApiResponse.error(ErrorResponse.from(errorCode)));
+                .body(ErrorResponse.from(errorCode));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<ErrorResponse>> handleValidationException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
         String errorMessage = ex.getBindingResult()
                 .getAllErrors()
                 .get(0)
@@ -37,17 +37,17 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(400)
-                .body(ApiResponse.error(ErrorResponse.of(errorMessage)));
+                .body(ErrorResponse.of(errorMessage));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<ErrorResponse>> handleUnexpectedException(Exception ex) {
+    public ResponseEntity<ErrorResponse> handleUnexpectedException(Exception ex) {
         ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
 
         log.error("예상하지 못한 에러 발생: {}", ex.getMessage(), ex);
 
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
-                .body(ApiResponse.error(ErrorResponse.from(errorCode)));
+                .body(ErrorResponse.from(errorCode));
     }
 }
