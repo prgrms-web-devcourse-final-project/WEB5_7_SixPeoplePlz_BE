@@ -14,4 +14,15 @@ public class ProofMapper {
                 .contractId(contractId)
                 .build();
     }
+
+    public static Proof toEntity(String comment, int totalSupervisors, Long contractId, Long proofId) {
+        return Proof.builder()
+                .comment(comment)
+                .totalSupervisors(totalSupervisors)
+                .checkedSupervisors(0)
+                .status(ProofStatus.APPROVE_PENDING)
+                .contractId(contractId)
+                .proofId(proofId)
+                .build();
+    }
 }
