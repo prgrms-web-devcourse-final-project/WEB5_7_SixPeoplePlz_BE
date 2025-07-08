@@ -11,6 +11,7 @@ import me.jinjjahalgae.domain.proof.mapper.ProofMapper;
 import me.jinjjahalgae.domain.proof.repository.ProofImageRepository;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
 import me.jinjjahalgae.domain.proof.usecase.interfaces.ReProofCreateUseCase;
+import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,26 +30,22 @@ public class ReProofCreateUseCaseImpl implements ReProofCreateUseCase {
     public void execute(ProofCreateRequest request, Long proofId) {
         // 이미지가 1장도 없는 경우 예외 발생
         if(request.firstImageKey() == null) {
-            // ErrorCode.IMAGE_REQUIRED.domainException("이미지가 존재하지 않음");
+            throw ErrorCode.IMAGE_REQUIRED.domainException("이미지가 존재하지 않습니다.");
         }
 
         // 원본 인증 조회 - 원본 인증이 존재하는 지 검증 겸용
         Proof proof = proofRepository.findById(proofId)
-                .orElseThrow(
-                        // ErrorCode.PROOF_NOT_FOUND.domainException("인증이 존재하지 않음");
-                );
+                .orElseThrow(() -> ErrorCode.PROOF_NOT_FOUND.domainException(proofId + "에 대한 인증이 존재하지 않습니다."));
 
         // 계약 조회 - 계약이 존재하는 지 검증 겸용
         Long contractId = proof.getContractId();
         Contract contract = contractRepository.findById(contractId)
-                .orElseThrow(
-                        // ErrorCode.CONTRACT_NOT_FOUND.domainException("계약이 존재하지 않음");
-                );
+                .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException(contractId + "에 대한 계약이 존재하지 않습니다."));
 
         // 해당 계약에 대해 오늘자 재인증이 존재하는 지 검증
         boolean isReProofExist = todayReProofExist(contract.getId());
         if(isReProofExist) {
-            // ErrorCode.REPROOF_ALREADY_EXISTS.domainException("재인증이 이미 존재함");
+            throw ErrorCode.REPROOF_ALREADY_EXISTS.domainException("오늘자 재인증이 이미 존재합니다.");
         }
 
         // 재인증 저장

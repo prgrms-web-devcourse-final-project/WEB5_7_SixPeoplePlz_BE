@@ -30,19 +30,18 @@ public class ProofCreateUseCaseImpl implements ProofCreateUseCase {
     public void execute(ProofCreateRequest request, Long contractId) {
         // 이미지가 1장도 없는 경우 예외 발생
         if(request.firstImageKey() == null) {
-            // ErrorCode.IMAGE_REQUIRED.domainException("이미지가 존재하지 않음");
+            throw ErrorCode.IMAGE_REQUIRED.domainException("이미지가 존재하지 않습니다.");
         }
 
         boolean isProofExist = todayProofExist(contractId);
 
         // 원본 인증 요청인데 오늘자 인증이 이미 존재하는 경우
         if(isProofExist) {
-            // ErrorCode.PROOF_ALREADY_EXISTS.domainException("원본 인증 요청인데 오늘자 인증이 이미 존재함");
+            throw ErrorCode.PROOF_ALREADY_EXISTS.domainException("오늘자 인증이 이미 존재합니다.");
         }
 
         Contract contract = contractRepository.findById(contractId)
-                .orElseThrow(// CONTRACT_NOT_FOUND
-                );
+                .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException(contractId + "에 대한 계약이 존재하지 않습니다."));
 
         // 인증 생성
         Proof proof = ProofMapper.toEntity(request.comment(), contract.getTotalSupervisor(), contractId);
