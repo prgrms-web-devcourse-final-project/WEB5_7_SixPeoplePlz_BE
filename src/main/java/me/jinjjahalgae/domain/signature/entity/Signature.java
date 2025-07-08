@@ -35,7 +35,7 @@ public class Signature {
         this.imageKey = imageKey;
     }
 
-    public static Signature of(Contract contract, User user, String imageKey) {
+    public static Signature createSignature(Contract contract, User user, String imageKey) {
         return Signature.builder()
                 .contract(contract)
                 .user(user)
