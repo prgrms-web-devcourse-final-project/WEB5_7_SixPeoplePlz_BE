@@ -15,9 +15,9 @@ public record ContractUpdateRequest(
     @NotBlank String goal,
     String penalty,
     String reward,
-    @NotNull int life,
-    @NotNull int proofPerWeek,
-    @NotNull boolean oneOff,
+    @NotNull Integer life,
+    @NotNull Integer proofPerWeek,
+    @NotNull Boolean oneOff,
     @NotNull LocalDateTime startDate,
     @NotNull LocalDateTime endDate,
     @NotNull ContractType type
