@@ -27,5 +27,3 @@ public record ParticipationResponse(
         );
     }
 }
-
-git commit -m "feat(contract_init) : 계약 요청, 응답 dto / 참여 요청, 응답 dto 구현"
