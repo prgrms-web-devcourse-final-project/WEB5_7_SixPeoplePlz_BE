@@ -10,9 +10,12 @@ import lombok.NoArgsConstructor;
 import me.jinjjahalgae.domain.common.BaseEntity;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
+import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.user.User;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -73,6 +76,9 @@ public class Contract extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private ContractType type; //계약서 템플릿 타입
+
+    @OneToMany(mappedBy = "contract")
+    private List<Participation> participations = new ArrayList<>();
 
     @Builder
     private Contract(User user, LocalDateTime startDate, LocalDateTime endDate, String title, String goal, String penalty, String reward, int life,
