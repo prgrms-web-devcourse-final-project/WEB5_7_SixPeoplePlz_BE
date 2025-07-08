@@ -1,13 +1,13 @@
 package me.jinjjahalgae.domain.signature.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import me.jinjjahalgae.domain.contract.entity.Contract;
+import me.jinjjahalgae.domain.user.User;
 
 @Entity
 @Getter
@@ -18,16 +18,28 @@ public class Signature {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //서명 id
 
-    private Long contractId; //계약 id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contract_id")
+    private Contract contract;
 
-    private Long userId; //유저 id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private String imageKey; //이미지 key (url)
 
     @Builder
-    public Signature(Long contractId, Long userId, String imageKey) {
-        this.contractId = contractId;
-        this.userId = userId;
+    private Signature(Contract contract, User user, String imageKey) {
+        this.contract = contract;
+        this.user = user;
         this.imageKey = imageKey;
+    }
+
+    public static Signature of(Contract contract, User user, String imageKey) {
+        return Signature.builder()
+                .contract(contract)
+                .user(user)
+                .imageKey(imageKey)
+                .build();
     }
 }

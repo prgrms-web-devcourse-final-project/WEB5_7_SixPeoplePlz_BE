@@ -7,8 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
+import me.jinjjahalgae.domain.user.User;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -20,13 +21,15 @@ public class Contract {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //계약 id
 
-    private Long userId; // 유저 id (FK)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user; // 유저 조인
 
     private String uuid; //계약 고유 uuid
 
-    private LocalDate startDate; //계약 시작일
+    private LocalDateTime startDate; //계약 시작일
 
-    private LocalDate endDate; //계약 종료일
+    private LocalDateTime endDate; //계약 종료일
 
     private String title; //목표 제목
 
@@ -55,10 +58,9 @@ public class Contract {
     private ContractType type; //계약서 템플릿 타입
 
     @Builder
-    public Contract(Long userId, LocalDate startDate, LocalDate endDate, String title, String goal, String penalty, String reward, int life,
+    private Contract(User user, LocalDateTime startDate, LocalDateTime endDate, String title, String goal, String penalty, String reward, int life,
                     int proofPerWeek, boolean oneOff, ContractType type) {
-        this.userId = userId;
-        this.uuid = UUID.randomUUID().toString();
+        this.user = user;
         this.startDate = startDate;
         this.endDate = endDate;
         this.title = title;
@@ -67,15 +69,36 @@ public class Contract {
         this.reward = reward;
         this.life = life;
         this.proofPerWeek = proofPerWeek;
-        this.totalProof = calculateTotalProof(startDate, endDate, proofPerWeek);
-        this.currentProof = 0;
-        this.totalSupervisor = 0;
         this.oneOff = oneOff;
-        this.status = ContractStatus.PENDING;
         this.type = type;
     }
 
-    private int calculateTotalProof(LocalDate startDate, LocalDate endDate, int proofPerWeek) {
+    public static Contract createContract(User user, LocalDateTime startDate, LocalDateTime endDate, String title, String goal, String penalty, String reward, int life,
+                              int proofPerWeek, boolean oneOff, ContractType type) {
+        Contract contract = Contract.builder()
+                .user(user)
+                .startDate(startDate)
+                .endDate(endDate)
+                .title(title)
+                .goal(goal)
+                .penalty(penalty)
+                .reward(reward)
+                .life(life)
+                .proofPerWeek(proofPerWeek)
+                .oneOff(oneOff)
+                .type(type)
+                .build();
+
+        contract.uuid = UUID.randomUUID().toString();
+        contract.totalProof = contract.calculateTotalProof(startDate, endDate, proofPerWeek);
+        contract.currentProof = 0;
+        contract.totalSupervisor = 0;
+        contract.status = ContractStatus.PENDING;
+
+        return contract;
+    }
+
+    private int calculateTotalProof(LocalDateTime startDate, LocalDateTime endDate, int proofPerWeek) {
         long totalDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1;
         long totalWeeks = (totalDays + 6) / 7; // 프론트에서 날짜 선택을 막으면 몇주인지 올림하여 계산하기만 하면 되기 때문에 6을 더해서 항상 올림 처리
         return (int) (totalWeeks * proofPerWeek);
