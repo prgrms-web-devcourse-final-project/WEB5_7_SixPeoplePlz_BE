@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Repository
 public interface ProofRepository extends JpaRepository<Proof, Long> {
@@ -57,4 +58,11 @@ AND p.proofId IS NOT NULL
             @Param("startOfDay") LocalDateTime startOfDay,
             @Param("endOfDay") LocalDateTime endOfDay
     );
+
+    /**
+     * Proof 엔티티의 oneToMany 이미지 리스트 사용을 위한 fetch join
+     * 인증에 무조건 하나 이상의 이미지가 존재하므로 Left join 대신 join 만 사용
+     */
+    @Query("SELECT p FROM Proof p JOIN FETCH p.proofImages WHERE p.id = :id")
+    Optional<Proof> findByIdWithProofImages(@Param("id") Long id);
 }
