@@ -6,6 +6,7 @@ import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.invite.dto.InviteInfo;
 import me.jinjjahalgae.domain.invite.dto.response.InviteLinkResponse;
 import me.jinjjahalgae.domain.invite.usecase.interfaces.CreateInviteLinkUseCase;
+import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -40,9 +41,8 @@ public class CreateInviteLinkUseCaseImpl implements CreateInviteLinkUseCase {
     @Override
     @Transactional(readOnly = true)
     public InviteLinkResponse execute(Long contractId) {
-        // 반환하는 예외는 임시
         Contract contract = contractRepository.findById(contractId)
-                .orElseThrow(() -> new NoSuchElementException("해당하는 계약을 찾을 수 없습니다."));
+                .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.serviceException("존재하지 않는 계약 입니다. id=" + contractId));
 
         // 기존 초대링크가 있으면 반환
         String contractKey = CONTRACT_TO_INVITE_PREFIX + contract.getId();
