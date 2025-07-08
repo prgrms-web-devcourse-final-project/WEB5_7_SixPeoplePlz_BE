@@ -83,8 +83,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         response.setCharacterEncoding("UTF-8");
 
         ErrorResponse errorResponseDto = ErrorResponse.from(errorCode);
-        CommonResponse<Object> commonResponse = CommonResponse.error(errorResponseDto);
 
-        response.getWriter().write(objectMapper.writeValueAsString(commonResponse));
+        response.getWriter().write(objectMapper.writeValueAsString(errorResponseDto));
     }
 }

@@ -10,6 +10,7 @@ import me.jinjjahalgae.domain.auth.dto.login.SocialLoginResponse;
 import me.jinjjahalgae.domain.auth.usecase.interfaces.SocialLoginUseCase;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.security.jwt.JwtProperties;
+import me.jinjjahalgae.presentation.api.docs.auth.AuthControllerDocs;
 import me.jinjjahalgae.presentation.util.CookieGenerator;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +19,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthController implements AuthControllerDocs {
     private final SocialLoginUseCase socialLoginUseCase;
     private final CookieGenerator cookieGenerator;
     private final JwtProperties jwtProperties;
 
+    @Override
     @PostMapping("/login/social/body")
     @ResponseStatus(HttpStatus.CREATED)
     public CommonResponse<SocialLoginResponse> socialLoginForBody(
@@ -33,6 +35,7 @@ public class AuthController {
         return CommonResponse.success(result);
     }
 
+    @Override
     @PostMapping("/login/social/cookie")
     @ResponseStatus(HttpStatus.CREATED)
     public CommonResponse<String> socialLoginForCookie(
