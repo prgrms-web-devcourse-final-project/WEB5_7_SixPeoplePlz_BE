@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.signature.entity;
+package me.jinjjahalgae.domain.participation.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 
 import me.jinjjahalgae.domain.common.BaseEntity;
 import me.jinjjahalgae.domain.contract.entity.Contract;
-import me.jinjjahalgae.domain.signature.enums.Role;
-import me.jinjjahalgae.domain.signature.enums.Validate;
+import me.jinjjahalgae.domain.participation.enums.Role;
+import me.jinjjahalgae.domain.participation.enums.Validate;
 import me.jinjjahalgae.domain.user.User;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Signature extends BaseEntity {
+public class Participation extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +38,7 @@ public class Signature extends BaseEntity {
     private Validate validate;
 
     @Builder
-    private Signature(Contract contract, User user, String imageKey, Role role, Validate validate) {
+    private Participation(Contract contract, User user, String imageKey, Role role, Validate validate) {
         this.contract = contract;
         this.user = user;
         this.imageKey = imageKey;
@@ -46,8 +46,8 @@ public class Signature extends BaseEntity {
         this.validate = validate;
     }
 
-    public static Signature createSignature(Contract contract, User user, String imageKey, Role role, Validate validate) {
-        return Signature.builder()
+    public static Participation createSignature(Contract contract, User user, String imageKey, Role role, Validate validate) {
+        return Participation.builder()
                 .contract(contract)
                 .user(user)
                 .imageKey(imageKey)

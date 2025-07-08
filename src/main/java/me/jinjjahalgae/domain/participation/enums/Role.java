@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.signature.enums;
+package me.jinjjahalgae.domain.participation.enums;
 
 public enum Role {
     CONTRACTOR,
