@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import me.jinjjahalgae.domain.common.BaseEntity;
-
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.participation.enums.Validate;
@@ -47,7 +46,7 @@ public class Participation extends BaseEntity {
         this.validate = validate;
     }
 
-    public static Participation createSignature(Contract contract, User user, String imageKey, Role role, Validate validate) {
+    public static Participation createParticipation(Contract contract, User user, String imageKey, Role role, Validate validate) {
         return Participation.builder()
                 .contract(contract)
                 .user(user)
