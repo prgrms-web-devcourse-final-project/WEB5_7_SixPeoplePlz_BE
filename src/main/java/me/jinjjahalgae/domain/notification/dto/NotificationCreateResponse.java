@@ -6,7 +6,7 @@ package me.jinjjahalgae.domain.notification.dto;
  * @param message 생성된 메세지 확인용
  */
 public record NotificationCreateResponse(
-        Long notificationCnt,
+        int notificationCnt,
         String message
 ) {
 }
