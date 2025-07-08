@@ -21,16 +21,19 @@ public class CustomJwtPrincipal implements UserDetails {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
+    // JWT 방식 사용
     @Override
     public String getPassword() {
         return null;
     }
 
+    // JWT 방식 사용
     @Override
     public String getUsername() {
         return "";
     }
 
+    // getUsername을 사용하지 않고 명시적으로 userId 가져오기 위함
     public Long getUserId(){
         return user.getId();
     }
