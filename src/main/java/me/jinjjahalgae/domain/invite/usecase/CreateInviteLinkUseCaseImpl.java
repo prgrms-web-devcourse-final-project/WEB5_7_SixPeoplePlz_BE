@@ -1,8 +1,8 @@
 package me.jinjjahalgae.domain.invite.usecase;
 
 import lombok.RequiredArgsConstructor;
-import me.jinjjahalgae.domain.contract.entity.Contract; // import 추가
-import me.jinjjahalgae.domain.contract.repository.ContractRepository; // import 추가
+import me.jinjjahalgae.domain.contract.entity.Contract;
+import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.invite.dto.InviteInfo;
 import me.jinjjahalgae.domain.invite.dto.response.InviteLinkResponse;
 import me.jinjjahalgae.domain.invite.usecase.interfaces.CreateInviteLinkUseCase;
@@ -25,22 +25,21 @@ public class CreateInviteLinkUseCaseImpl implements CreateInviteLinkUseCase {
     @Value("${invite.invite-url-prefix}")
     private String INVITE_URL_PREFIX;
 
-    @Value("${invite.expired-time-hours}")
+    @Value("${invite.expired-time}")
     private long INVITE_EXPIRATION_HOURS;
 
     @Value("${invite.max-supervisors}")
     private int MAX_SUPERVISORS;
 
-    // application.yml에 정의된 값을 사용하도록 수정
-    @Value("${spring.data.redis.contract-invite-prefix}")
+    @Value("${spring.data.redis.contract-invite}")
     private String CONTRACT_TO_INVITE_PREFIX;
 
-    @Value("${spring.data.redis.supervisor-count-prefix}")
+    @Value("${spring.data.redis.contract-supervisors}")
     private String SUPERVISOR_COUNT_PREFIX;
 
     @Override
     @Transactional(readOnly = true)
-    public InviteLinkResponse execute(Integer contractId) {
+    public InviteLinkResponse execute(Long contractId) {
         // 반환하는 예외는 임시
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> new NoSuchElementException("해당하는 계약을 찾을 수 없습니다."));
@@ -60,7 +59,7 @@ public class CreateInviteLinkUseCaseImpl implements CreateInviteLinkUseCase {
         }
 
         // 감독자 자리는 redis로 다루어 동시성 해결
-        // 계약 시작 시 이 정보를 받아와 계약의 감독자 수 업데이트 후 redis에서 정리 필요
+        // 만료 시간이 없어 계약 시작 시 이 정보를 받아와 계약의 감독자 수 업데이트 후 redis에서 정리 필요
         String supervisorCountKey = SUPERVISOR_COUNT_PREFIX + contract.getId();
         redisTemplate.opsForValue().setIfAbsent(
                 supervisorCountKey,
