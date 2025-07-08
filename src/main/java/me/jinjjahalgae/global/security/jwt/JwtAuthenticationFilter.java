@@ -62,6 +62,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.warn("JWT 인증 예외: {}", e.getErrorCode().getMessage());
 
             setErrorResponse(res, e.getErrorCode());
+        } catch (Exception e) {
+            // JwtTokenProvider에서 던진 커스텀 예외를 잡아서 처리
+            log.error("예상하지 못한 예외: {}", e.getMessage());
+
+            setErrorResponse(res, ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
