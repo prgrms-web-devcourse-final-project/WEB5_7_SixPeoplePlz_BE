@@ -1,10 +1,9 @@
 package me.jinjjahalgae.domain.invite.usecase.interfaces;
 
 import me.jinjjahalgae.domain.common.UseCase;
-import me.jinjjahalgae.domain.invite.dto.request.CreateInviteLinkRequest;
-import me.jinjjahalgae.domain.invite.dto.response.CreateInviteLinkResponse;
+import me.jinjjahalgae.domain.invite.dto.response.InviteLinkResponse;
 
-public interface CreateInviteLinkUseCase extends UseCase<CreateInviteLinkRequest, CreateInviteLinkResponse> {
+public interface CreateInviteLinkUseCase extends UseCase<Integer, InviteLinkResponse> {
     @Override
-    CreateInviteLinkResponse execute(CreateInviteLinkRequest request);
+    InviteLinkResponse execute(Integer contractId);
 }
