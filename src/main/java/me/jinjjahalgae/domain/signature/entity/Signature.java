@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import me.jinjjahalgae.domain.contract.entity.Contract;
+import me.jinjjahalgae.domain.signature.enums.Role;
+import me.jinjjahalgae.domain.signature.enums.Validate;
 import me.jinjjahalgae.domain.user.User;
 
 @Entity
@@ -28,18 +30,28 @@ public class Signature {
 
     private String imageKey; //이미지 key (url)
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @Enumerated(EnumType.STRING)
+    private Validate validate;
+
     @Builder
-    private Signature(Contract contract, User user, String imageKey) {
+    private Signature(Contract contract, User user, String imageKey, Role role, Validate validate) {
         this.contract = contract;
         this.user = user;
         this.imageKey = imageKey;
+        this.role = role;
+        this.validate = validate;
     }
 
-    public static Signature createSignature(Contract contract, User user, String imageKey) {
+    public static Signature createSignature(Contract contract, User user, String imageKey, Role role, Validate validate) {
         return Signature.builder()
                 .contract(contract)
                 .user(user)
                 .imageKey(imageKey)
+                .role(role)
+                .validate(validate)
                 .build();
     }
 }
