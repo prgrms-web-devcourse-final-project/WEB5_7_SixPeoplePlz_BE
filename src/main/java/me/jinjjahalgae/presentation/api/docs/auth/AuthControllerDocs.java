@@ -15,6 +15,7 @@ import me.jinjjahalgae.domain.auth.dto.login.SocialLoginResponse;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.exception.ErrorResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
+import me.jinjjahalgae.presentation.api.docs.NoContentSwaggerResponse;
 import me.jinjjahalgae.presentation.api.docs.auth.login.SocialLoginBodySwaggerResponse;
 import me.jinjjahalgae.presentation.api.docs.auth.login.SocialLoginCookieSwaggerResponse;
 import me.jinjjahalgae.domain.auth.dto.refresh.RefreshRequest;
@@ -185,7 +186,7 @@ public interface AuthControllerDocs {
             description = "로그아웃 성공",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = SocialLoginCookieSwaggerResponse.class),
+                    schema = @Schema(implementation = NoContentSwaggerResponse.class),
                     examples = @ExampleObject(
                             name = "로그아웃 성공",
                             value = """

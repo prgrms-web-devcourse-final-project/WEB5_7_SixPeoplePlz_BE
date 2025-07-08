@@ -71,14 +71,19 @@ public class AuthController implements AuthControllerDocs {
     @Override
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
-    public CommonResponse<Void> logout(@AuthenticationPrincipal CustomJwtPrincipal user) {
+    public CommonResponse<Void> logout(
+            @AuthenticationPrincipal CustomJwtPrincipal user
+    ) {
         logoutUseCase.execute(user.getUserId());
         
         return CommonResponse.success();
     }
 
     @PostMapping("/refresh")
-    public CommonResponse<RefreshResponse> refresh(@Valid @RequestBody RefreshRequest request) {
+    @ResponseStatus(HttpStatus.OK)
+    public CommonResponse<RefreshResponse> refresh(
+            @Valid @RequestBody RefreshRequest request
+    ) {
         RefreshResponse result = refreshTokenUseCase.execute(request);
         
         return CommonResponse.success(result);
