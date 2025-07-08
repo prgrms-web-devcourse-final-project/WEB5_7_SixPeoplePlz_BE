@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.jinjjahalgae.domain.common.BaseEntity;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -23,11 +25,21 @@ public class User extends BaseEntity {
 
     private String email; // (Optional) 이메일
 
+    private java.time.LocalDateTime deletedAt;
+
     @Builder
     public User(Long id, String name, String nickname, String email) {
         this.id = id;
         this.name = name;
         this.nickname = nickname;
         this.email = email;
+    }
+
+    public void updateNickname(String nickname){
+        this.nickname = nickname;
+    }
+
+    public void delete(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
     }
 }
