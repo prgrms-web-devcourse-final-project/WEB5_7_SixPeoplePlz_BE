@@ -1,15 +1,14 @@
 package me.jinjjahalgae.domain.notification.usecase.interfaces;
 
-import me.jinjjahalgae.domain.common.UseCase;
 import me.jinjjahalgae.domain.notification.dto.NotificationCreateRequest;
 import me.jinjjahalgae.domain.notification.dto.NotificationCreateResponse;
-import me.jinjjahalgae.domain.notification.dto.NotificationResponse;
 
 /**
+ * 알림 생성 usecase (백엔드에서만 쓰일 예정)
  * REQ : NotificationCreateRequest
  * RES : 알림id와 생성된 메세지를 담은 NotificationCreateResponse
  */
-public interface CreateNotificationUseCase extends UseCase<NotificationCreateRequest, NotificationCreateResponse> {
+public interface CreateNotificationUseCase {
 
     NotificationCreateResponse execute(NotificationCreateRequest request);
 }
