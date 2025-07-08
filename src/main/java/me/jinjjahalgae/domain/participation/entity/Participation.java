@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import me.jinjjahalgae.domain.common.BaseEntity;
+
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.participation.enums.Validate;
