@@ -8,6 +8,7 @@ import me.jinjjahalgae.domain.notification.usecase.interfaces.GetAllNotification
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -23,6 +24,7 @@ public class GetAllNotificationUseCaseImpl implements GetAllNotificationUseCase 
      * @return NotificationGetResponse의 Page
      */
     @Override
+    @Transactional(readOnly = true)
     public Page<NotificationGetResponse> execute(Long userId, Pageable pageable) {
 
         return repository.findAllByUserId(userId, pageable)

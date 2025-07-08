@@ -7,6 +7,7 @@ import me.jinjjahalgae.domain.notification.repository.NotificationRepository;
 import me.jinjjahalgae.domain.notification.usecase.interfaces.MarkSingleNotificationAsReadUseCase;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -23,6 +24,7 @@ public class MarkSingleNotificationAsReadUseCaseImpl implements MarkSingleNotifi
      * @return 읽음처리된 알림 id
      */
     @Override
+    @Transactional
     public Long execute(Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> ErrorCode.NOTIFICATION_NOT_FOUND.serviceException("존재하지 않는 알림 id입니다."));
