@@ -17,6 +17,9 @@ import me.jinjjahalgae.global.exception.ErrorResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
 import me.jinjjahalgae.presentation.api.docs.auth.login.SocialLoginBodySwaggerResponse;
 import me.jinjjahalgae.presentation.api.docs.auth.login.SocialLoginCookieSwaggerResponse;
+import me.jinjjahalgae.domain.auth.dto.refresh.RefreshRequest;
+import me.jinjjahalgae.domain.auth.dto.refresh.RefreshResponse;
+import me.jinjjahalgae.presentation.api.docs.auth.refresh.RefreshSwaggerResponse;
 
 @Tag(name = "인증 API", description = "소셜 로그인 등 인증 관련 API")
 public interface AuthControllerDocs {
@@ -47,19 +50,32 @@ public interface AuthControllerDocs {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "잘못된 요청 (지원하지 않는 provider)",
+                    description = "잘못된 요청 (provider 누락 또는 accessToken 누락 등)",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "잘못된 요청",
+                            examples = {
+                                @ExampleObject(
+                                    name = "잘못된 provider, provider 누락, 공백",
                                     value = """
                                     {
                                       "success": false,
-                                      "code": "INVALID_PROVIDER",
-                                      "message": "유효하지 않은 provider입니다."
-                                    }"""
-                            )
+                                      "code": "BAD_REQUEST",
+                                      "message": "provider는 필수입니다."
+                                    }
+                                    """
+                                ),
+                                @ExampleObject(
+                                    name = "accessToken 누락",
+                                    value = """
+                                    {
+                                      "success": false,
+                                      "code": "BAD_REQUEST",
+                                      "message": "accessToken은 필수입니다."
+                                    }
+                                    """
+                                )
+                            }
                     )
             ),
             @ApiResponse(
@@ -107,19 +123,32 @@ public interface AuthControllerDocs {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "잘못된 요청",
+                    description = "잘못된 요청 (provider 또는 accessToken 누락 등)",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "잘못된 요청",
+                            examples = {
+                                @ExampleObject(
+                                    name = "잘못된 provider, provider 누락, 공백",
                                     value = """
                                     {
                                       "success": false,
-                                      "code": "INVALID_PROVIDER",
-                                      "message": "유효하지 않은 provider입니다."
-                                    }"""
-                            )
+                                      "code": "BAD_REQUEST",
+                                      "message": "provider는 필수입니다."
+                                    }
+                                    """
+                                ),
+                                @ExampleObject(
+                                    name = "accessToken 누락, 공백",
+                                    value = """
+                                    {
+                                      "success": false,
+                                      "code": "BAD_REQUEST",
+                                      "message": "accessToken은 필수입니다."
+                                    }
+                                    """
+                                )
+                            }
                     )
             ),
             @ApiResponse(
@@ -204,5 +233,71 @@ public interface AuthControllerDocs {
     })
     CommonResponse<Void> logout(
         @Parameter(hidden = true) CustomJwtPrincipal user
+    );
+
+    @Operation(
+        summary = "토큰 재발급",
+        description = "리프레시 토큰으로 access/refresh 토큰을 재발급합니다. <br> - accessToken 만료시간 30분<br> - refreshToken 만료시간 30일"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "토큰 재발급 성공",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = RefreshSwaggerResponse.class),
+                examples = @ExampleObject(
+                    name = "토큰 재발급 성공",
+                    value = """
+                    {
+                      "success": true,
+                      "result": {
+                        "accessToken": "eyJhbGc123451NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNzUxODMyNjMxLCJleHAiOjE3NTE4MzQ0MzF9.hY7PLaNrQifTgHUjg8Jb2899FQfCSoiGGJv6-yl6jS0",
+                        "refreshToken": "eyJhbGc123451NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNzUxODMyNjMxLCJleHAiOjE3NTE4MzQ0MzF9.hY7PLaNrQifTgHUjg8Jb2899FQfCSoiGGJv6-yl6jS0"
+                      }
+                    }
+                    """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "잘못된 요청 (refreshToken 누락 등)",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "잘못된 요청",
+                    value = """
+                    {
+                      "success": false,
+                      "code": "BAD_REQUEST",
+                      "message": "refreshToken은 필수입니다."
+                    }
+                    """
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "401",
+            description = "유효하지 않은 리프레시 토큰",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "유효하지 않은 토큰",
+                    value = """
+                    {
+                      "success": false,
+                      "code": "INVALID_TOKEN",
+                      "message": "유효하지 않은 리프레시 토큰입니다."
+                    }
+                    """
+                )
+            )
+        )
+    })
+    CommonResponse<RefreshResponse> refresh(
+        @Parameter(description = "리프레시 토큰 요청 DTO", required = true) RefreshRequest request
     );
 }

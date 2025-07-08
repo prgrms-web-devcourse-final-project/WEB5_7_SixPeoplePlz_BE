@@ -39,4 +39,8 @@ public class ErrorResponse {
     public static ErrorResponse of(String message) {
         return new ErrorResponse(null, message);
     }
+
+    public static ErrorResponse of(ErrorCode errorCode, String message) {
+        return new ErrorResponse(errorCode.name(), message);
+    }
 }

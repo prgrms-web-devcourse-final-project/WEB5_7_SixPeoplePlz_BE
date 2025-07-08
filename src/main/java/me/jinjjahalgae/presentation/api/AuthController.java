@@ -9,9 +9,13 @@ import me.jinjjahalgae.domain.auth.dto.login.SocialLoginRequest;
 import me.jinjjahalgae.domain.auth.dto.login.SocialLoginResponse;
 import me.jinjjahalgae.domain.auth.usecase.interfaces.SocialLoginUseCase;
 import me.jinjjahalgae.domain.auth.usecase.interfaces.LogoutUseCase;
+import me.jinjjahalgae.domain.auth.usecase.interfaces.RefreshTokenUseCase;
+import me.jinjjahalgae.domain.auth.dto.refresh.RefreshRequest;
+import me.jinjjahalgae.domain.auth.dto.refresh.RefreshResponse;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.security.jwt.JwtProperties;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
+import me.jinjjahalgae.global.security.jwt.Token;
 import me.jinjjahalgae.presentation.api.docs.auth.AuthControllerDocs;
 import me.jinjjahalgae.presentation.util.CookieGenerator;
 import org.springframework.http.HttpStatus;
@@ -28,6 +32,7 @@ public class AuthController implements AuthControllerDocs {
 
     private final SocialLoginUseCase socialLoginUseCase;
     private final LogoutUseCase logoutUseCase;
+    private final RefreshTokenUseCase refreshTokenUseCase;
 
     @Override
     @PostMapping("/login/social/body")
@@ -67,9 +72,15 @@ public class AuthController implements AuthControllerDocs {
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
     public CommonResponse<Void> logout(@AuthenticationPrincipal CustomJwtPrincipal user) {
-
-        log.info("userId = {}", user.getUserId());
         logoutUseCase.execute(user.getUserId());
+        
         return CommonResponse.success();
+    }
+
+    @PostMapping("/refresh")
+    public CommonResponse<RefreshResponse> refresh(@Valid @RequestBody RefreshRequest request) {
+        RefreshResponse result = refreshTokenUseCase.execute(request);
+        
+        return CommonResponse.success(result);
     }
 }

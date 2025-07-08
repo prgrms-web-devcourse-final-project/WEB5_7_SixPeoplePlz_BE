@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(400)
-                .body(ErrorResponse.of(errorMessage));
+                .body(ErrorResponse.of(ErrorCode.BAD_REQUEST, errorMessage));
     }
 
     @ExceptionHandler(Exception.class)
