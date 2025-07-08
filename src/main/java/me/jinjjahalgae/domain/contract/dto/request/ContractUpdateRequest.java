@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
 
 /**
- * 인증 수정 request
+ * 계약 수정 request
  * 기본적으로 생성과 동일하지만 서명은 다시 받지 않음.
  */
 

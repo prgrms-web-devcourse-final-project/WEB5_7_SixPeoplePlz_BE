@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
 
 /**
- * 인증 생성 request
+ * 계약 생성 request
  */
 
 public record ContractCreateRequest(
