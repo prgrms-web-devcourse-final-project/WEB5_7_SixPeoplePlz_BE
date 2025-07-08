@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import me.jinjjahalgae.domain.common.BaseEntity;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.signature.enums.Role;
 import me.jinjjahalgae.domain.signature.enums.Validate;
@@ -14,7 +15,7 @@ import me.jinjjahalgae.domain.user.User;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Signature {
+public class Signature extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
