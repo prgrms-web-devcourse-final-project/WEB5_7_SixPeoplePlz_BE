@@ -26,7 +26,7 @@ import java.util.List;
  * @param type                      계약서 템플릿 타입
  * @param supervisorInfos           감독자 이름과 서명 이미지 키 배열
  */
-public record InviteContractResponse(
+public record InviteContractInfoResponse(
         String contractorName,
         String contractorSignatureKey,
         String uuid,
