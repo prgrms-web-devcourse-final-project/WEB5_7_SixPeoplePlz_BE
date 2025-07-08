@@ -1,29 +1,25 @@
 package me.jinjjahalgae.domain.contract.mapper;
 
+import me.jinjjahalgae.domain.contract.dto.request.ContractCreateRequest;
 import me.jinjjahalgae.domain.contract.entity.Contract;
-import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.user.User;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-
 @Component
 public class ContractMapper {
-
-    public Contract toEntity(User user, LocalDateTime startDate, LocalDateTime endDate, String title, String goal, String penalty, String reward, int life,
-                                    int proofPerWeek, boolean oneOff, ContractType type) {
+    public Contract toEntity(User user, ContractCreateRequest request) {
         Contract contract = Contract.builder()
                 .user(user)
-                .startDate(startDate)
-                .endDate(endDate)
-                .title(title)
-                .goal(goal)
-                .penalty(penalty)
-                .reward(reward)
-                .life(life)
-                .proofPerWeek(proofPerWeek)
-                .oneOff(oneOff)
-                .type(type)
+                .startDate(request.startDate())
+                .endDate(request.endDate())
+                .title(request.title())
+                .goal(request.goal())
+                .penalty(request.penalty())
+                .reward(request.reward())
+                .life(request.life())
+                .proofPerWeek(request.proofPerWeek())
+                .oneOff(request.oneOff())
+                .type(request.type())
                 .build();
 
         contract.initialize();
