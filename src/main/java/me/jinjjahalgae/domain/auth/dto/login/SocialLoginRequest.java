@@ -18,7 +18,7 @@ public record SocialLoginRequest(
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 example = "NAVER"
         )
-        @NotNull
+        @NotNull(message = "provider는 필수입니다.")
         String provider, // 써드파티 제공자 (NAVER, KAKAO)
 
         @Schema(
@@ -26,7 +26,7 @@ public record SocialLoginRequest(
                 requiredMode = Schema.RequiredMode.REQUIRED,
                 example = "r3bas52789CPG-7jV9t3ht6XPwJKHCT9AABAEAQoXBi4AAAGX4VCtCK-b-4ep6DEo"
         )
-        @NotBlank
+        @NotBlank(message = "accessToken은 필수입니다.")
         String accessToken // 써드파티 토큰
 ) {
 }
