@@ -13,6 +13,7 @@ import me.jinjjahalgae.domain.proof.repository.ProofRepository;
 import me.jinjjahalgae.domain.proof.usecase.interfaces.ProofCreateUseCase;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,6 +26,7 @@ public class ProofCreateUseCaseImpl implements ProofCreateUseCase {
     private final ContractRepository contractRepository;
 
     @Override
+    @Transactional
     public void execute(ProofCreateRequest request, Long contractId) {
         // 이미지가 1장도 없는 경우 예외 발생
         if(request.firstImageKey() == null) {
