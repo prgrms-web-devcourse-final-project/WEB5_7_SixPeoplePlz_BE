@@ -5,6 +5,7 @@ package me.jinjjahalgae.domain.contract.dto.response;
 
  import me.jinjjahalgae.domain.contract.enums.ContractStatus;
  import me.jinjjahalgae.domain.contract.enums.ContractType;
+ import me.jinjjahalgae.domain.participation.enums.Role;
 
 /**
  * 계약 상세 response
@@ -29,12 +30,15 @@ package me.jinjjahalgae.domain.contract.dto.response;
         int currentProof, //지금까지 성공한 인증 수
         int remainingLife, //남아있는 목숨
 
+        double achievementPercent, // 계산해서 제공
+        double periodPercent,      // 계산해서 제공
+
         List<ParticipantInfo> participants //감독자로 참여한 유저 정보
  ) {
      public record ParticipantInfo(
          Long userId,
-         String nickname,
-         String role,
+         String name,
+         Role role,
          String signatureImageKey
      ) {}
  }
