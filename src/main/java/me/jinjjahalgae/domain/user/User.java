@@ -25,7 +25,7 @@ public class User extends BaseEntity {
 
     private String email; // (Optional) 이메일
 
-    private java.time.LocalDateTime deletedAt;
+    private LocalDateTime deletedAt;
 
     @Builder
     public User(Long id, String name, String nickname, String email) {
