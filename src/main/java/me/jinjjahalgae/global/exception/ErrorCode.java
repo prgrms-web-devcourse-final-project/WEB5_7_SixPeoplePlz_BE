@@ -20,7 +20,11 @@ public enum ErrorCode {
     ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "AccessToken이 만료되었습니다." ),
     TOKEN_NOT_FOUND(HttpStatus.BAD_REQUEST,"존재하지 않는 토큰입니다."),
     UNAUTHORIZED_USER(HttpStatus.UNAUTHORIZED, "인증 정보가 없습니다."),
-    PERMISSION_DENIED(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
+    PERMISSION_DENIED(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
+
+    // 알림 관련
+    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 알림입니다.");
+
 
     private final HttpStatus httpStatus;
     private final String message;

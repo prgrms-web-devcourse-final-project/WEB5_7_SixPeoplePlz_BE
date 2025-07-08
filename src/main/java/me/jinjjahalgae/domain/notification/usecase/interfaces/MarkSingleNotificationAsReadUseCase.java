@@ -5,7 +5,7 @@ import me.jinjjahalgae.domain.common.UseCase;
 /**
  * 개별 알림 읽음 처리
  */
-public interface MarkSingleNotificationAsReadUseCase extends UseCase<Long, Void> {
+public interface MarkSingleNotificationAsReadUseCase extends UseCase<Long, Long> {
     @Override
-    Void execute(Long notificationId);
+    Long execute(Long notificationId);
 }
