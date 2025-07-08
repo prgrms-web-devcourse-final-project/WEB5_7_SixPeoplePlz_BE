@@ -6,9 +6,11 @@ import me.jinjjahalgae.domain.common.usecase_example.dto.ExampleRequest;
 import me.jinjjahalgae.domain.common.usecase_example.dto.ExampleResponse;
 import me.jinjjahalgae.global.common.ApiResponse;
 import me.jinjjahalgae.global.exception.ErrorResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -22,5 +24,13 @@ public class ExampleController {
         ExampleResponse result = exampleUseCase.execute(req);
 
         return ResponseEntity.status(201).body(ApiResponse.success(result));
+    }
+
+    @PostMapping("/2")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<ExampleResponse> example2(ExampleRequest req){
+        ExampleResponse result = exampleUseCase.execute(req);
+        
+        return ApiResponse.success(result);
     }
 }
