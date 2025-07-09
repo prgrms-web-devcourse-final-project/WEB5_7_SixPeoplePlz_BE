@@ -140,17 +140,19 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
         return new NotificationCreateResponse(notificationList.size(), message);
     }
 
-    /// 계약과 관련된 유저 중 감독자만 필터링 해서 반환
+    /// 계약과 관련된 유저 중 유효한 감독자만 필터링 해서 반환
     private static List<ParticipantInfoResponse> getSupervisorInfoList(List<ParticipantInfoResponse> participantInfoList) {
         return participantInfoList.stream()
                 .filter(info -> info.role() == Role.SUPERVISOR)
+                .filter(info -> info.validate())
                 .toList();
     }
 
-    /// 계약과 관련된 유저 중 계약자만 필터링 해서 반환
+    /// 계약과 관련된 유저 중 유효한 계약자만 필터링 해서 반환 (계약자는 1명만 존재)
     private static List<ParticipantInfoResponse> getContractorInfoList(List<ParticipantInfoResponse> participantInfoList) {
         return participantInfoList.stream()
                 .filter(info -> info.role() == Role.CONTRACTOR)
+                .filter(info -> info.validate())
                 .toList();
     }
 }
