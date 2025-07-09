@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
  import me.jinjjahalgae.domain.contract.enums.ContractType;
  import me.jinjjahalgae.domain.participation.enums.Role;
+import me.jinjjahalgae.global.validation.EnumValue;
 
 /**
  * 계약 상세 response
@@ -36,6 +37,7 @@ import me.jinjjahalgae.domain.contract.enums.ContractStatus;
         String reward, //보상
 
         @Schema(description = "계약서 디자인 타입", example = "BASIC")
+        @EnumValue(enumClass = ContractType.class)
         ContractType type, //계약서 디자인 타입
 
         @Schema(description = "시작 날짜", example = "2024-01-01T09:00:00")
@@ -45,6 +47,7 @@ import me.jinjjahalgae.domain.contract.enums.ContractStatus;
         LocalDateTime endDate, //종료 날짜
 
         @Schema(description = "계약 상태", example = "ACTIVE")
+        @EnumValue(enumClass = ContractStatus.class)
         ContractStatus contractStatus, //현재 상태(진행중 등)
 
         @Schema(description = "한 주 인증 수", example = "3")
@@ -71,6 +74,7 @@ import me.jinjjahalgae.domain.contract.enums.ContractStatus;
      public record ParticipantInfo(
          Long userId,
          String name,
+        @EnumValue(enumClass = Role.class)
          Role role,
          String signatureImageKey
      ) {}

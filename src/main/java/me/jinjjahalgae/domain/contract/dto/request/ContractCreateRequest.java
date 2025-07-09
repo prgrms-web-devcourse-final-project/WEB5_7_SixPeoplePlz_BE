@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
+//뒤에 메시지는 안적어도 됨, default 메시지 사용
+import me.jinjjahalgae.global.validation.EnumValue;
 
 /**
  * 계약 생성 request
@@ -76,6 +78,7 @@ public record ContractCreateRequest(
         example = "BASIC", 
         requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "type은 필수입니다.")
+    @EnumValue(enumClass = ContractType.class, message = "유효하지 않은 계약 타입입니다.")
     ContractType type,
 
     @Schema(description = "서명 이미지 키", 

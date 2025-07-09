@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
+import me.jinjjahalgae.global.validation.EnumValue;
 
 /**
  * 계약 수정 request
@@ -75,5 +76,6 @@ public record ContractUpdateRequest(
         example = "BASIC", 
         requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "type은 필수입니다.")
+    @EnumValue(enumClass = ContractType.class)
     ContractType type
 ) {}
