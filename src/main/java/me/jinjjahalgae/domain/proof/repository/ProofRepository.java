@@ -1,5 +1,6 @@
 package me.jinjjahalgae.domain.proof.repository;
 
+import me.jinjjahalgae.domain.feedback.entity.Feedback;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -84,6 +85,19 @@ AND p.proofId IS NOT NULL
      * @param ids 인증 id들
      * @return {@link Proof}
      */
-    @Query("SELECT p FROM Proof p LEFT JOIN FETCH p.proofImages WHERE p.id IN :ids")
+    @Query("SELECT p FROM Proof p JOIN FETCH p.proofImages WHERE p.id IN :ids")
     List<Proof> findProofsWithProofImagesByIds(@Param("ids") List<Long> ids);
+
+
+    @Query("""
+SELECT p.id 
+FROM Proof p 
+WHERE p.contractId = :contractId 
+AND p.status = 'APPROVE_PENDING' 
+AND NOT EXISTS (
+SELECT 1 
+FROM Feedback f 
+WHERE f.proof = p 
+AND f.userId = :userId)""")
+    List<Long> findPendingProofIdsWithoutUserFeedback(@Param("contractId") Long contractId, @Param("userId") Long userId);
 }
