@@ -1,6 +1,7 @@
 package me.jinjjahalgae.domain.proof.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import me.jinjjahalgae.domain.feedback.enums.FeedbackStatus;
 
 /**
  * 감독자 달력 표시를 위한 response
@@ -38,13 +39,13 @@ public record SupervisorProofListResponse(
         @Schema(description = "원본 인증 데이터")
         ProofSimpleResponse originalProof,
 
-/*        @Schema(description = "원본 인증에 대한 감독자 자신의 승인 상태(APPROVED: 승인, REJECTED: 거절)")
-        FeedbackStatus originalFeedbackStatus,  */
+        @Schema(description = "원본 인증에 대한 감독자 자신의 승인 상태(APPROVED: 승인, REJECTED: 거절)")
+        FeedbackStatus originalFeedbackStatus,
 
         @Schema(description = "재인증 데이터 (해당일에 재인증이 존재하지 않으면 null)")
-        ProofSimpleResponse reProof
+        ProofSimpleResponse reProof,
 
-/*        @Schema(description = "재인증에 대한 감독자 자신의 승인 상태(APPROVED: 승인, REJECTED: 거절)")
-        FeedbackStatus reProofFeedbackStatus  */
+        @Schema(description = "재인증에 대한 감독자 자신의 승인 상태(APPROVED: 승인, REJECTED: 거절)")
+        FeedbackStatus reProofFeedbackStatus
 ) {
 }
