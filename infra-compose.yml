@@ -44,4 +44,5 @@ services:
 
 networks:
   jjhg-net:
+    name: jjhg-net
     driver: bridge
