@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface ContractRepository extends JpaRepository<Contract, Long> {
     Optional<Contract> findByUuid(String Uuid);
+    Optional<Contract> findContractById(Long contractId);
 }
