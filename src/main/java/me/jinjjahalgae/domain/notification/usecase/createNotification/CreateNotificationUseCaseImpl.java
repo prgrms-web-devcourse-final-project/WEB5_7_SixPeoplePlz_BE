@@ -1,14 +1,12 @@
-package me.jinjjahalgae.domain.notification.usecase;
+package me.jinjjahalgae.domain.notification.usecase.createNotification;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
-import me.jinjjahalgae.domain.notification.dto.NotificationCreateRequest;
 import me.jinjjahalgae.domain.notification.entities.Notification;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
 import me.jinjjahalgae.domain.notification.repository.NotificationRepository;
-import me.jinjjahalgae.domain.notification.usecase.interfaces.CreateNotificationUseCase;
 import me.jinjjahalgae.domain.participation.dto.response.ParticipantInfoResponse;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.participation.usecase.interfaces.GetParticipantInfoByContractIdUseCase;

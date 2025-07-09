@@ -1,8 +1,7 @@
-package me.jinjjahalgae.domain.notification.usecase;
+package me.jinjjahalgae.domain.notification.usecase.deleteSingleNotification;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.notification.repository.NotificationRepository;
-import me.jinjjahalgae.domain.notification.usecase.interfaces.DeleteSingleNotificationUseCase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

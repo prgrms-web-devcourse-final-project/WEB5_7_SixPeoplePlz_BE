@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.notification.usecase.interfaces;
+package me.jinjjahalgae.domain.notification.usecase.deleteAllNotification;
 
 /**
  * 알림 목록 전체 삭제

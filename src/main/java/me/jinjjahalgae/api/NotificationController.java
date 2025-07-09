@@ -1,8 +1,12 @@
 package me.jinjjahalgae.api;
 
 import lombok.RequiredArgsConstructor;
-import me.jinjjahalgae.domain.notification.dto.NotificationGetResponse;
-import me.jinjjahalgae.domain.notification.usecase.interfaces.*;
+import me.jinjjahalgae.domain.notification.usecase.deleteAllNotification.DeleteAllNotificationUseCase;
+import me.jinjjahalgae.domain.notification.usecase.deleteSingleNotification.DeleteSingleNotificationUseCase;
+import me.jinjjahalgae.domain.notification.usecase.getAllNotification.GetAllNotificationUseCase;
+import me.jinjjahalgae.domain.notification.usecase.getAllNotification.NotificationGetResponse;
+import me.jinjjahalgae.domain.notification.usecase.countUnreadNotificationByUserId.CountUnreadNotificationByUserIdUseCase;
+import me.jinjjahalgae.domain.notification.usecase.markSingleNotificationAsRead.MarkSingleNotificationAsReadUseCase;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
 import org.springframework.data.domain.Page;

@@ -3,7 +3,8 @@ package me.jinjjahalgae.domain.notification.usecase;
 import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
-import me.jinjjahalgae.domain.notification.dto.NotificationCreateRequest;
+import me.jinjjahalgae.domain.notification.usecase.createNotification.CreateNotificationUseCaseImpl;
+import me.jinjjahalgae.domain.notification.usecase.createNotification.NotificationCreateRequest;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
 import me.jinjjahalgae.domain.notification.repository.NotificationRepository;
 import me.jinjjahalgae.domain.participation.dto.response.ParticipantInfoResponse;
@@ -21,7 +22,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

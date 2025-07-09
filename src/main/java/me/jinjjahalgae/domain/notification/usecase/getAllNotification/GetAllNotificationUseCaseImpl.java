@@ -1,10 +1,8 @@
-package me.jinjjahalgae.domain.notification.usecase;
+package me.jinjjahalgae.domain.notification.usecase.getAllNotification;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jinjjahalgae.domain.notification.dto.NotificationGetResponse;
 import me.jinjjahalgae.domain.notification.repository.NotificationRepository;
-import me.jinjjahalgae.domain.notification.usecase.interfaces.GetAllNotificationUseCase;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

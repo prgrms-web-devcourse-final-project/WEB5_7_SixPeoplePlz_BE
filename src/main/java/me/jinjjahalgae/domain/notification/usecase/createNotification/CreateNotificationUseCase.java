@@ -1,6 +1,4 @@
-package me.jinjjahalgae.domain.notification.usecase.interfaces;
-
-import me.jinjjahalgae.domain.notification.dto.NotificationCreateRequest;
+package me.jinjjahalgae.domain.notification.usecase.createNotification;
 
 /**
  * 알림 생성 usecase (백엔드에서만 쓰일 예정)
