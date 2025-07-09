@@ -1,5 +1,7 @@
 package me.jinjjahalgae.domain.proof.mapper;
 
+import me.jinjjahalgae.domain.feedback.dto.FeedbackResponse;
+import me.jinjjahalgae.domain.feedback.mapper.FeedbackMapper;
 import me.jinjjahalgae.domain.proof.dto.response.ProofAwaitResponse;
 import me.jinjjahalgae.domain.proof.dto.response.ProofDetailResponse;
 import me.jinjjahalgae.domain.proof.dto.response.ProofRecentResponse;
@@ -54,12 +56,17 @@ public class ProofMapper {
      * @return  {@link ProofDetailResponse}
      */
     public static ProofDetailResponse toDetailResponse(Proof proof, List<String> images) {
+        List<FeedbackResponse> feedbacks = proof.getFeedbacks().stream()
+                .map(FeedbackMapper::toResponse)
+                .toList();
+
         return new ProofDetailResponse(
                 images,
                 proof.getComment(),
                 proof.getStatus(),
                 proof.getCreatedAt(),
                 proof.getProofId() != null,
+                feedbacks,
                 proof.getId()
                 );
     }

@@ -1,6 +1,7 @@
 package me.jinjjahalgae.domain.proof.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import me.jinjjahalgae.domain.feedback.dto.FeedbackResponse;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 
 import java.time.LocalDateTime;
@@ -60,8 +61,8 @@ public record ProofDetailResponse(
    @Schema(description = "재인증 여부 (원본 = false, 재인증 = true)")
    boolean reProof,
 
-   /*@Schema(description = "인증에 달린 감독자들의 피드백 데이터들")
-   List<FeedbackResponse> feedbacks,  */
+   @Schema(description = "인증에 달린 감독자들의 피드백 데이터들")
+   List<FeedbackResponse> feedbacks,
 
    @Schema(description = "인증 id")
    long proofId

@@ -19,18 +19,14 @@ public class GetProofDetailUseCaseImpl implements GetProofDetailUseCase {
 
     @Override
     public ProofDetailResponse execute(Long proofId) {
-        // 인증 조회
-        Proof proof = proofRepository.findByIdWithProofImages(proofId)
+        // 인증 조회 (이미지 + 피드백)
+        Proof proof = proofRepository.findByIdWithProofImagesAndFeedbacks(proofId)
                 .orElseThrow(() -> ErrorCode.PROOF_NOT_FOUND.domainException(proofId + "에 대한 인증이 존재하지 않습니다."));
 
         // 이미지 순서대로 key만 추출
         List<String> images = ProofImageMapper.toListResponse(proof.getProofImages());
 
-        // feedback 추가 필요
-
-
-        // 이미지와 인증 정보를 합친 응답 생성
+        // 이미지와 인증 정보와 피드백을 합친 응답 생성
         return ProofMapper.toDetailResponse(proof, images);
-//        return ProofMapper.toDetailResponse(proof, images, feedbacks);
     }
 }

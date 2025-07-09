@@ -69,6 +69,9 @@ AND p.proofId IS NOT NULL
     @Query("SELECT p FROM Proof p JOIN FETCH p.proofImages WHERE p.id = :id")
     Optional<Proof> findByIdWithProofImages(@Param("id") Long id);
 
+    @Query("SELECT p FROM Proof p JOIN FETCH p.proofImages JOIN FETCH p.feedbacks WHERE p.id = :id")
+    Optional<Proof> findByIdWithProofImagesAndFeedbacks(@Param("proofId") Long id);
+
     /**
      * 최근 인증을 가져오기 위해 최근 인증의 아이디만 먼저 가져오는 쿼리
      * fetch join + limit를 같이 사용할 때 하이버네이트가 메모리에서 limit을 적용할 수 있다고 함
