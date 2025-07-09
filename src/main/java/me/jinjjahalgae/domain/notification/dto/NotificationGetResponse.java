@@ -1,25 +1,46 @@
 package me.jinjjahalgae.domain.notification.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import me.jinjjahalgae.domain.notification.entities.Notification;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
 
-/**
- * userID로 알림 목록 조회했을 때 각 알림정보를 담은 DTO.
- * 알림 전체 목록 조회하는 api에서 해당 DTO의 list를 반환할 예정
- * @param notificationId 알림의 id
- * @param type 알림의 enum 타입
- * @param readStatus 알림의 read 상태 true/false
- * @param content 알림 본문
- * @param targetUserId 알림을 받을 유저 ID 정보 (FK)
- * @param contractId 클릭했을 때 이동할 계약 ID 정보 (FK)
- */
+@Schema(
+    title = "알림 조회 응답",
+    description = "사용자 ID로 조회한 알림 목록의 각 알림 정보를 담은 DTO"
+)
 public record NotificationGetResponse(
-        Long notificationId,
-        NotificationType type,
-        boolean readStatus,
-        String content,
-        Long targetUserId,
-        Long contractId
+    @Schema(description = "알림 ID",
+        example = "1",
+        requiredMode = Schema.RequiredMode.REQUIRED)
+    Long notificationId,
+    
+    @Schema(description = "알림 타입",
+        example = "CONTRACT_STARTED",
+        allowableValues = {"SUPERVISOR_ADDED", "SUPERVISOR_WITHDRAWN", "CONTRACT_STARTED", 
+                          "CONTRACT_ENDED_FAIL", "CONTRACT_ENDED_SUCCESS", "PROOF_ADDED", 
+                          "PROOF_ACCEPTED", "PROOF_REJECTED", "FEEDBACK_ADDED", "REPROOF_ADDED"},
+        requiredMode = Schema.RequiredMode.REQUIRED)
+    NotificationType type,
+    
+    @Schema(description = "알림 읽음 상태",
+        example = "false",
+        requiredMode = Schema.RequiredMode.REQUIRED)
+    boolean readStatus,
+    
+    @Schema(description = "알림 본문 내용",
+        example = "'홍길동'님의 '매일 운동하기' 계약이 시작되었습니다.",
+        requiredMode = Schema.RequiredMode.REQUIRED)
+    String content,
+    
+    @Schema(description = "알림을 받을 사용자 ID",
+        example = "1",
+        requiredMode = Schema.RequiredMode.REQUIRED)
+    Long targetUserId,
+    
+    @Schema(description = "관련 계약 ID (클릭 시 이동할 계약)",
+        example = "1",
+        requiredMode = Schema.RequiredMode.REQUIRED)
+    Long contractId
 ) {
     /// Notification -> NotificationGetResponse 변환 메서드
     public static NotificationGetResponse from(Notification notification) {

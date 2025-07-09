@@ -1,12 +1,20 @@
 package me.jinjjahalgae.domain.notification.dto;
 
-/**
- * 알림 생성 후 응답 dto
- * @param notificationCnt DB에 추가된 알림의 개수
- * @param message 생성된 메세지 확인용
- */
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(
+    title = "알림 생성 응답",
+    description = "알림 생성 완료 후 반환되는 응답 DTO"
+)
 public record NotificationCreateResponse(
-        int notificationCnt,
-        String message
+    @Schema(description = "생성된 알림 개수",
+        example = "3",
+        requiredMode = Schema.RequiredMode.REQUIRED)
+    int notificationCnt,
+    
+    @Schema(description = "생성된 알림 메시지 (확인용)",
+        example = "'홍길동'님이 '매일 운동하기' 계약의 감독자로 추가되었습니다.",
+        requiredMode = Schema.RequiredMode.REQUIRED)
+    String message
 ) {
 }
