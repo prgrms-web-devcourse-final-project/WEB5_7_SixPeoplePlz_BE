@@ -23,7 +23,7 @@ services:
         volumes:
             - ./lib:/etc/nginx/conf.d
             - ./html:/var/www/certbot # acme-challenge 저장용
-            - letsencrypt:/etc/letsencrypt # 인증서
+            - ./letsencrypt:/etc/letsencrypt # 인증서
         depends_on:
             - mysql
         networks:
@@ -49,4 +49,3 @@ networks:
 volumes:
     mysql-data:
     redis-data:
-    letsencrypt:
