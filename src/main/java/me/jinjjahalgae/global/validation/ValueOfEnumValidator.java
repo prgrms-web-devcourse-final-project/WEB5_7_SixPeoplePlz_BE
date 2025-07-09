@@ -14,12 +14,12 @@ public class ValueOfEnumValidator implements ConstraintValidator<EnumValue, Stri
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        // null 값 처리
+        // null 처리
         if (value == null) {
             return false;
         }
         
-        // 빈 문자열이면 false
+        // 빈 문자열 false
         if (value.trim().isEmpty()) {
             return false;
         }
