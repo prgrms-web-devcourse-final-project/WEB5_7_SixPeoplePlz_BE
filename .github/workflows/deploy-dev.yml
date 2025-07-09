@@ -7,7 +7,7 @@ on:
       - completed
 
 env:
-  IMAGE_NAME: ghcr.io/${{ github.repository }}
+  IMAGE_NAME: ghcr.io/jjhg-api-dev
   CONTAINER_NAME: jjhg-api-dev
 
 jobs:

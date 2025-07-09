@@ -6,7 +6,7 @@ on:
       - release # TODO cicd 도입용 임시 브랜치.... 삭제 필수
 
 env:
-  IMAGE_NAME: ghcr.io/${{ github.repository }}
+  IMAGE_NAME: ghcr.io/jjhg-api-dev
 
 jobs:
   build:
