@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ContractMapper {
-    public static Contract toEntity(User user, ContractCreateRequest request) {
+    public Contract toEntity(User user, ContractCreateRequest request) {
         Contract contract = Contract.builder()
                 .user(user)
                 .startDate(request.startDate())

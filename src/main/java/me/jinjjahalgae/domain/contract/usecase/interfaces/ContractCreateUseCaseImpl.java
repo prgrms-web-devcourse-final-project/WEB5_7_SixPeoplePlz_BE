@@ -1,6 +1,5 @@
 package me.jinjjahalgae.domain.contract.usecase.interfaces;
 
-import jakarta.validation.constraints.NotBlank;
 import me.jinjjahalgae.domain.contract.dto.request.ContractCreateRequest;
 import me.jinjjahalgae.domain.contract.dto.response.ContractCreateResponse;
 import me.jinjjahalgae.domain.contract.entity.Contract;
@@ -16,24 +15,29 @@ import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ContractCreateUseCaseImpl implements ContractCreateUseCase {
 
     private final ContractRepository contractRepository;
     private final UserRepository userRepository;
+    private final ContractMapper contractMapper;
+    private final ParticipationMapper participationMapper;
 
     @Override
     public ContractCreateResponse execute(Long userId, ContractCreateRequest request) {
         //유저 검증하고
         User user = findUserById(userId);
         //계약 생성
-        Contract contract = ContractMapper.toEntity(user, request);
+        Contract contract = contractMapper.toEntity(user, request);
         //계약자가 계약에 서명하고 저장
-        Participation contractorSignature = ParticipationMapper.toEntity(
+        Participation contractorSignature = participationMapper.toEntity(
                 contract, user, request.signatureImageKey(), Role.CONTRACTOR, true
         );
+        contract.addParticipation(contractorSignature);
         //저장
         Contract saveContract = contractRepository.save(contract);
         //반환
