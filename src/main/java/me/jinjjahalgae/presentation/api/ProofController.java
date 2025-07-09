@@ -6,8 +6,10 @@ import me.jinjjahalgae.domain.proof.dto.request.ProofCreateRequest;
 import me.jinjjahalgae.domain.proof.dto.response.*;
 import me.jinjjahalgae.domain.proof.usecase.interfaces.*;
 import me.jinjjahalgae.global.common.CommonResponse;
+import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
 import me.jinjjahalgae.presentation.api.docs.proof.ProofControllerDocs;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,49 +31,55 @@ public class ProofController implements ProofControllerDocs {
     @Override
     @PostMapping("/contracts/{contractId}/proofs")
     @ResponseStatus(HttpStatus.CREATED)
-    public CommonResponse<Void> createProof(@RequestBody ProofCreateRequest req, @PathVariable Long contractId) {
+    public CommonResponse<Void> createProof(@RequestBody ProofCreateRequest req, @PathVariable Long contractId, @AuthenticationPrincipal CustomJwtPrincipal user) {
         return null;
     }
 
     @Override
     @PostMapping("/proofs/{proofId}/again")
     @ResponseStatus(HttpStatus.CREATED)
-    public CommonResponse<Void> createReProof(@RequestBody ProofCreateRequest req, @PathVariable Long proofId) {
+    public CommonResponse<Void> createReProof(@RequestBody ProofCreateRequest req, @PathVariable Long proofId, @AuthenticationPrincipal CustomJwtPrincipal user) {
         return null;
     }
 
     @Override
     @GetMapping("/contracts/{contractId}/proofs/await")
     @ResponseStatus(HttpStatus.OK)
-    public CommonResponse<List<ProofAwaitResponse>> getAwaitProofs(@PathVariable Long contractId) {
+    public CommonResponse<List<ProofAwaitResponse>> getAwaitProofs(@PathVariable Long contractId, @AuthenticationPrincipal CustomJwtPrincipal user) {
         return null;
     }
 
     @Override
     @GetMapping("/contracts/{contractId}/proofs/recent")
     @ResponseStatus(HttpStatus.OK)
-    public CommonResponse<List<ProofRecentResponse>> getRecentProofs(@PathVariable Long contractId) {
+    public CommonResponse<List<ProofRecentResponse>> getRecentProofs(@PathVariable Long contractId, @AuthenticationPrincipal CustomJwtPrincipal user) {
         return null;
     }
 
     @Override
     @GetMapping("/proofs/{proofId}")
     @ResponseStatus(HttpStatus.OK)
-    public CommonResponse<ProofDetailResponse> getProofDetail(@PathVariable Long proofId) {
+    public CommonResponse<ProofDetailResponse> getProofDetail(@PathVariable Long proofId, @AuthenticationPrincipal CustomJwtPrincipal user) {
         return null;
     }
 
     @Override
     @GetMapping("/contractors/contracts/{contractId}/proofs")
     @ResponseStatus(HttpStatus.OK)
-    public CommonResponse<List<ContractorProofListResponse>> getContractorProofList(@PathVariable Long contractId, @RequestParam int year, @RequestParam int month) {
+    public CommonResponse<List<ContractorProofListResponse>> getContractorProofList(@PathVariable Long contractId,
+                                                                                    @RequestParam int year,
+                                                                                    @RequestParam int month,
+                                                                                    @AuthenticationPrincipal CustomJwtPrincipal user) {
         return null;
     }
 
     @Override
     @GetMapping("/supervisors/contracts/{contractId}/proofs")
     @ResponseStatus(HttpStatus.OK)
-    public CommonResponse<List<SupervisorProofListResponse>> getSupervisorProofList(@PathVariable Long contractId, @RequestParam int year, @RequestParam int month) {
+    public CommonResponse<List<SupervisorProofListResponse>> getSupervisorProofList(@PathVariable Long contractId,
+                                                                                    @RequestParam int year,
+                                                                                    @RequestParam int month,
+                                                                                    @AuthenticationPrincipal CustomJwtPrincipal user) {
         return null;
     }
 }
