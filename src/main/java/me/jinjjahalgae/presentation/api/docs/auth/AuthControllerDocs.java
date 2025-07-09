@@ -22,7 +22,7 @@ import me.jinjjahalgae.domain.auth.dto.refresh.RefreshRequest;
 import me.jinjjahalgae.domain.auth.dto.refresh.RefreshResponse;
 import me.jinjjahalgae.presentation.api.docs.auth.refresh.RefreshSwaggerResponse;
 
-@Tag(name = "인증 API", description = "소셜 로그인 등 인증 관련 API")
+@Tag(name = "Auth API", description = "소셜 로그인 등 인증 관련 API")
 public interface AuthControllerDocs {
 
     @Operation(
