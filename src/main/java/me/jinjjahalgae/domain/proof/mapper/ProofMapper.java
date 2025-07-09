@@ -3,10 +3,15 @@ package me.jinjjahalgae.domain.proof.mapper;
 import me.jinjjahalgae.domain.feedback.dto.FeedbackResponse;
 import me.jinjjahalgae.domain.feedback.enums.FeedbackStatus;
 import me.jinjjahalgae.domain.feedback.mapper.FeedbackMapper;
-import me.jinjjahalgae.domain.proof.dto.response.*;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.entities.ProofImage;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
+import me.jinjjahalgae.domain.proof.usecase.getawaitproofusecase.ProofAwaitResponse;
+import me.jinjjahalgae.domain.proof.usecase.getcontractorprooflistusecase.ContractorProofListResponse;
+import me.jinjjahalgae.domain.proof.usecase.getcontractorprooflistusecase.ProofSimpleResponse;
+import me.jinjjahalgae.domain.proof.usecase.getproofdetailusecase.ProofDetailResponse;
+import me.jinjjahalgae.domain.proof.usecase.getrecentproofusecase.ProofRecentResponse;
+import me.jinjjahalgae.domain.proof.usecase.getsupervisorprooflistusecase.SupervisorProofListResponse;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

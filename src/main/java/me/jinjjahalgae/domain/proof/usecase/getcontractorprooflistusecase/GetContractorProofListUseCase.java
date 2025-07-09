@@ -1,6 +1,4 @@
-package me.jinjjahalgae.domain.proof.usecase.interfaces;
-
-import me.jinjjahalgae.domain.proof.dto.response.ContractorProofListResponse;
+package me.jinjjahalgae.domain.proof.usecase.getcontractorprooflistusecase;
 
 import java.util.List;
 

@@ -1,6 +1,4 @@
-package me.jinjjahalgae.domain.proof.usecase.interfaces;
-
-import me.jinjjahalgae.domain.proof.dto.response.ProofAwaitResponse;
+package me.jinjjahalgae.domain.proof.usecase.getawaitproofusecase;
 
 import java.util.List;
 

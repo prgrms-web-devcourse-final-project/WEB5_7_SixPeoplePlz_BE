@@ -1,12 +1,10 @@
-package me.jinjjahalgae.domain.proof.usecase.impls;
+package me.jinjjahalgae.domain.proof.usecase.getproofdetailusecase;
 
 import lombok.RequiredArgsConstructor;
-import me.jinjjahalgae.domain.proof.dto.response.ProofDetailResponse;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.mapper.ProofImageMapper;
 import me.jinjjahalgae.domain.proof.mapper.ProofMapper;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
-import me.jinjjahalgae.domain.proof.usecase.interfaces.GetProofDetailUseCase;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 

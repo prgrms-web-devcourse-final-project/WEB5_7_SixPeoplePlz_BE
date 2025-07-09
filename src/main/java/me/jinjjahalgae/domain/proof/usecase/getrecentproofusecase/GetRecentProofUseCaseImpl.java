@@ -1,11 +1,9 @@
-package me.jinjjahalgae.domain.proof.usecase.impls;
+package me.jinjjahalgae.domain.proof.usecase.getrecentproofusecase;
 
 import lombok.RequiredArgsConstructor;
-import me.jinjjahalgae.domain.proof.dto.response.ProofRecentResponse;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.mapper.ProofMapper;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
-import me.jinjjahalgae.domain.proof.usecase.interfaces.GetRecentProofUseCase;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 

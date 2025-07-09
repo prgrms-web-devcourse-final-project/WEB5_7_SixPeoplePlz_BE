@@ -1,6 +1,4 @@
-package me.jinjjahalgae.domain.proof.usecase.interfaces;
-
-import me.jinjjahalgae.domain.proof.dto.response.ProofRecentResponse;
+package me.jinjjahalgae.domain.proof.usecase.getrecentproofusecase;
 
 import java.util.List;
 

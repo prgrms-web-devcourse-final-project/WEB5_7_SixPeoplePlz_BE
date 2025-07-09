@@ -1,16 +1,15 @@
-package me.jinjjahalgae.domain.proof.usecase.impls;
+package me.jinjjahalgae.domain.proof.usecase.createreproofusecase;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
-import me.jinjjahalgae.domain.proof.dto.request.ProofCreateRequest;
+import me.jinjjahalgae.domain.proof.usecase.createproofusecase.ProofCreateRequest;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.entities.ProofImage;
 import me.jinjjahalgae.domain.proof.mapper.ProofImageMapper;
 import me.jinjjahalgae.domain.proof.mapper.ProofMapper;
 import me.jinjjahalgae.domain.proof.repository.ProofImageRepository;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
-import me.jinjjahalgae.domain.proof.usecase.interfaces.CreateReProofUseCase;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

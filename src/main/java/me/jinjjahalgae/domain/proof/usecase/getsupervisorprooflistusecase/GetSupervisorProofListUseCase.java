@@ -1,6 +1,4 @@
-package me.jinjjahalgae.domain.proof.usecase.interfaces;
-
-import me.jinjjahalgae.domain.proof.dto.response.SupervisorProofListResponse;
+package me.jinjjahalgae.domain.proof.usecase.getsupervisorprooflistusecase;
 
 import java.util.List;
 

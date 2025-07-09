@@ -1,14 +1,12 @@
-package me.jinjjahalgae.domain.proof.usecase.impls;
+package me.jinjjahalgae.domain.proof.usecase.getsupervisorprooflistusecase;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.feedback.entity.Feedback;
 import me.jinjjahalgae.domain.feedback.enums.FeedbackStatus;
 import me.jinjjahalgae.domain.feedback.repository.FeedbackRepository;
-import me.jinjjahalgae.domain.proof.dto.response.SupervisorProofListResponse;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.mapper.ProofMapper;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
-import me.jinjjahalgae.domain.proof.usecase.interfaces.GetSupervisorProofListUseCase;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
