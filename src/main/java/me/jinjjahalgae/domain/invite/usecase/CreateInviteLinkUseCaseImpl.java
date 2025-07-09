@@ -1,6 +1,8 @@
 package me.jinjjahalgae.domain.invite.usecase;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.invite.model.InviteInfo;
@@ -14,12 +16,14 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CreateInviteLinkUseCaseImpl implements CreateInviteLinkUseCase {
 
     private final ContractRepository contractRepository;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ObjectMapper objectMapper;
 
     @Value("${invite.invite-url-prefix}")
     private String INVITE_URL_PREFIX;
@@ -44,14 +48,21 @@ public class CreateInviteLinkUseCaseImpl implements CreateInviteLinkUseCase {
         // 기존 초대링크가 있으면 반환
         String contractKey = CONTRACT_TO_INVITE_PREFIX + contract.getId();
         Object existingInviteCode = redisTemplate.opsForValue().get(contractKey);
+        log.info("existingInviteCode = {}", existingInviteCode);
         if (existingInviteCode != null) {
+
+            log.info("existingInviteCode2222 = {}", existingInviteCode);
             String inviteCode = (String) existingInviteCode;
             Object data = redisTemplate.opsForValue().get(inviteCode);
+            log.info("inviteCode = {}", inviteCode);
+            log.info("data = {}", data);
 
             // instanceof를 이용해 null 체크와 타입 체크를 동시에 수행
-            if (data instanceof InviteInfo existingInfo) {
+            if (data != null) {
+                InviteInfo existingInfo = objectMapper.convertValue(data, InviteInfo.class);
                 String inviteUrl = INVITE_URL_PREFIX + inviteCode;
-                return new InviteLinkResponse(existingInfo.password(), inviteUrl);
+                log.info("기존 초대 정보를 재사용합니다: {}", existingInfo);
+                return new InviteLinkResponse(inviteUrl, existingInfo.password());
             }
         }
 
@@ -85,6 +96,6 @@ public class CreateInviteLinkUseCaseImpl implements CreateInviteLinkUseCase {
 
         // 초대 정보 반환
         String inviteUrl = INVITE_URL_PREFIX + newInviteCode;
-        return new InviteLinkResponse(password, inviteUrl);
+        return new InviteLinkResponse(inviteUrl, password);
     }
 }
