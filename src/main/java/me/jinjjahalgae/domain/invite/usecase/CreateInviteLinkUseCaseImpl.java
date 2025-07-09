@@ -48,20 +48,14 @@ public class CreateInviteLinkUseCaseImpl implements CreateInviteLinkUseCase {
         // 기존 초대링크가 있으면 반환
         String contractKey = CONTRACT_TO_INVITE_PREFIX + contract.getId();
         Object existingInviteCode = redisTemplate.opsForValue().get(contractKey);
-        log.info("existingInviteCode = {}", existingInviteCode);
+        // 기존 초대 정보를 가져와 응답 작성
         if (existingInviteCode != null) {
-
-            log.info("existingInviteCode2222 = {}", existingInviteCode);
             String inviteCode = (String) existingInviteCode;
             Object data = redisTemplate.opsForValue().get(inviteCode);
-            log.info("inviteCode = {}", inviteCode);
-            log.info("data = {}", data);
 
-            // instanceof를 이용해 null 체크와 타입 체크를 동시에 수행
             if (data != null) {
                 InviteInfo existingInfo = objectMapper.convertValue(data, InviteInfo.class);
                 String inviteUrl = INVITE_URL_PREFIX + inviteCode;
-                log.info("기존 초대 정보를 재사용합니다: {}", existingInfo);
                 return new InviteLinkResponse(inviteUrl, existingInfo.password());
             }
         }
