@@ -116,4 +116,25 @@ public class Contract extends BaseEntity {
         long totalWeeks = (totalDays + 6) / 7; // 프론트에서 날짜 선택을 막으면 몇주인지 올림하여 계산하기만 하면 되기 때문에 6을 더해서 항상 올림 처리
         return (int) (totalWeeks * proofPerWeek);
     }
+
+    public double calculateAchievementPercent() {
+        return ( (double) currentProof / totalProof * 100);
+    }
+
+    public double calculatePeriodPercent() {
+
+        LocalDateTime now = LocalDateTime.now();
+
+        if (now.isBefore(startDate)) {
+            return 0.0; // 시작 전이면 0%
+        }
+        if (now.isAfter(endDate)) {
+            return 100.0; // 종료 후면 100%
+        }
+
+        long totalDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1;
+        long passedDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, now) +1;
+
+        return ( (double) passedDays / totalDays * 100);
+    }
 }

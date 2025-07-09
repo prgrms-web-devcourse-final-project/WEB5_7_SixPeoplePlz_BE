@@ -42,24 +42,8 @@ public class ContractMapper {
                 contract.getEndDate(),
                 contract.getReward(),
                 contract.getPenalty(),
-                calculateAchievementPercent(contract), //횟수 달성률
-                calculatePeriodPercent(contract) //기간 달성률
+                contract.calculateAchievementPercent(), //횟수 달성률
+                contract.calculatePeriodPercent() //기간 달성률
         );
-    }
-
-    private double calculateAchievementPercent(Contract contract) {
-        return ( (double) contract.getCurrentProof() / contract.getTotalProof() * 100);
-    }
-
-    private double calculatePeriodPercent(Contract contract) {
-
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime startDate = contract.getStartDate();
-        LocalDateTime endDate = contract.getEndDate();
-
-        long totalDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1;
-        long passedDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, now) +1;
-
-        return ( (double) passedDays / totalDays * 100);
     }
 }
