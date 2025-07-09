@@ -21,21 +21,22 @@ public class InviteTestUtil {
     }
 
     public static Contract createContract(Long id, User contractor) {
-        Contract contract = Contract.createContract(
-                contractor,
-                LocalDateTime.now(),
-                LocalDateTime.now().plusDays(30),
-                "Test Contract " + id,
-                "Test Goal",
-                "Test Penalty",
-                "Test Reward",
-                10,
-                3,
-                false,
-                null // ContractType
-        );
-        // 테스트 편의를 위해 ID와 UUID를 강제로 설정
-        // 실제로는 JPA가 ID를, createContract 내부 로직이 UUID를 생성
+        Contract contract = Contract.builder()
+                .user(contractor)
+                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now().plusDays(30))
+                .title("Test Contract " + id)
+                .goal("Test Goal")
+                .penalty("Test Penalty")
+                .reward("Test Reward")
+                .life(10)
+                .proofPerWeek(3)
+                .oneOff(false)
+                .type(null)
+                .build();
+
+        contract.initialize();
+
         ReflectionTestUtils.setField(contract, "id", id);
         ReflectionTestUtils.setField(contract, "uuid", "contract-uuid-" + id);
         return contract;

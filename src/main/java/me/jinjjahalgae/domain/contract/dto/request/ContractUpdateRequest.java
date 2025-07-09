@@ -77,5 +77,5 @@ public record ContractUpdateRequest(
         requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "type은 필수입니다.")
     @EnumValue(enumClass = ContractType.class)
-    ContractType type
+    String type
 ) {}

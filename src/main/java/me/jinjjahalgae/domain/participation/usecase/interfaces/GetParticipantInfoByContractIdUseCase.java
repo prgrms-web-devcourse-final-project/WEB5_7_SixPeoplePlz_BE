@@ -1,6 +1,6 @@
 package me.jinjjahalgae.domain.participation.usecase.interfaces;
 
-import me.jinjjahalgae.domain.participation.dto.ParticipantInfoResponse;
+import me.jinjjahalgae.domain.participation.dto.response.ParticipantInfoResponse;
 
 import java.util.List;
 
