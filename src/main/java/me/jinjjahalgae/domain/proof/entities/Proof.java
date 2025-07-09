@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.jinjjahalgae.domain.common.BaseEntity;
+import me.jinjjahalgae.domain.feedback.entity.Feedback;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 
 import java.util.ArrayList;
@@ -51,6 +52,9 @@ public class Proof extends BaseEntity {
     @OneToMany(mappedBy = "proof", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProofImage> proofImages = new ArrayList<>();
 
+    @OneToMany(mappedBy = "proof", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Feedback> feedbacks = new ArrayList<>();
+
     @Builder
     public Proof(Long id, String comment, int checkedSupervisors, int totalSupervisors, ProofStatus status, Long contractId, Long proofId) {
         this.id = id;
@@ -66,5 +70,10 @@ public class Proof extends BaseEntity {
     public void addProofImage(ProofImage proofImage) {
         proofImages.add(proofImage);
         proofImage.assignProof(this);
+    }
+
+    public void addFeedback(Feedback feedback) {
+        feedbacks.add(feedback);
+        feedback.assignProof(this);
     }
 }
