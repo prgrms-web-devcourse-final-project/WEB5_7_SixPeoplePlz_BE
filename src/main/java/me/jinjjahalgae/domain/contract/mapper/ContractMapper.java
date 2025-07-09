@@ -2,6 +2,7 @@ package me.jinjjahalgae.domain.contract.mapper;
 
 import me.jinjjahalgae.domain.contract.dto.request.ContractCreateRequest;
 import me.jinjjahalgae.domain.contract.entity.Contract;
+import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.user.User;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,7 @@ public class ContractMapper {
                 .life(request.life())
                 .proofPerWeek(request.proofPerWeek())
                 .oneOff(request.oneOff())
-                .type(request.type())
+                .type(ContractType.valueOf(request.type()))
                 .build();
 
         contract.initialize();

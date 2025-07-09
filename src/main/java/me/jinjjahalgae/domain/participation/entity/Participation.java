@@ -33,15 +33,15 @@
         @Enumerated(EnumType.STRING)
         private Role role;
 
-        private Boolean validate;
+        private Boolean valid;
 
         @Builder
-        private Participation(Contract contract, User user, String imageKey, Role role, Boolean validate) {
+        private Participation(Contract contract, User user, String imageKey, Role role, Boolean valid) {
             this.contract = contract;
             this.user = user;
             this.imageKey = imageKey;
             this.role = role;
-            this.validate = validate;
+            this.valid = valid;
         }
 
         public void setContract(Contract contract) {

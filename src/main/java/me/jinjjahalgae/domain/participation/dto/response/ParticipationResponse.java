@@ -4,7 +4,6 @@ import me.jinjjahalgae.domain.participation.enums.Role;
 import java.time.LocalDateTime;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import me.jinjjahalgae.global.validation.EnumValue;
 
 /**
  * 참여(서명) 응답 DTO
@@ -33,7 +32,7 @@ public record ParticipationResponse(
         Role role,
 
         @Schema(description = "서명 유효 여부", example = "true")
-        Boolean validate,
+        Boolean valid,
 
         @Schema(description = "서명 일시", example = "2024-01-01T09:00:00")
         LocalDateTime createdAt

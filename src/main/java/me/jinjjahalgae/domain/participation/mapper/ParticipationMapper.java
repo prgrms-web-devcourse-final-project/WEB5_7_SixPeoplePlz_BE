@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ParticipationMapper {
-    public Participation toEntity(Contract contract, User user, String imageKey, Role role, Boolean validate) {
+    public Participation toEntity(Contract contract, User user, String imageKey, Role role, Boolean valid) {
         return Participation.builder()
                 .contract(contract)
                 .user(user)
                 .imageKey(imageKey)
                 .role(role)
-                .validate(validate)
+                .valid(valid)
                 .build();
     }
 
@@ -27,7 +27,7 @@ public class ParticipationMapper {
                 participation.getUser().getName(),
                 participation.getImageKey(),
                 participation.getRole(),
-                participation.getValidate(),
+                participation.getValid(),
                 participation.getCreatedAt()
         );
     }
