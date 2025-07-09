@@ -2,13 +2,13 @@ package me.jinjjahalgae.domain.proof.mapper;
 
 import me.jinjjahalgae.domain.feedback.dto.FeedbackResponse;
 import me.jinjjahalgae.domain.feedback.mapper.FeedbackMapper;
-import me.jinjjahalgae.domain.proof.dto.response.ProofAwaitResponse;
-import me.jinjjahalgae.domain.proof.dto.response.ProofDetailResponse;
-import me.jinjjahalgae.domain.proof.dto.response.ProofRecentResponse;
+import me.jinjjahalgae.domain.proof.dto.response.*;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.entities.ProofImage;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class ProofMapper {
@@ -114,4 +114,45 @@ public class ProofMapper {
                 proof.getId()
         );
     }
+
+    public static ContractorProofListResponse toContractorListResponse(Proof proof, Proof reProof) {
+        ProofSimpleResponse orgResponse = toSimpleResponse(proof);
+        ProofSimpleResponse reProofResponse = null;
+
+        if (reProof != null) {
+            reProofResponse = toSimpleResponse(reProof);
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String date = proof.getCreatedAt().format(formatter);
+
+        LocalDateTime rejectedAt = null;
+        if(proof.getStatus().equals(ProofStatus.REJECTED)) {
+            rejectedAt = proof.getUpdatedAt();
+        }
+
+        return new ContractorProofListResponse(
+                date,
+                orgResponse,
+                rejectedAt,
+                reProofResponse
+        );
+    }
+
+    private static ProofSimpleResponse toSimpleResponse(Proof proof) {
+        String imageKey = proof.getProofImages().stream()
+                .filter(img -> img.getIndex() == 1)
+                .findFirst()
+                .map(ProofImage::getImageKey)
+                .orElse(null);
+
+        return new ProofSimpleResponse(
+                imageKey,
+                proof.getStatus(),
+                proof.getTotalSupervisors(),
+                proof.getCheckedSupervisors(),
+                proof.getId()
+        );
+    }
 }
+
