@@ -70,7 +70,36 @@ public interface ProofControllerDocs {
                                             """
                                     )
                             }
-
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "인증 실패",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "INVALID_TOKEN",
+                                              "message": "유효하지 않은 토큰입니다."
+                                            }
+                                            """
+                                    ),
+                                    @ExampleObject(
+                                            name = "만료된 토큰",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "EXPIRED_TOKEN",
+                                              "message": "토큰이 만료되었습니다."
+                                            }
+                                            """
+                                    )
+                            }
                     )
             ),
             @ApiResponse(
@@ -177,6 +206,36 @@ public interface ProofControllerDocs {
                     )
             ),
             @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "인증 실패",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "INVALID_TOKEN",
+                                              "message": "유효하지 않은 토큰입니다."
+                                            }
+                                            """
+                                    ),
+                                    @ExampleObject(
+                                            name = "만료된 토큰",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "EXPIRED_TOKEN",
+                                              "message": "토큰이 만료되었습니다."
+                                            }
+                                            """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
                     responseCode = "403",
                     description = "계약에 대한 인증 생성 권한이 없음",
                     content = @Content(
@@ -276,6 +335,36 @@ public interface ProofControllerDocs {
                     )
             ),
             @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "인증 실패",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "INVALID_TOKEN",
+                                              "message": "유효하지 않은 토큰입니다."
+                                            }
+                                            """
+                                    ),
+                                    @ExampleObject(
+                                            name = "만료된 토큰",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "EXPIRED_TOKEN",
+                                              "message": "토큰이 만료되었습니다."
+                                            }
+                                            """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
                     responseCode = "403",
                     description = "계약에 대한 접근 권한이 없음 ",
                     content = @Content(
@@ -348,6 +437,36 @@ public interface ProofControllerDocs {
                                     }
                                     """
                             )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "인증 실패",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "INVALID_TOKEN",
+                                              "message": "유효하지 않은 토큰입니다."
+                                            }
+                                            """
+                                    ),
+                                    @ExampleObject(
+                                            name = "만료된 토큰",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "EXPIRED_TOKEN",
+                                              "message": "토큰이 만료되었습니다."
+                                            }
+                                            """
+                                    )
+                            }
                     )
             ),
             @ApiResponse(
@@ -426,6 +545,36 @@ public interface ProofControllerDocs {
                                     }
                                     """
                             )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "인증 실패",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "INVALID_TOKEN",
+                                              "message": "유효하지 않은 토큰입니다."
+                                            }
+                                            """
+                                    ),
+                                    @ExampleObject(
+                                            name = "만료된 토큰",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "EXPIRED_TOKEN",
+                                              "message": "토큰이 만료되었습니다."
+                                            }
+                                            """
+                                    )
+                            }
                     )
             ),
             @ApiResponse(
@@ -550,6 +699,36 @@ public interface ProofControllerDocs {
                     )
             ),
             @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "인증 실패",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "INVALID_TOKEN",
+                                              "message": "유효하지 않은 토큰입니다."
+                                            }
+                                            """
+                                    ),
+                                    @ExampleObject(
+                                            name = "만료된 토큰",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "EXPIRED_TOKEN",
+                                              "message": "토큰이 만료되었습니다."
+                                            }
+                                            """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
                     responseCode = "403",
                     description = "계약에 대한 접근 권한이 없음 ",
                     content = @Content(
@@ -653,6 +832,36 @@ public interface ProofControllerDocs {
 
                     )
 
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "인증 실패",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "INVALID_TOKEN",
+                                              "message": "유효하지 않은 토큰입니다."
+                                            }
+                                            """
+                                    ),
+                                    @ExampleObject(
+                                            name = "만료된 토큰",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "EXPIRED_TOKEN",
+                                              "message": "토큰이 만료되었습니다."
+                                            }
+                                            """
+                                    )
+                            }
+                    )
             ),
             @ApiResponse(
                     responseCode = "403",
