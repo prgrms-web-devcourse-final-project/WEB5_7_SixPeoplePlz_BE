@@ -7,7 +7,6 @@ on:
       - completed
 
 env:
-  IMAGE_NAME: ghcr.io/jjhg-api-dev
   CONTAINER_NAME: jjhg-api-dev
 
 jobs:
@@ -19,6 +18,9 @@ jobs:
     steps:
       - name: 브랜치로 체크아웃
         uses: actions/checkout@v4
+
+      - name: 소문자 이미지 이름 설정
+        run: echo "IMAGE_NAME=ghcr.io/$(echo ${{ github.event.workflow_run.head_repository.full_name }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: GHCR 로그인
         run: echo ${{ secrets.PAT }} | sudo docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
