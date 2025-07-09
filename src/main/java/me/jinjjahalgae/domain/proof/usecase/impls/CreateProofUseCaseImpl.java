@@ -27,7 +27,7 @@ public class CreateProofUseCaseImpl implements CreateProofUseCase {
 
     @Override
     @Transactional
-    public void execute(ProofCreateRequest request, Long contractId) {
+    public void execute(ProofCreateRequest request, Long contractId, Long userId) {
         // 이미지가 1장도 없는 경우 예외 발생
         if(request.firstImageKey() == null) {
             throw ErrorCode.IMAGE_REQUIRED.domainException("이미지가 존재하지 않습니다.");

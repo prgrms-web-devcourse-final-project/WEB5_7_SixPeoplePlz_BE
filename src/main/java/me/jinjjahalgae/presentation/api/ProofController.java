@@ -34,7 +34,7 @@ public class ProofController implements ProofControllerDocs {
     @ResponseStatus(HttpStatus.CREATED)
     public CommonResponse<Void> createProof(@RequestBody ProofCreateRequest req, @PathVariable Long contractId, @AuthenticationPrincipal CustomJwtPrincipal user) {
         Long userId = user.getUserId();
-        createProofUseCase.execute(req, userId);
+        createProofUseCase.execute(req, contractId, userId);
         return CommonResponse.success();
     }
 
