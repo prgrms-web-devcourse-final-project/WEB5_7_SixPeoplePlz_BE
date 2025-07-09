@@ -12,6 +12,8 @@ import me.jinjjahalgae.domain.notification.usecase.interfaces.CreateNotification
 import me.jinjjahalgae.domain.participation.dto.ParticipantInfoResponse;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.participation.usecase.GetParticipantInfoByContractIdUseCaseImpl;
+import me.jinjjahalgae.domain.user.usecase.GetMyInfoUseCaseImpl;
+import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,7 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
     private final NotificationRepository notificationRepository;
     private final ContractRepository contractRepository;
     private final GetParticipantInfoByContractIdUseCaseImpl getParticipantInfoByContractId;
+    private final GetMyInfoUseCaseImpl getMyInfo;
 
     @Transactional // 트랜잭션 생성
     @Override
@@ -33,15 +36,18 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
 
         // 불필요한 객체 생성 방지. 재사용하기.
         Notification notification;
+        String message;
 
-        // 계약id로 관련유저 정보리스트에서 필요한 것만 필터링한 결과
+        // 계약id로 관련유저 정보리스트에서 필요한 것만 필터링한 결과를 저장할 리스트
         List<ParticipantInfoResponse> targetUserList;
+
+        // DB에 저장할 알림 모음 리스트
         List<Notification> notificationList = new ArrayList<>();
 
-        String message;
-        String actionUserName = "행동한 유저 이름"; // TODO: user쪽 구현된 후에 userid로 username 가져오기
+        // userid로 이름 가져오기
+        String actionUserName = getMyInfo.execute(request.actorUserId()).name();
 
-        // 메세지에 들어갈 계약 이름 찾아오기
+        // 메세지에 들어갈 계약 제목 찾아오기
         Contract contract = contractRepository.findContractById(request.contractId()).orElseThrow(); // TODO: contract not found 예외로 처리
         String contractName = contract.getTitle();
 
@@ -111,7 +117,7 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
             }
 
             default -> {
-                throw new IllegalArgumentException("지원하지 않는 알림 타입입니다");
+                throw ErrorCode.INVALID_NOTIFICATION_TYPE.serviceException("지원하지 않는 알림 타입입니다.");
             } // TODO: 나중에 INVALID_NOTIFICATION_TYPE으로 변경
         }
 
