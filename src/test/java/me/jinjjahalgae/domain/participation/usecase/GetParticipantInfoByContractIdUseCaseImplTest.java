@@ -1,7 +1,7 @@
 package me.jinjjahalgae.domain.participation.usecase;
 
 import lombok.extern.slf4j.Slf4j;
-import me.jinjjahalgae.domain.participation.dto.ParticipantInfoResponse;
+import me.jinjjahalgae.domain.participation.dto.response.ParticipantInfoResponse;
 import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.participation.repository.ParticipationRepository;

@@ -6,7 +6,7 @@ import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.notification.dto.NotificationCreateRequest;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
 import me.jinjjahalgae.domain.notification.repository.NotificationRepository;
-import me.jinjjahalgae.domain.participation.dto.ParticipantInfoResponse;
+import me.jinjjahalgae.domain.participation.dto.response.ParticipantInfoResponse;
 import me.jinjjahalgae.domain.participation.usecase.GetParticipantInfoByContractIdUseCaseImpl;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.domain.user.dto.MyInfoResponse;
