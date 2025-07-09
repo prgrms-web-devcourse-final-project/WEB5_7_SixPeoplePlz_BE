@@ -67,7 +67,7 @@ import me.jinjjahalgae.global.validation.EnumValue;
         double periodPercent,      // 계산해서 제공
 
         @Schema(description = "참여자 정보", example = "참여자 정보")
-        List<ParticipantInfo> participants //감독자로 참여한 유저 정보
+        List<ParticipantInfo> participants //참여한 유저 정보
  ) {
      public record ParticipantInfo(
          Long userId,

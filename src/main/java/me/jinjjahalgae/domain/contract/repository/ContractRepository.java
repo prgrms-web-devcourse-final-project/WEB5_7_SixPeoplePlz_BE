@@ -16,4 +16,6 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
 
     //해당 유저의 계약 생태로 내림차순 조회
     Page<Contract> findByUserIdAndStatusInOrderByIdDesc(Long userId, List<ContractStatus> status, Pageable pageable);
+    //사용자별 계약 상세 조회
+    Optional<Contract> findByIdAndUserIdWithParticipation(Long contractId, Long userId);
 }
