@@ -1,27 +1,29 @@
 package me.jinjjahalgae.domain.invite.usecase;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
-import me.jinjjahalgae.domain.invite.dto.InviteInfo;
+import me.jinjjahalgae.domain.invite.model.InviteInfo;
 import me.jinjjahalgae.domain.invite.dto.response.InviteLinkResponse;
 import me.jinjjahalgae.domain.invite.usecase.interfaces.CreateInviteLinkUseCase;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CreateInviteLinkUseCaseImpl implements CreateInviteLinkUseCase {
 
     private final ContractRepository contractRepository;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ObjectMapper objectMapper;
 
     @Value("${invite.invite-url-prefix}")
     private String INVITE_URL_PREFIX;
@@ -39,7 +41,6 @@ public class CreateInviteLinkUseCaseImpl implements CreateInviteLinkUseCase {
     private String SUPERVISOR_COUNT_PREFIX;
 
     @Override
-    @Transactional(readOnly = true)
     public InviteLinkResponse execute(Long contractId) {
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.serviceException("존재하지 않는 계약 입니다. id=" + contractId));
@@ -47,14 +48,15 @@ public class CreateInviteLinkUseCaseImpl implements CreateInviteLinkUseCase {
         // 기존 초대링크가 있으면 반환
         String contractKey = CONTRACT_TO_INVITE_PREFIX + contract.getId();
         Object existingInviteCode = redisTemplate.opsForValue().get(contractKey);
+        // 기존 초대 정보를 가져와 응답 작성
         if (existingInviteCode != null) {
             String inviteCode = (String) existingInviteCode;
             Object data = redisTemplate.opsForValue().get(inviteCode);
 
-            // instanceof를 이용해 null 체크와 타입 체크를 동시에 수행
-            if (data instanceof InviteInfo existingInfo) {
+            if (data != null) {
+                InviteInfo existingInfo = objectMapper.convertValue(data, InviteInfo.class);
                 String inviteUrl = INVITE_URL_PREFIX + inviteCode;
-                return new InviteLinkResponse(existingInfo.password(), inviteUrl);
+                return new InviteLinkResponse(inviteUrl, existingInfo.password());
             }
         }
 
@@ -73,10 +75,21 @@ public class CreateInviteLinkUseCaseImpl implements CreateInviteLinkUseCase {
 
         // 새로운 초대 정보 저장
         InviteInfo inviteInfo = new InviteInfo(contract.getUuid(), password);
-        redisTemplate.opsForValue().set(newInviteCode, inviteInfo, INVITE_EXPIRATION_HOURS, TimeUnit.HOURS);
-        redisTemplate.opsForValue().set(contractKey, newInviteCode, INVITE_EXPIRATION_HOURS, TimeUnit.HOURS);
+        redisTemplate.opsForValue().set(
+                newInviteCode,
+                inviteInfo,
+                INVITE_EXPIRATION_HOURS,
+                TimeUnit.HOURS
+        );
+        redisTemplate.opsForValue().set(
+                contractKey,
+                newInviteCode,
+                INVITE_EXPIRATION_HOURS,
+                TimeUnit.HOURS
+        );
 
+        // 초대 정보 반환
         String inviteUrl = INVITE_URL_PREFIX + newInviteCode;
-        return new InviteLinkResponse(password, inviteUrl);
+        return new InviteLinkResponse(inviteUrl, password);
     }
 }
