@@ -10,8 +10,8 @@ import me.jinjjahalgae.domain.notification.repository.NotificationRepository;
 import me.jinjjahalgae.domain.notification.usecase.interfaces.CreateNotificationUseCase;
 import me.jinjjahalgae.domain.participation.dto.ParticipantInfoResponse;
 import me.jinjjahalgae.domain.participation.enums.Role;
-import me.jinjjahalgae.domain.participation.usecase.GetParticipantInfoByContractIdUseCaseImpl;
-import me.jinjjahalgae.domain.user.usecase.GetMyInfoUseCaseImpl;
+import me.jinjjahalgae.domain.participation.usecase.interfaces.GetParticipantInfoByContractIdUseCase;
+import me.jinjjahalgae.domain.user.usecase.interfaces.GetMyInfoUseCase;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +26,10 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
 
     private final NotificationRepository notificationRepository;
     private final ContractRepository contractRepository;
-    private final GetParticipantInfoByContractIdUseCaseImpl getParticipantInfoByContractId;
-    private final GetMyInfoUseCaseImpl getMyInfo;
+
+    // Impl이 아닌 인터페이스를 타입으로 가져옴
+    private final GetParticipantInfoByContractIdUseCase getParticipantInfoByContractId;
+    private final GetMyInfoUseCase getMyInfo;
 
     @Transactional // 트랜잭션 생성
     @Override
@@ -47,7 +49,8 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
         String actionUserName = getMyInfo.execute(request.actorUserId()).name();
 
         // 메세지에 들어갈 계약 제목 찾아오기
-        Contract contract = contractRepository.findContractById(request.contractId()).orElseThrow(); // TODO: contract not found 예외로 처리
+        Contract contract = contractRepository.findContractById(request.contractId())
+                .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.serviceException("계약 ID에 맞는 계약을 찾지 못했습니다 : " + request.contractId()));
         String contractName = contract.getTitle();
 
         // 계약id와 관련 있는 유저들의 정보 모음 (이름, id, role)
@@ -116,8 +119,8 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
             }
 
             default -> {
-                throw ErrorCode.INVALID_NOTIFICATION_TYPE.serviceException("지원하지 않는 알림 타입입니다.");
-            } // TODO: 나중에 INVALID_NOTIFICATION_TYPE으로 변경
+                throw ErrorCode.INVALID_NOTIFICATION_TYPE.serviceException("지원하지 않는 알림 타입입니다 : " + request.type());
+            }
         }
 
         // 모든 알림 타겟 유저id들에 대해 알림 생성 및 저장
