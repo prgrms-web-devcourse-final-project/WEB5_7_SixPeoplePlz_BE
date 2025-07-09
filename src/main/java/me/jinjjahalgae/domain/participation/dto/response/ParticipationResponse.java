@@ -30,7 +30,6 @@ public record ParticipationResponse(
         String imageKey,
 
         @Schema(description = "사용자 역할", example = "SUPERVISOR")
-        @EnumValue(enumClass = Role.class)
         Role role,
 
         @Schema(description = "서명 유효 여부", example = "true")

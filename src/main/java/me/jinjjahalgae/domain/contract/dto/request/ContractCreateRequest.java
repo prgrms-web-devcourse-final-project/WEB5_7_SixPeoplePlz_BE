@@ -79,7 +79,7 @@ public record ContractCreateRequest(
         requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "type은 필수입니다.")
     @EnumValue(enumClass = ContractType.class, message = "유효하지 않은 계약 타입입니다.")
-    ContractType type,
+    String type,
 
     @Schema(description = "서명 이미지 키", 
         example = "signature.jpg", 
