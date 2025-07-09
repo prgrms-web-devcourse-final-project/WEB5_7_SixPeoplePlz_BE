@@ -48,13 +48,13 @@ public class CreateSupervisorParticipationUseCaseImpl implements CreateSuperviso
         }
 
         // 새로운 참여 정보 생성
-        Participation newParticipation = Participation.createParticipation(
-                contract,
-                user,
-                request.imageKey(),
-                Role.SUPERVISOR,
-                true
-        );
+        Participation newParticipation = Participation.builder()
+                .contract(contract)
+                .user(user)
+                .imageKey(request.imageKey())
+                .role(Role.SUPERVISOR)
+                .valid(true)
+                .build();
 
         // 계약에 참여 정보 추가 및 감독자 수 증가
         contract.addParticipation(newParticipation);

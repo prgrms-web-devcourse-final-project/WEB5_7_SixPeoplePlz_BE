@@ -44,16 +44,6 @@ public class Participation extends BaseEntity {
         this.valid = valid;
     }
 
-    public static Participation createParticipation(Contract contract, User user, String imageKey, Role role, Boolean validate) {
-        return Participation.builder()
-                .contract(contract)
-                .user(user)
-                .imageKey(imageKey)
-                .role(role)
-                .valid(validate)
-                .build();
-    }
-
     public void setContract(Contract contract) {
         this.contract = contract;
     }
