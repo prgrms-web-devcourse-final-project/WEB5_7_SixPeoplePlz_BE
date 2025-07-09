@@ -74,7 +74,6 @@ import me.jinjjahalgae.global.validation.EnumValue;
      public record ParticipantInfo(
          Long userId,
          String name,
-        @EnumValue(enumClass = Role.class)
          Role role,
          String signatureImageKey
      ) {}

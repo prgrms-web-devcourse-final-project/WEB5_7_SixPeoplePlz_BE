@@ -1,5 +1,6 @@
 package me.jinjjahalgae.domain.contract.usecase;
 
+import me.jinjjahalgae.domain.contract.dto.response.ContractListResponse;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 
 import java.util.List;
