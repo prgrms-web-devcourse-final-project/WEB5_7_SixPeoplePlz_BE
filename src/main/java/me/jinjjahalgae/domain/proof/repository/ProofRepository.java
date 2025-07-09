@@ -23,7 +23,7 @@ public interface ProofRepository extends JpaRepository<Proof, Long> {
      * @return boolean
      */
     @Query("""
-SELECT COUNT(P) > 0
+SELECT COUNT(p) > 0
 FROM Proof p
 WHERE p.contractId = :contractId
 AND p.createdAt >= :startOfDay
@@ -46,7 +46,7 @@ AND p.createdAt < :endOfDay
      * @return boolean
      */
     @Query("""
-SELECT COUNT(P) > 0
+SELECT COUNT(p) > 0
 FROM Proof p
 WHERE p.contractId = :contractId
 AND p.createdAt >= :startOfDay
