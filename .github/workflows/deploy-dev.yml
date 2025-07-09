@@ -1,0 +1,68 @@
+name: Deploy to Dev Server
+
+on:
+  workflow_run:
+    workflows: ["dev-cd"]
+    types:
+      - completed
+
+env:
+  IMAGE_NAME: ghcr.io/jjhg-api-dev
+  CONTAINER_NAME: jjhg-api-dev
+
+jobs:
+  deploy-on-dev-server:
+    name: dev 서버에 api, nginx, db 도커 컨테이너 띄우기
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: self-hosted
+
+    steps:
+      - name: 브랜치로 체크아웃
+        uses: actions/checkout@v4
+
+      - name: GHCR 로그인
+        run: echo ${{ secrets.PAT }} | sudo docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+
+      - name: 인프라 컨테이너 실행 (mysql, nginx)
+        run: |
+          export DEV_DB_DATABASE=${{ secrets.DEV_DB_DATABASE }}
+          export DEV_DB_ROOT_PASSWORD=${{ secrets.DEV_DB_PASSWORD }}
+          export DEV_REDIS_PASSWORD=${{ secrets.DEV_REDIS_PASSWORD }}
+
+          sudo docker-compose -f infra-compose.yml up -d
+
+      - name: 진짜할게 최신 이미지 pull
+        run: sudo docker pull ${{ env.IMAGE_NAME }}:latest
+
+      - name: 기존 컨테이너 중지 및 삭제
+        run: |
+          if [ $(sudo docker ps -q -f name=${{ env.CONTAINER_NAME }}) ]; then
+            sudo docker stop ${{ env.CONTAINER_NAME }}
+            sudo docker rm ${{ env.CONTAINER_NAME }}
+          fi
+
+      - name: 새 api 컨테이너 실행
+        run: |
+          sudo docker run -d --name ${{ env.CONTAINER_NAME }} \
+            --network=jjhg-net \
+            -e SPRING_PROFILES_ACTIVE=dev \
+            -e DEV_REDIS_INVITE_KEY=${{ secrets.DEV_REDIS_INVITE_KEY }} \
+            -e DEV_REDIS_SUPERVISORS_KEY=${{ secrets.DEV_REDIS_SUPERVISORS_KEY }} \
+            -e DEV_REDIS_HOST=${{ secrets.DEV_REDIS_HOST }} \
+            -e DEV_REDIS_PORT=${{ secrets.DEV_REDIS_PORT }} \
+            -e DEV_REDIS_PASSWORD=${{ secrets.DEV_REDIS_PASSWORD }} \
+            -e DEV_DB_URL=${{ secrets.DEV_DB_URL }} \
+            -e DEV_DB_USERNAME=${{ secrets.DEV_DB_USERNAME }} \
+            -e DEV_DB_PASSWORD=${{ secrets.DEV_DB_PASSWORD }} \
+            -e DEV_OAUTH_KAKAO_CLIENT_ID=${{ secrets.DEV_OAUTH_KAKAO_CLIENT_ID }} \
+            -e DEV_OAUTH_KAKAO_CLIENT_SECRET=${{ secrets.DEV_OAUTH_KAKAO_CLIENT_SECRET }} \
+            -e DEV_OAUTH_NAVER_CLIENT_ID=${{ secrets.DEV_OAUTH_NAVER_CLIENT_ID }} \
+            -e DEV_OAUTH_NAVER_CLIENT_SECRET=${{ secrets.DEV_OAUTH_NAVER_CLIENT_SECRET }} \
+            -e DEV_JWT_SECRET_KEY=${{ secrets.DEV_JWT_SECRET_KEY }} \
+            -e DEV_JWT_ACCESS_EXPIRATION=${{ secrets.DEV_JWT_ACCESS_EXPIRATION }} \
+            -e DEV_JWT_REFRESH_EXPIRATION=${{ secrets.DEV_JWT_REFRESH_EXPIRATION }} \
+            -e DEV_INVITE_URL_PREFIX=${{ secrets.DEV_INVITE_URL_PREFIX }} \
+            ${{ env.IMAGE_NAME }}:latest
+
+      - name: 사용하지 않아서 붕뜬 도커 이미지 정리
+        run: sudo docker image prune -f

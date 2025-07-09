@@ -8,7 +8,7 @@ import me.jinjjahalgae.domain.notification.dto.NotificationCreateRequest;
 import me.jinjjahalgae.domain.notification.entities.Notification;
 import me.jinjjahalgae.domain.notification.repository.NotificationRepository;
 import me.jinjjahalgae.domain.notification.usecase.interfaces.CreateNotificationUseCase;
-import me.jinjjahalgae.domain.participation.dto.ParticipantInfoResponse;
+import me.jinjjahalgae.domain.participation.dto.response.ParticipantInfoResponse;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.participation.usecase.interfaces.GetParticipantInfoByContractIdUseCase;
 import me.jinjjahalgae.domain.user.usecase.interfaces.GetMyInfoUseCase;
