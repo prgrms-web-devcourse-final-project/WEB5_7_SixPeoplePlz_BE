@@ -27,7 +27,7 @@ public class MarkSingleNotificationAsReadUseCaseImpl implements MarkSingleNotifi
     @Transactional
     public Long execute(Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
-                .orElseThrow(() -> ErrorCode.NOTIFICATION_NOT_FOUND.serviceException("존재하지 않는 알림 id입니다."));
+                .orElseThrow(() -> ErrorCode.NOTIFICATION_NOT_FOUND.serviceException("존재하지 않는 알림 id입니다 : " + notificationId));
 
         notification.markRead();
 
