@@ -3,16 +3,14 @@ package me.jinjjahalgae.domain.invite.usecase;
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
-import me.jinjjahalgae.domain.invite.dto.InviteInfo;
+import me.jinjjahalgae.domain.invite.model.InviteInfo;
 import me.jinjjahalgae.domain.invite.dto.response.InviteLinkResponse;
 import me.jinjjahalgae.domain.invite.usecase.interfaces.CreateInviteLinkUseCase;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -39,7 +37,6 @@ public class CreateInviteLinkUseCaseImpl implements CreateInviteLinkUseCase {
     private String SUPERVISOR_COUNT_PREFIX;
 
     @Override
-    @Transactional(readOnly = true)
     public InviteLinkResponse execute(Long contractId) {
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.serviceException("존재하지 않는 계약 입니다. id=" + contractId));
@@ -73,9 +70,20 @@ public class CreateInviteLinkUseCaseImpl implements CreateInviteLinkUseCase {
 
         // 새로운 초대 정보 저장
         InviteInfo inviteInfo = new InviteInfo(contract.getUuid(), password);
-        redisTemplate.opsForValue().set(newInviteCode, inviteInfo, INVITE_EXPIRATION_HOURS, TimeUnit.HOURS);
-        redisTemplate.opsForValue().set(contractKey, newInviteCode, INVITE_EXPIRATION_HOURS, TimeUnit.HOURS);
+        redisTemplate.opsForValue().set(
+                newInviteCode,
+                inviteInfo,
+                INVITE_EXPIRATION_HOURS,
+                TimeUnit.HOURS
+        );
+        redisTemplate.opsForValue().set(
+                contractKey,
+                newInviteCode,
+                INVITE_EXPIRATION_HOURS,
+                TimeUnit.HOURS
+        );
 
+        // 초대 정보 반환
         String inviteUrl = INVITE_URL_PREFIX + newInviteCode;
         return new InviteLinkResponse(password, inviteUrl);
     }

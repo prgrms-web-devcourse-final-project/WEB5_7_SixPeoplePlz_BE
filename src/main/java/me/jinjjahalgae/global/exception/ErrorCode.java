@@ -41,10 +41,11 @@ public enum ErrorCode {
     REPROOF_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "해당 날짜에 이미 재인증이 존재합니다."),
 
     // 초대 관련
-    SUPERVISOR_ALREADY_FULL(HttpStatus.CONFLICT, "감독자가 이미 모두 참여했습니다."),
+    SUPERVISOR_ALREADY_FULL(HttpStatus.CONFLICT, "이미 5명의 감독자가 참여했습니다."),
     INVITE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않거나 만료된 초대입니다."),
     INVALID_INVITE_PASSWORD(HttpStatus.UNAUTHORIZED, "초대 비밀번호가 일치하지 않습니다."),
     INVITE_ALREADY_PARTICIPATED(HttpStatus.BAD_REQUEST, "이미 참여한 계약입니다."),
+    CONTRACTOR_PARTICIPATION_NOT_FOUND(HttpStatus.NOT_FOUND, "계약자의 정보가 없는 계약입니다."),
 
     // 알림 관련
     NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 알림 타입입니다."),
