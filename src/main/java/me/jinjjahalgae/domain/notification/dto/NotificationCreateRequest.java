@@ -11,8 +11,11 @@ import me.jinjjahalgae.domain.notification.enums.NotificationType;
  *                    이를 통해 "ㅇㅇㅇ님이 계약을 종료했습니다" 등의 메세지를 생성할 예정
  */
 public record NotificationCreateRequest(
-        @NotNull NotificationType type,
-        @NotNull Long contractId,
-        @NotNull Long actorUserId
+        @NotNull(message = "알림 타입은 필수입니다.")
+        NotificationType type,
+        @NotNull(message = "계약id는 필수입니다.")
+        Long contractId,
+        @NotNull(message = "행동 주체인 user의 id는 필수입니다.")
+        Long actorUserId
 ) {
 }
