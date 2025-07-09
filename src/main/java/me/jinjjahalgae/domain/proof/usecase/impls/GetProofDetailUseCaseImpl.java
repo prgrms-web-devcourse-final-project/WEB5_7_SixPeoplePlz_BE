@@ -26,7 +26,11 @@ public class GetProofDetailUseCaseImpl implements GetProofDetailUseCase {
         // 이미지 순서대로 key만 추출
         List<String> images = ProofImageMapper.toListResponse(proof.getProofImages());
 
+        // feedback 추가 필요
+
+
         // 이미지와 인증 정보를 합친 응답 생성
         return ProofMapper.toDetailResponse(proof, images);
+//        return ProofMapper.toDetailResponse(proof, images, feedbacks);
     }
 }
