@@ -1,12 +1,15 @@
 package me.jinjjahalgae.domain.proof.usecase.getsupervisorprooflistusecase;
 
 import lombok.RequiredArgsConstructor;
+import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.feedback.entity.Feedback;
 import me.jinjjahalgae.domain.feedback.enums.FeedbackStatus;
 import me.jinjjahalgae.domain.feedback.repository.FeedbackRepository;
+import me.jinjjahalgae.domain.participation.repository.ParticipationRepository;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.mapper.ProofMapper;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
+import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,9 +25,18 @@ public class GetSupervisorProofListUseCaseImpl implements GetSupervisorProofList
 
     private final ProofRepository proofRepository;
     private final FeedbackRepository feedbackRepository;
+    private final ParticipationRepository participationRepository;
 
     @Override
     public List<SupervisorProofListResponse> execute(Long contractId, int year, int month, Long userId) {
+        // 유저가 계약의 참여자인지 확인
+        boolean isUserParticipate = participationRepository.existsByContractIdAndUserId(contractId, userId);
+
+        // 유저가 계약의 참여자가 아닐 경우 예외
+        if (!isUserParticipate) {
+            throw ErrorCode.ACCESS_DENIED.domainException("계약에 대한 접근 권한이 없습니다.");
+        }
+
         // 달의 시작일 00:00:00
         LocalDateTime startDate = LocalDateTime.of(year, month, 1, 0, 0);
 

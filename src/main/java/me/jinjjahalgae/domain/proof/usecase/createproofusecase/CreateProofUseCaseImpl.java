@@ -3,6 +3,7 @@ package me.jinjjahalgae.domain.proof.usecase.createproofusecase;
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
+import me.jinjjahalgae.domain.participation.repository.ParticipationRepository;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.entities.ProofImage;
 import me.jinjjahalgae.domain.proof.mapper.ProofImageMapper;
@@ -26,6 +27,14 @@ public class CreateProofUseCaseImpl implements CreateProofUseCase {
     @Override
     @Transactional
     public void execute(ProofCreateRequest request, Long contractId, Long userId) {
+        // 유저의 계약인지 확인
+        boolean isUserContract = contractRepository.existsByIdAndUserId(contractId, userId);
+
+        // 유저의 계약이 아닐 경우 예외
+        if (!isUserContract) {
+            throw ErrorCode.ACCESS_DENIED.domainException("계약에 대한 접근 권한이 없습니다.");
+        }
+
         // 이미지가 1장도 없는 경우 예외 발생
         if(request.firstImageKey() == null) {
             throw ErrorCode.IMAGE_REQUIRED.domainException("이미지가 존재하지 않습니다.");

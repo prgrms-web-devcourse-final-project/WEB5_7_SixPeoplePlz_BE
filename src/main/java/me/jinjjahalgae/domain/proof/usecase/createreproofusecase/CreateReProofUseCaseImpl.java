@@ -41,6 +41,14 @@ public class CreateReProofUseCaseImpl implements CreateReProofUseCase {
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException(contractId + "에 대한 계약이 존재하지 않습니다."));
 
+        // 유저의 계약인지 확인
+        boolean isUserContract = contractRepository.existsByIdAndUserId(contractId, userId);
+
+        // 유저의 계약이 아닐 경우 예외
+        if (!isUserContract) {
+            throw ErrorCode.ACCESS_DENIED.domainException("계약에 대한 접근 권한이 없습니다.");
+        }
+
         // 해당 계약에 대해 오늘자 재인증이 존재하는 지 검증
         boolean isReProofExist = todayReProofExist(contract.getId());
         if(isReProofExist) {

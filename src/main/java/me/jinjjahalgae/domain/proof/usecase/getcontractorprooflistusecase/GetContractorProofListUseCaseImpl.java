@@ -1,9 +1,11 @@
 package me.jinjjahalgae.domain.proof.usecase.getcontractorprooflistusecase;
 
 import lombok.RequiredArgsConstructor;
+import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.mapper.ProofMapper;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
+import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,9 +20,18 @@ import java.util.stream.Collectors;
 public class GetContractorProofListUseCaseImpl implements GetContractorProofListUseCase {
 
     private final ProofRepository proofRepository;
+    private final ContractRepository contractRepository;
 
     @Override
     public List<ContractorProofListResponse> execute(Long contractId, int year, int month, Long userId) {
+        // 유저의 계약인지 확인
+        boolean isUserContract = contractRepository.existsByIdAndUserId(contractId, userId);
+
+        // 유저의 계약이 아닐 경우 예외
+        if (!isUserContract) {
+            throw ErrorCode.ACCESS_DENIED.domainException("계약에 대한 접근 권한이 없습니다.");
+        }
+
         // 달의 시작일 00:00:00
         LocalDateTime startDate = LocalDateTime.of(year, month, 1, 0, 0);
 
