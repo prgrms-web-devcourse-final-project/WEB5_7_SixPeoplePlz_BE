@@ -33,6 +33,8 @@ public enum ErrorCode {
     CONTRACT_ALREADY_SIGNED(HttpStatus.CONFLICT, "감독자가 서명한 계약은 수정할 수 없습니다."),
     CONTRACT_STATUS_CONFLICT(HttpStatus.CONFLICT, "계약 상태 변경 중 충돌이 발생했습니다."),
     CANNOT_ABANDON_STARTED_CONTRACT(HttpStatus.CONFLICT, "이미 시작된 계약은 포기할 수 없습니다."),
+    CANNOT_WITHDRAW_PARTICIPATION_AFTER_START(HttpStatus.CONFLICT, "계약이 시작히기 전에만 계약 감독을 철회할 수 있습니다."),
+    CANNOT_ABANDON_PARTICIPATION_UNLESS_IN_PROGRESS(HttpStatus.CONFLICT, "계약 진행중에만 감독을 중도 포기할 수 있습니다."),
 
     // 인증 관련
     PROOF_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 인증을 찾을 수 없습니다."),
@@ -48,6 +50,7 @@ public enum ErrorCode {
     INVALID_INVITE_PASSWORD(HttpStatus.UNAUTHORIZED, "초대 비밀번호가 일치하지 않습니다."),
     INVITE_ALREADY_PARTICIPATED(HttpStatus.BAD_REQUEST, "이미 참여한 계약입니다."),
     CONTRACTOR_PARTICIPATION_NOT_FOUND(HttpStatus.NOT_FOUND, "계약자의 정보가 없는 계약입니다."),
+    SUPERVISOR_PARTICIPATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 감독자의 정보가 없는 계약입니다."),
 
     // 알림 관련
     NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 알림 타입입니다."),

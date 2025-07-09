@@ -57,4 +57,9 @@ public class Participation extends BaseEntity {
     public void setContract(Contract contract) {
         this.contract = contract;
     }
+
+    // 참여 여부를 false로 변경하는 메서드
+    public void invalidate() {
+        this.valid = false;
+    }
 }
