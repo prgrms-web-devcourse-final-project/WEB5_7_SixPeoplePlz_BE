@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.proof.api;
+package me.jinjjahalgae.presentation.api;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.proof.usecase.interfaces.CreateProofUseCase;
