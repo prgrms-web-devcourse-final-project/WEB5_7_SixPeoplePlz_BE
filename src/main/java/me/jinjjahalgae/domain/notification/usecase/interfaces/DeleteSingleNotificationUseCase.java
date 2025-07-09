@@ -5,5 +5,5 @@ package me.jinjjahalgae.domain.notification.usecase.interfaces;
  * 삭제할 알림id를 받고, 삭제된 알림의 id를 반환
  */
 public interface DeleteSingleNotificationUseCase {
-    Long execute(Long notificationId);
+    void execute(Long notificationId);
 }
