@@ -1,6 +1,8 @@
 package me.jinjjahalgae.domain.contract.dto.request;
 
 import java.time.LocalDateTime;
+
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
@@ -10,15 +12,37 @@ import me.jinjjahalgae.domain.contract.enums.ContractType;
  */
 
 public record ContractCreateRequest(
-    @NotBlank String title,
-    @NotBlank String goal,
+    @NotBlank (message = "제목은 필수 입력 값입니다.")
+    String title,
+    
+    @NotBlank (message = "목표는 필수 입력 값입니다.")
+    String goal,
+
+    //선택사항 : 둘 중 하나만 입력
     String penalty,
     String reward,
-    @NotNull Integer life,
-    @NotNull Integer proofPerWeek,
-    @NotNull Boolean oneOff,
-    @NotNull LocalDateTime startDate,
-    @NotNull LocalDateTime endDate,
-    @NotNull ContractType type,
-    @NotBlank String signatureImageKey //서명 이미지
+
+    @NotNull(message = "실패 가능 횟수는 필수입니다.")
+    @Min(value = 0, message = "실패 가능 횟수는 0 이상이어야 합니다.")
+    Integer life,
+
+    
+    @NotNull(message = "주간 인증 횟수는 필수입니다.")
+    @Min(value = 1, message = "주간 인증 횟수는 1 이상이어야 합니다.")
+    Integer proofPerWeek,
+
+    @NotNull(message = "당일 여부는 필수입니다.")
+    Boolean oneOff,
+
+    @NotNull(message = "시작일은 필수입니다.")
+    LocalDateTime startDate,
+
+    @NotNull(message = "종료일은 필수입니다.")
+    LocalDateTime endDate,
+
+    @NotNull(message = "계약서 디자인인 타입은 필수입니다.")
+    ContractType type,
+
+    @NotBlank(message = "계약자 서명은 필수입니다.")
+    String signatureImageKey //서명 이미지
 ) {}
