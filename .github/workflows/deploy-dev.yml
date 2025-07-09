@@ -31,7 +31,7 @@ jobs:
           export DEV_DB_ROOT_PASSWORD=${{ secrets.DEV_DB_PASSWORD }}
           export DEV_REDIS_PASSWORD=${{ secrets.DEV_REDIS_PASSWORD }}
 
-          docker-compose -f infra-compose.yml up -d
+          docker compose -f infra-compose.yml up -d
 
       - name: 진짜할게 최신 이미지 pull
         run: docker pull ${{ env.IMAGE_NAME }}:latest
