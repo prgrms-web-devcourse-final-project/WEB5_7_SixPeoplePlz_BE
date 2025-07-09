@@ -3,6 +3,7 @@ package me.jinjjahalgae.domain.notification.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
+import me.jinjjahalgae.global.validation.EnumValue;
 
 /**
  * 알림 생성 요청 dto (백엔드에서만 쓰일 예정)
@@ -21,7 +22,8 @@ public record NotificationCreateRequest(
         example = "CONTRACT_STARTED",
         requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "알림 타입은 필수입니다.")
-    NotificationType type,
+    @EnumValue(enumClass = NotificationType.class, message = "type은 SUPERVISOR_ADDED, SUPERVISOR_WITHDRAWN, CONTRACT_STARTED, CONTRACT_ENDED_FAIL, CONTRACT_ENDED_SUCCESS, PROOF_ADDED, PROOF_ACCEPTED, PROOF_REJECTED, FEEDBACK_ADDED, REPROOF_ADDED 중 하나여야 합니다.")
+    String type,
     
     @Schema(description = "관련 계약 ID",
         example = "1",
