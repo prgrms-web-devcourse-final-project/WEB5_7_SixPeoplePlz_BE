@@ -205,29 +205,28 @@ public interface ProofControllerDocs {
                             schema = @Schema(implementation = GetAwaitProofsSwaggerResponse.class),
                             examples = @ExampleObject(
                                     name = "성공 응답",
-                                    value = """
+                                    value =
+                                    """
                                     {
                                       "success": true,
-                                      "result": {
-                                        [
-                                          {
-                                            "titleImageKey": "1234abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
-                                            "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
-                                            "createdAt": "2025-07-09T19:30:00+09:00",
-                                            "status": "APPROVE_PENDING",
-                                            "reProof": false,
-                                            "proofId": 11
-                                          },
-                                          {
-                                            "titleImageKey": "3453abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
-                                            "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
-                                            "createdAt": "2025-07-08T19:30:00+09:00",
-                                            "status": "APPROVE_PENDING",
-                                            "reProof": false,
-                                            "proofId": 10
-                                          }
-                                        ]
-                                      }
+                                      "result": [
+                                        {
+                                          "titleImageKey": "1234abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
+                                          "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
+                                          "createdAt": "2025-07-09T19:30:00+09:00",
+                                          "status": "APPROVE_PENDING",
+                                          "reProof": false,
+                                          "proofId": 11
+                                        },
+                                        {
+                                          "titleImageKey": "3453abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
+                                          "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
+                                          "createdAt": "2025-07-08T19:30:00+09:00",
+                                          "status": "APPROVE_PENDING",
+                                          "reProof": false,
+                                          "proofId": 10
+                                        }
+                                      ]
                                     }
                                     """
                             )
@@ -252,11 +251,11 @@ public interface ProofControllerDocs {
                             schema = @Schema(implementation = GetRecentProofsSwaggerResponse.class),
                             examples = @ExampleObject(
                                     name = "성공 응답",
-                                    value = """
+                                    value =
+                                    """
                                     {
                                       "success": true,
-                                      "result": {
-                                        [
+                                      "result": [
                                           {
                                             "imageKey": "1234abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
@@ -281,8 +280,7 @@ public interface ProofControllerDocs {
                                             "reProof": false,
                                             "proofId": 10
                                           }
-                                        ]
-                                      }
+                                       ]
                                     }
                                     """
                             )
@@ -307,7 +305,8 @@ public interface ProofControllerDocs {
                             schema = @Schema(implementation = GetProofDetailSwaggerResponse.class),
                             examples = @ExampleObject(
                                     name = "성공 응답",
-                                    value = """
+                                    value =
+                                    """
                                     {
                                       "success": true,
                                       "result": {
@@ -337,7 +336,7 @@ public interface ProofControllerDocs {
                                             "comment": null
                                           }
                                         ],
-                                        "proofId: 17
+                                        "proofId": 17
                                       }
                                     }
                                     """
@@ -352,7 +351,8 @@ public interface ProofControllerDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "인증이 존재하지 않는 경우",
-                                    value = """
+                                    value =
+                                    """
                                     {
                                       "success": false,
                                       "code": "PROOF_NOT_FOUND",
@@ -382,12 +382,13 @@ public interface ProofControllerDocs {
                             schema = @Schema(implementation = GetContractorProofListSwaggerResponse.class),
                             examples = @ExampleObject(
                                     name = "성공 응답",
-                                    value = """
+                                    value =
+                                    """
                                     {
                                       "success": true,
                                       "result": [
                                         {
-                                          "date": "2025-07-01"
+                                          "date": "2025-07-01",
                                           "originalProof": {
                                             "imageKey": "1234abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "status": "REJECTED",
@@ -405,7 +406,7 @@ public interface ProofControllerDocs {
                                           }
                                         },
                                         {
-                                          "date": "2025-07-02"
+                                          "date": "2025-07-02",
                                           "originalProof": {
                                             "imageKey": "2344abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "status": "APPROVED",
@@ -414,19 +415,6 @@ public interface ProofControllerDocs {
                                             "proofId": 24
                                           },
                                           "rejectedAt": "2025-07-02T11:30:00+09:00",
-                                          "reProof": null
-                                        },
-                                        ...
-                                        {
-                                          "date": "2025-07-31"
-                                          "originalProof": {
-                                            "imageKey": "1112abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
-                                            "status": "REJECTED",
-                                            "totalSupervisors": 4,
-                                            "completedSupervisors": 2,
-                                            "proofId": 66
-                                          },
-                                          "rejectedAt": "2025-07-31T10:30:00+09:00",
                                           "reProof": null
                                         }
                                       ]
@@ -443,7 +431,8 @@ public interface ProofControllerDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "년, 월 값이 잘못된 경우",
-                                    value = """
+                                    value =
+                                    """
                                     {
                                       "success": false,
                                       "code": "INVALID_YEAR_MONTH",
@@ -475,12 +464,13 @@ public interface ProofControllerDocs {
                             schema = @Schema(implementation = GetSupervisorProofListSwaggerResponse.class),
                             examples = @ExampleObject(
                                     name = "성공 응답",
-                                    value = """
+                                    value =
+                                    """
                                     {
                                       "success": true,
                                       "result": [
                                         {
-                                          "date": "2025-07-01"
+                                          "date": "2025-07-01",
                                           "originalProof": {
                                             "imageKey": "1234abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "status": "REJECTED",
@@ -496,10 +486,10 @@ public interface ProofControllerDocs {
                                             "completedSupervisors": 2,
                                             "proofId": 21
                                           },
-                                          "reProofFeedbackStatus": "APPROVED",
+                                          "reProofFeedbackStatus": "APPROVED"
                                         },
                                         {
-                                          "date": "2025-07-02"
+                                          "date": "2025-07-02",
                                           "originalProof": {
                                             "imageKey": "2344abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "status": "APPROVED",
@@ -509,21 +499,7 @@ public interface ProofControllerDocs {
                                           },
                                           "originalFeedbackStatus": "REJECTED",
                                           "reProof": null,
-                                          "reProofFeedbackStatus": null,
-                                        },
-                                        ...
-                                        {
-                                          "date": "2025-07-31"
-                                          "originalProof": {
-                                            "imageKey": "1112abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
-                                            "status": "APPROVED",
-                                            "totalSupervisors": 4,
-                                            "completedSupervisors": 2,
-                                            "proofId": 66
-                                          },
-                                          "originalFeedbackStatus": "REJECTED",
-                                          "reProof": null,
-                                          "reProofFeedbackStatus": null,
+                                          "reProofFeedbackStatus": null
                                         }
                                       ]
                                     }
@@ -539,7 +515,8 @@ public interface ProofControllerDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
                                     name = "년, 월 값이 잘못된 경우",
-                                    value = """
+                                    value =
+                                    """
                                     {
                                       "success": false,
                                       "code": "INVALID_YEAR_MONTH",
