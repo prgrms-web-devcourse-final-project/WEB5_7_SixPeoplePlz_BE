@@ -4,7 +4,7 @@ services:
         container_name: mysql
         restart: always
         volumes:
-            - ./mysql-data:/var/lib/mysql
+            - mysql-data:/var/lib/mysql
         environment:
             MYSQL_DATABASE: ${DEV_DB_DATABASE}
             MYSQL_ROOT_PASSWORD: ${DEV_DB_PASSWORD}
@@ -22,7 +22,7 @@ services:
             - "443:443"
         volumes:
             - ./lib:/etc/nginx/conf.d
-            - ./letsencrypt:/etc/letsencrypt
+            - letsencrypt:/etc/letsencrypt
         depends_on:
             - mysql
         networks:
@@ -36,7 +36,7 @@ services:
         ports:
             - "6379:6379"
         volumes:
-            - ./redis-data:/data
+            - redis-data:/data
         networks:
             - jjhg-net
 
@@ -44,3 +44,8 @@ networks:
     jjhg-net:
         name: jjhg-net
         driver: bridge
+
+volumes:
+    mysql-data:
+    redis-data:
+    letsencrypt:
