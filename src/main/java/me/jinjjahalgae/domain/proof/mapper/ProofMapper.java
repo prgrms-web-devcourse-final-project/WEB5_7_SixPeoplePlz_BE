@@ -1,7 +1,9 @@
 package me.jinjjahalgae.domain.proof.mapper;
 
 import me.jinjjahalgae.domain.proof.dto.response.ProofDetailResponse;
+import me.jinjjahalgae.domain.proof.dto.response.ProofRecentResponse;
 import me.jinjjahalgae.domain.proof.entities.Proof;
+import me.jinjjahalgae.domain.proof.entities.ProofImage;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 
 import java.util.List;
@@ -59,5 +61,27 @@ public class ProofMapper {
                 proof.getProofId() != null,
                 proof.getId()
                 );
+    }
+
+    /**
+     * 최근 인증 조회 response 변환용
+     * @param proof
+     * @return {@link ProofRecentResponse}
+     */
+    public static ProofRecentResponse toRecentResponse(Proof proof) {
+        String imageKey = proof.getProofImages().stream()
+                .filter(img -> img.getIndex() == 1)
+                .findFirst()
+                .map(ProofImage::getImageKey)
+                .orElse(null);
+
+        return new ProofRecentResponse(
+                imageKey,
+                proof.getComment(),
+                proof.getStatus(),
+                proof.getCreatedAt(),
+                proof.getProofId() != null,
+                proof.getId()
+        );
     }
 }

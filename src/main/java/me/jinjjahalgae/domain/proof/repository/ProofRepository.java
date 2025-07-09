@@ -1,12 +1,14 @@
 package me.jinjjahalgae.domain.proof.repository;
 
 import me.jinjjahalgae.domain.proof.entities.Proof;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -65,4 +67,23 @@ AND p.proofId IS NOT NULL
      */
     @Query("SELECT p FROM Proof p JOIN FETCH p.proofImages WHERE p.id = :id")
     Optional<Proof> findByIdWithProofImages(@Param("id") Long id);
+
+    /**
+     * 최근 인증을 가져오기 위해 최근 인증의 아이디만 먼저 가져오는 쿼리
+     * fetch join + limit를 같이 사용할 때 하이버네이트가 메모리에서 limit을 적용할 수 있다고 함
+     * 소량의 데이터라 문제는 없어보이지만 쿼리를 분리
+     * @param contractId 계약 id
+     * @param pageable   페이징 (3개의 인증을 가져옴(
+     * @return List<Long> 0~3개의 인증을 가져옴
+     */
+    @Query("SELECT p.id FROM Proof p WHERE p.contractId = :contractId ORDER BY p.id DESC")
+    List<Long> findProofIdsByContractId(@Param("contractId") Long contractId, Pageable pageable);
+
+    /**
+     * 찾아온 3개의 인증 id로 인증 이미지와 fetch join
+     * @param ids 인증 id들
+     * @return {@link Proof}
+     */
+    @Query("SELECT p FROM Proof p LEFT JOIN FETCH p.proofImages WHERE p.id IN :ids")
+    List<Proof> findProofsWithProofImagesByIds(@Param("ids") List<Long> ids);
 }
