@@ -25,8 +25,9 @@ jobs:
 
       - name: 인프라 컨테이너 실행 (mysql, nginx)
         run: |
-          export DEV_DB_ROOT_PASSWORD=${{ secrets.DEV_DB_PASSWORD }}
           export DEV_DB_DATABASE=${{ secrets.DEV_DB_DATABASE }}
+          export DEV_DB_ROOT_PASSWORD=${{ secrets.DEV_DB_PASSWORD }}
+          export DEV_REDIS_PASSWORD=${{ secrets.DEV_REDIS_PASSWORD }}
 
           sudo docker-compose -f infra-compose.yml up -d
 

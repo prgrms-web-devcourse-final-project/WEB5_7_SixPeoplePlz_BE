@@ -1,13 +1,13 @@
 package me.jinjjahalgae.domain.invite.util;
 
 import me.jinjjahalgae.domain.contract.entity.Contract;
-import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.user.User;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class InviteTestUtil {
 
@@ -32,7 +32,7 @@ public class InviteTestUtil {
                 .life(10)
                 .proofPerWeek(3)
                 .oneOff(false)
-                .type(ContractType.BASIC)  // null 대신 BASIC 타입 사용
+                .type(null)
                 .build();
 
         contract.initialize();
@@ -43,14 +43,13 @@ public class InviteTestUtil {
     }
 
     public static Participation createParticipation(Long id, Contract contract, User user, Role role) {
-        Participation participation = Participation.builder()  // builder 패턴 사용
-                .contract(contract)
-                .user(user)
-                .imageKey("image-key-" + id)
-                .role(role)
-                .valid(true)
-                .build();
-
+        Participation participation = Participation.createParticipation(
+                contract,
+                user,
+                "image-key-" + id,
+                role,
+                true
+        );
         ReflectionTestUtils.setField(participation, "id", id);
         return participation;
     }
