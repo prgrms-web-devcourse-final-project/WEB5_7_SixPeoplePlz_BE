@@ -2,10 +2,12 @@ package me.jinjjahalgae.domain.contract.usecase;
 
 import me.jinjjahalgae.domain.contract.dto.response.ContractListResponse;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface ContractListUseCase {
     //계약 목록 조회 (진행중, 종료 히스토리 공유)
-    List<ContractListResponse> execute(Long userId, List<ContractStatus> statuses);
+    Page<ContractListResponse> execute(Long userId, List<ContractStatus> statuses, Pageable pageable);
 }
