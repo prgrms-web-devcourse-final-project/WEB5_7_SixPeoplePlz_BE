@@ -1,5 +1,3 @@
-
-
 package me.jinjjahalgae.domain.contract.entity;
 
 import jakarta.persistence.*;
@@ -96,29 +94,12 @@ public class Contract extends BaseEntity {
         this.type = type;
     }
 
-    public static Contract createContract(User user, LocalDateTime startDate, LocalDateTime endDate, String title, String goal, String penalty, String reward, int life,
-                              int proofPerWeek, boolean oneOff, ContractType type) {
-        Contract contract = Contract.builder()
-                .user(user)
-                .startDate(startDate)
-                .endDate(endDate)
-                .title(title)
-                .goal(goal)
-                .penalty(penalty)
-                .reward(reward)
-                .life(life)
-                .proofPerWeek(proofPerWeek)
-                .oneOff(oneOff)
-                .type(type)
-                .build();
-
-        contract.uuid = UUID.randomUUID().toString();
-        contract.totalProof = contract.calculateTotalProof(startDate, endDate, proofPerWeek);
-        contract.currentProof = 0;
-        contract.totalSupervisor = 0;
-        contract.status = ContractStatus.PENDING;
-
-        return contract;
+    public void initialize() {
+        this.uuid = UUID.randomUUID().toString();
+        this.totalProof = calculateTotalProof(this.startDate, this.endDate, this.proofPerWeek);
+        this.currentProof = 0;
+        this.totalSupervisor = 0;
+        this.status = ContractStatus.PENDING;
     }
 
     public void addParticipation(Participation participation) {
