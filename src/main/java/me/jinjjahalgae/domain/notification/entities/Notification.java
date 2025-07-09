@@ -32,7 +32,7 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     private NotificationType type; // 알림 유형
 
-    private boolean readStatus = false; // 알림 조회여부 (기본값 false)
+    private boolean read = false; // 알림 조회여부 (기본값 false)
 
     @Builder
     public Notification(Long userId, Long contractId, String content, NotificationType type) {
@@ -43,7 +43,7 @@ public class Notification {
     }
 
     /// 해당 알림객체를 읽음 상태로 변경
-    public void read() {
-        this.readStatus = true;
+    public void markRead() {
+        this.read = true;
     }
 }

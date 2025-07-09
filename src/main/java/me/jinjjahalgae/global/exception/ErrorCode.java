@@ -68,9 +68,7 @@ public enum ErrorCode {
         return new AppException(this, detail, ErrorType.SERVICE);
     }
 
-    public AppException domainException() {
-        return new AppException(this, ErrorType.DOMAIN);
-    }
+    public AppException domainException() {return new AppException(this, ErrorType.DOMAIN);}
 
     public AppException domainException(String detail) {
         return new AppException(this, detail, ErrorType.DOMAIN);

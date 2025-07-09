@@ -44,7 +44,7 @@
             this.valid = valid;
         }
 
-        public void setContract(Contract contract) {
-            this.contract = contract;
-        }
+    public void setContract(Contract contract) {
+        this.contract = contract;
     }
+}

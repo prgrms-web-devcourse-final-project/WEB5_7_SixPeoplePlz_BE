@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql
+    container_name: mysql
+    restart: always
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ${DEV_DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DEV_DB_PASSWORD}
+    ports:
+      - "3306:3306"
+    networks:
+      - jjhg-net
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./lib:/etc/nginx/conf.d
+      - ./letsencrypt:/etc/letsencrypt
+    depends_on:
+      - mysql
+    networks:
+      - jjhg-net
+
+networks:
+  jjhg-net:
+    driver: bridge
