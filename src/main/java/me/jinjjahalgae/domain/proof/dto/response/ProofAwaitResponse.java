@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
         description = "승인 대기중인 인증 조회 응답 DTO",
         example = """
         {
-          "titleImageKey": "1234abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
+          "imageKey": "1234abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
           "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
           "createdAt": "2025-07-09T13:30:00+09:00",
           "status": "APPROVE_PENDING",
@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 )
 public record ProofAwaitResponse(
         @Schema(description = "1 번째 이미지 (대표 사진) 키")
-        String titleImageKey,
+        String imageKey,
 
         @Schema(description = "인증 코멘트 (없으면 null)")
         String comment,
