@@ -22,7 +22,8 @@ services:
             - "443:443"
         volumes:
             - ./lib:/etc/nginx/conf.d
-            - letsencrypt:/etc/letsencrypt
+            - ./html:/var/www/certbot # acme-challenge 저장용
+            - letsencrypt:/etc/letsencrypt # 인증서
         depends_on:
             - mysql
         networks:
