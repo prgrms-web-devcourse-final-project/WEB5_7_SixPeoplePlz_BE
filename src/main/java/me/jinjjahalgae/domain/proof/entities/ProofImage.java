@@ -21,6 +21,7 @@ public class ProofImage extends BaseEntity {
 
     private String imageKey;    // 이미지 키
 
+    @Column(name = "`index`", nullable = false)
     private int index;  // 인덱스
 
     @Builder
