@@ -21,7 +21,6 @@ public record ParticipantInfoResponse(
     
     @Schema(description = "참여자 역할",
         example = "CONTRACTOR",
-        allowableValues = {"CONTRACTOR", "SUPERVISOR"},
         requiredMode = Schema.RequiredMode.REQUIRED)
     Role role,
 

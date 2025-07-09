@@ -16,9 +16,6 @@ public record NotificationGetResponse(
     
     @Schema(description = "알림 타입",
         example = "CONTRACT_STARTED",
-        allowableValues = {"SUPERVISOR_ADDED", "SUPERVISOR_WITHDRAWN", "CONTRACT_STARTED", 
-                          "CONTRACT_ENDED_FAIL", "CONTRACT_ENDED_SUCCESS", "PROOF_ADDED", 
-                          "PROOF_ACCEPTED", "PROOF_REJECTED", "FEEDBACK_ADDED", "REPROOF_ADDED"},
         requiredMode = Schema.RequiredMode.REQUIRED)
     NotificationType type,
     

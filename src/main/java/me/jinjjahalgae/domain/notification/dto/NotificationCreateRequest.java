@@ -19,9 +19,6 @@ import me.jinjjahalgae.domain.notification.enums.NotificationType;
 public record NotificationCreateRequest(
     @Schema(description = "알림 타입",
         example = "CONTRACT_STARTED",
-        allowableValues = {"SUPERVISOR_ADDED", "SUPERVISOR_WITHDRAWN", "CONTRACT_STARTED", 
-                          "CONTRACT_ENDED_FAIL", "CONTRACT_ENDED_SUCCESS", "PROOF_ADDED", 
-                          "PROOF_ACCEPTED", "PROOF_REJECTED", "FEEDBACK_ADDED", "REPROOF_ADDED"},
         requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "알림 타입은 필수입니다.")
     NotificationType type,
