@@ -26,7 +26,6 @@ public record ContractListResponse(
         String title,
 
         @Schema(description = "계약 상태", example = "ACTIVE")
-        @EnumValue(enumClass = ContractStatus.class)
         ContractStatus contractStatus, //계약 현재 상태
 
         @Schema(description = "한 주 인증 수", example = "3")

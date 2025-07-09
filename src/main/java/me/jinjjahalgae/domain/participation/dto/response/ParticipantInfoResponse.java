@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.participation.dto;
+package me.jinjjahalgae.domain.participation.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import me.jinjjahalgae.domain.participation.entity.Participation;

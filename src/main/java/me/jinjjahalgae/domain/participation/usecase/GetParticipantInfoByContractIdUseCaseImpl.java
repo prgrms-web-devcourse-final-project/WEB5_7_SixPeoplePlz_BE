@@ -2,7 +2,7 @@ package me.jinjjahalgae.domain.participation.usecase;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jinjjahalgae.domain.participation.dto.ParticipantInfoResponse;
+import me.jinjjahalgae.domain.participation.dto.response.ParticipantInfoResponse;
 import me.jinjjahalgae.domain.participation.repository.ParticipationRepository;
 import me.jinjjahalgae.domain.participation.usecase.interfaces.GetParticipantInfoByContractIdUseCase;
 import org.springframework.stereotype.Service;
