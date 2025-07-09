@@ -1,7 +1,5 @@
 package me.jinjjahalgae.domain.notification.usecase.interfaces;
 
-import me.jinjjahalgae.domain.common.UseCase;
-
 /**
  * 개별 알림 읽음 처리
  * 알림id를 받고, 상태변경된 알림id를 반환한다

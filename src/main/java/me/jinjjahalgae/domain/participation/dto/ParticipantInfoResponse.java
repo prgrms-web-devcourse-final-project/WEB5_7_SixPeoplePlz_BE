@@ -12,8 +12,8 @@ public record ParticipantInfoResponse(
     /// Participation -> ParticipantInfoResponse로 변환
     public static ParticipantInfoResponse from (Participation participation) {
         return new ParticipantInfoResponse(
-                participation.getUser().name(),
-                participation.getUser().id(),
+                participation.getUser().getName(),
+                participation.getUser().getId(),
                 participation.getRole()
         );
     }
