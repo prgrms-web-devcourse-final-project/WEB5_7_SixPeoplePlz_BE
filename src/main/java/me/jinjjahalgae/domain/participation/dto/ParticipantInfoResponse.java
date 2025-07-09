@@ -27,7 +27,7 @@ public record ParticipantInfoResponse(
     @Schema(description = "역할 유효 여부",
             example = "true",
             requiredMode = Schema.RequiredMode.REQUIRED)
-    Boolean validate
+    Boolean valid
 ) {
 
     /// Participation -> ParticipantInfoResponse로 변환
@@ -36,7 +36,7 @@ public record ParticipantInfoResponse(
                 participation.getUser().getName(),
                 participation.getUser().getId(),
                 participation.getRole(),
-                participation.getValidate()
+                participation.getValid()
         );
     }
 }
