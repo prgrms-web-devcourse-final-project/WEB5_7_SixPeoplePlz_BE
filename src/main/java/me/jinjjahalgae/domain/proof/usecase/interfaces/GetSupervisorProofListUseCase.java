@@ -1,5 +1,9 @@
 package me.jinjjahalgae.domain.proof.usecase.interfaces;
 
-public interface GetSupervisorProofListUseCase {
+import me.jinjjahalgae.domain.proof.dto.response.SupervisorProofListResponse;
 
+import java.util.List;
+
+public interface GetSupervisorProofListUseCase {
+    List<SupervisorProofListResponse> execute(Long contractId, int year, int month, Long userId);
 }
