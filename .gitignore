@@ -38,3 +38,8 @@ out/
 
 
 application-local.yml
+
+
+/mysql-data
+/redis-data
+/letsencrypt
