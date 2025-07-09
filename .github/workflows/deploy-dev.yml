@@ -26,21 +26,23 @@ jobs:
         run: echo ${{ secrets.PAT }} | docker login ghcr.io -u Soohyeok447 --password-stdin
 
       - name: 인프라 컨테이너 실행 (mysql, nginx)
-        run: |
-          export DEV_DB_DATABASE=${{ secrets.DEV_DB_DATABASE }}
-          export DEV_DB_PASSWORD=${{ secrets.DEV_DB_PASSWORD }}
-          export DEV_REDIS_PASSWORD=${{ secrets.DEV_REDIS_PASSWORD }}
-
-          docker compose -f infra-compose.yml up -d
+        env:
+          DEV_DB_DATABASE: ${{ secrets.DEV_DB_DATABASE }}
+          DEV_DB_PASSWORD: ${{ secrets.DEV_DB_PASSWORD }}
+          DEV_REDIS_PASSWORD: ${{ secrets.DEV_REDIS_PASSWORD }}
+        run: docker compose -f infra-compose.yml up -d
 
       - name: 진짜할게 최신 이미지 pull
         run: docker pull ${{ env.IMAGE_NAME }}:latest
 
       - name: 기존 컨테이너 중지 및 삭제
         run: |
-          if [ $(docker ps -q -f name=${{ env.CONTAINER_NAME }}) ]; then
+          if [ $(docker ps -aq -f name=${{ env.CONTAINER_NAME }}) ]; then
+            echo "기존 api 컨테이너 제거"
             docker stop ${{ env.CONTAINER_NAME }}
             docker rm ${{ env.CONTAINER_NAME }}
+          else
+            echo "기존 컨테이너 없음. 새 api 컨테이너를 실행합니다"
           fi
 
       - name: 새 api 컨테이너 실행
