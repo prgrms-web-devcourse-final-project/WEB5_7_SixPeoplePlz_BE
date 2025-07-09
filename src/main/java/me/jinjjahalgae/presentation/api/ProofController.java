@@ -23,7 +23,8 @@ public class ProofController implements ProofControllerDocs {
     private final CreateProofUseCase createProofUseCase;
     private final CreateReProofUseCase createReProofUseCase;
     private final GetAwaitProofUseCase getAwaitProofUseCase;
-    private final GetContractorProofListUseCase getProofListUseCase;
+    private final GetContractorProofListUseCase getContractorProofListUseCase;
+    private final GetSupervisorProofListUseCase getSupervisorProofListUseCase;
     private final GetRecentProofUseCase getRecentProofUseCase;
     private final GetProofDetailUseCase getProofDetailUseCase;
 
@@ -32,35 +33,45 @@ public class ProofController implements ProofControllerDocs {
     @PostMapping("/contracts/{contractId}/proofs")
     @ResponseStatus(HttpStatus.CREATED)
     public CommonResponse<Void> createProof(@RequestBody ProofCreateRequest req, @PathVariable Long contractId, @AuthenticationPrincipal CustomJwtPrincipal user) {
-        return null;
+        Long userId = user.getUserId();
+        createProofUseCase.execute(req, userId);
+        return CommonResponse.success();
     }
 
     @Override
     @PostMapping("/proofs/{proofId}/again")
     @ResponseStatus(HttpStatus.CREATED)
     public CommonResponse<Void> createReProof(@RequestBody ProofCreateRequest req, @PathVariable Long proofId, @AuthenticationPrincipal CustomJwtPrincipal user) {
-        return null;
+        Long userId = user.getUserId();
+        createReProofUseCase.execute(req, proofId, userId);
+        return CommonResponse.success();
     }
 
     @Override
     @GetMapping("/contracts/{contractId}/proofs/await")
     @ResponseStatus(HttpStatus.OK)
     public CommonResponse<List<ProofAwaitResponse>> getAwaitProofs(@PathVariable Long contractId, @AuthenticationPrincipal CustomJwtPrincipal user) {
-        return null;
+        Long userId = user.getUserId();
+        List<ProofAwaitResponse> result = getAwaitProofUseCase.execute(contractId, userId);
+        return CommonResponse.success(result);
     }
 
     @Override
     @GetMapping("/contracts/{contractId}/proofs/recent")
     @ResponseStatus(HttpStatus.OK)
     public CommonResponse<List<ProofRecentResponse>> getRecentProofs(@PathVariable Long contractId, @AuthenticationPrincipal CustomJwtPrincipal user) {
-        return null;
+        Long userId = user.getUserId();
+        List<ProofRecentResponse> result = getRecentProofUseCase.execute(contractId, userId);
+        return CommonResponse.success(result);
     }
 
     @Override
     @GetMapping("/proofs/{proofId}")
     @ResponseStatus(HttpStatus.OK)
     public CommonResponse<ProofDetailResponse> getProofDetail(@PathVariable Long proofId, @AuthenticationPrincipal CustomJwtPrincipal user) {
-        return null;
+        Long userId = user.getUserId();
+        ProofDetailResponse result = getProofDetailUseCase.execute(proofId, userId);
+        return CommonResponse.success(result);
     }
 
     @Override
@@ -70,7 +81,9 @@ public class ProofController implements ProofControllerDocs {
                                                                                     @RequestParam int year,
                                                                                     @RequestParam int month,
                                                                                     @AuthenticationPrincipal CustomJwtPrincipal user) {
-        return null;
+        Long userId = user.getUserId();
+        List<ContractorProofListResponse> result = getContractorProofListUseCase.execute(contractId, year, month, userId);
+        return CommonResponse.success(result);
     }
 
     @Override
@@ -80,6 +93,8 @@ public class ProofController implements ProofControllerDocs {
                                                                                     @RequestParam int year,
                                                                                     @RequestParam int month,
                                                                                     @AuthenticationPrincipal CustomJwtPrincipal user) {
-        return null;
+        Long userId = user.getUserId();
+        List<SupervisorProofListResponse> result = getSupervisorProofListUseCase.execute(contractId, year, month, userId);
+        return CommonResponse.success(result);
     }
 }
