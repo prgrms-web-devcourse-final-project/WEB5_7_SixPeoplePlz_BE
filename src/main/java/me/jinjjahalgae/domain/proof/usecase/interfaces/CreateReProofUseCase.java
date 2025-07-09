@@ -4,5 +4,5 @@ import me.jinjjahalgae.domain.proof.dto.request.ProofCreateRequest;
 
 public interface CreateReProofUseCase {
 
-    void execute(ProofCreateRequest request, Long proofId);
+    void execute(ProofCreateRequest request, Long proofId, Long userId);
 }

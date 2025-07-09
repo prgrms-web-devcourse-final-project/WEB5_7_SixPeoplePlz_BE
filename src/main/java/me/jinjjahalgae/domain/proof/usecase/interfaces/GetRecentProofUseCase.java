@@ -5,5 +5,5 @@ import me.jinjjahalgae.domain.proof.dto.response.ProofRecentResponse;
 import java.util.List;
 
 public interface GetRecentProofUseCase {
-    List<ProofRecentResponse> execute(Long contractId);
+    List<ProofRecentResponse> execute(Long contractId, Long userId);
 }

@@ -4,5 +4,5 @@ import me.jinjjahalgae.domain.proof.dto.response.ProofDetailResponse;
 
 public interface GetProofDetailUseCase {
 
-    ProofDetailResponse execute(Long proofId);
+    ProofDetailResponse execute(Long proofId, Long userId);
 }

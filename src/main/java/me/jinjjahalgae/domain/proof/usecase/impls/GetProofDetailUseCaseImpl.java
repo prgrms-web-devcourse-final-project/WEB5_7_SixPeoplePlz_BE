@@ -18,7 +18,7 @@ public class GetProofDetailUseCaseImpl implements GetProofDetailUseCase {
     private final ProofRepository proofRepository;
 
     @Override
-    public ProofDetailResponse execute(Long proofId) {
+    public ProofDetailResponse execute(Long proofId, Long userId) {
         // 인증 조회 (이미지 + 피드백)
         Proof proof = proofRepository.findByIdWithProofImagesAndFeedbacks(proofId)
                 .orElseThrow(() -> ErrorCode.PROOF_NOT_FOUND.domainException(proofId + "에 대한 인증이 존재하지 않습니다."));

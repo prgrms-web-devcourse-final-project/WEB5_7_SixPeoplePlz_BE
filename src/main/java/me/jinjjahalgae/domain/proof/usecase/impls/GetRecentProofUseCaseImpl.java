@@ -18,7 +18,7 @@ public class GetRecentProofUseCaseImpl implements GetRecentProofUseCase {
     private final ProofRepository proofRepository;
 
     @Override
-    public List<ProofRecentResponse> execute(Long contractId) {
+    public List<ProofRecentResponse> execute(Long contractId, Long userId) {
         // 최근 3개의 인증 id를 계약 id로 가져옴
         List<Long> proofIds = proofRepository.findProofIdsByContractId(contractId, PageRequest.of(0, 3));
 
