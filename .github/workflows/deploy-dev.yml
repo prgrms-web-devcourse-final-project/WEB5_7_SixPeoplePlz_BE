@@ -31,21 +31,21 @@ jobs:
           export DEV_DB_ROOT_PASSWORD=${{ secrets.DEV_DB_PASSWORD }}
           export DEV_REDIS_PASSWORD=${{ secrets.DEV_REDIS_PASSWORD }}
 
-          sudo docker-compose -f infra-compose.yml up -d
+          docker-compose -f infra-compose.yml up -d
 
       - name: 진짜할게 최신 이미지 pull
-        run: sudo docker pull ${{ env.IMAGE_NAME }}:latest
+        run: docker pull ${{ env.IMAGE_NAME }}:latest
 
       - name: 기존 컨테이너 중지 및 삭제
         run: |
-          if [ $(sudo docker ps -q -f name=${{ env.CONTAINER_NAME }}) ]; then
-            sudo docker stop ${{ env.CONTAINER_NAME }}
-            sudo docker rm ${{ env.CONTAINER_NAME }}
+          if [ $(docker ps -q -f name=${{ env.CONTAINER_NAME }}) ]; then
+            docker stop ${{ env.CONTAINER_NAME }}
+            docker rm ${{ env.CONTAINER_NAME }}
           fi
 
       - name: 새 api 컨테이너 실행
         run: |
-          sudo docker run -d --name ${{ env.CONTAINER_NAME }} \
+          docker run -d --name ${{ env.CONTAINER_NAME }} \
             --network=jjhg-net \
             -e SPRING_PROFILES_ACTIVE=dev \
             -e DEV_REDIS_INVITE_KEY=${{ secrets.DEV_REDIS_INVITE_KEY }} \
@@ -67,4 +67,4 @@ jobs:
             ${{ env.IMAGE_NAME }}:latest
 
       - name: 사용하지 않아서 붕뜬 도커 이미지 정리
-        run: sudo docker image prune -f
+        run: docker image prune -f
