@@ -4,12 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.notification.dto.NotificationCreateRequest;
-import me.jinjjahalgae.domain.notification.dto.NotificationCreateResponse;
-import me.jinjjahalgae.domain.notification.entities.Notification;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
 import me.jinjjahalgae.domain.notification.repository.NotificationRepository;
 import me.jinjjahalgae.domain.participation.dto.ParticipantInfoResponse;
-import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.participation.usecase.GetParticipantInfoByContractIdUseCaseImpl;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.domain.user.dto.MyInfoResponse;
@@ -26,7 +23,9 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import org.mockito.ArgumentCaptor;
 
 @Slf4j
 class CreateNotificationUseCaseImplTest {
@@ -84,23 +83,27 @@ class CreateNotificationUseCaseImplTest {
 
         // when
         log.info("=== UseCase 실행 시작 ===");
-        NotificationCreateResponse response = createNotificationUseCase.execute(request);
+        createNotificationUseCase.execute(request);
         log.info("=== UseCase 실행 완료 ===");
-        
-        log.info("반환된 Response: notificationCnt={}, message={}", 
-                response.notificationCnt(), response.message());
 
         // then
         log.info("=== 검증 시작 ===");
         
+        // ArgumentCaptor를 사용해서 실제 저장되는 알림 리스트 캡처
+        ArgumentCaptor<List<me.jinjjahalgae.domain.notification.entities.Notification>> notificationCaptor = 
+                ArgumentCaptor.forClass(List.class);
+        verify(notificationRepository).saveAll(notificationCaptor.capture());
+        
+        List<me.jinjjahalgae.domain.notification.entities.Notification> savedNotifications = notificationCaptor.getValue();
+        
         // 계약자에게만 알림이 가야 함 (1명)
-        assertThat(response.notificationCnt()).isEqualTo(1);
-        log.info("✅ 알림 개수 검증 통과: 예상 1개, 실제 {}개", response.notificationCnt());
+        assertThat(savedNotifications).hasSize(1);
+        log.info("✅ 알림 개수 검증 통과: 예상 1개, 실제 {}개", savedNotifications.size());
         
         // 메시지 검증
         String expectedMessage = "'감독자'님이 '테스트 계약' 계약의 감독자로 추가되었습니다.";
-        assertThat(response.message()).isEqualTo(expectedMessage);
-        log.info("✅ 메시지 검증 통과: '{}'", response.message());
+        assertThat(savedNotifications.get(0).getContent()).isEqualTo(expectedMessage);
+        log.info("✅ 메시지 검증 통과: '{}'", savedNotifications.get(0).getContent());
         
         log.info("=== 모든 테스트 검증 완료 ===");
     }
@@ -138,23 +141,27 @@ class CreateNotificationUseCaseImplTest {
 
         // when
         log.info("=== UseCase 실행 시작 ===");
-        NotificationCreateResponse response = createNotificationUseCase.execute(request);
+        createNotificationUseCase.execute(request);
         log.info("=== UseCase 실행 완료 ===");
-        
-        log.info("반환된 Response: notificationCnt={}, message={}", 
-                response.notificationCnt(), response.message());
 
         // then
         log.info("=== 검증 시작 ===");
         
+        // ArgumentCaptor를 사용해서 실제 저장되는 알림 리스트 캡처
+        ArgumentCaptor<List<me.jinjjahalgae.domain.notification.entities.Notification>> notificationCaptor = 
+                ArgumentCaptor.forClass(List.class);
+        verify(notificationRepository).saveAll(notificationCaptor.capture());
+        
+        List<me.jinjjahalgae.domain.notification.entities.Notification> savedNotifications = notificationCaptor.getValue();
+        
         // 모든 참여자에게 알림이 가야 함 (3명)
-        assertThat(response.notificationCnt()).isEqualTo(3);
-        log.info("✅ 알림 개수 검증 통과: 예상 3개, 실제 {}개", response.notificationCnt());
+        assertThat(savedNotifications).hasSize(3);
+        log.info("✅ 알림 개수 검증 통과: 예상 3개, 실제 {}개", savedNotifications.size());
         
         // 메시지 검증
         String expectedMessage = "'계약자'님의 '테스트 계약' 계약이 시작되었습니다.";
-        assertThat(response.message()).isEqualTo(expectedMessage);
-        log.info("✅ 메시지 검증 통과: '{}'", response.message());
+        assertThat(savedNotifications.get(0).getContent()).isEqualTo(expectedMessage);
+        log.info("✅ 메시지 검증 통과: '{}'", savedNotifications.get(0).getContent());
         
         log.info("=== 모든 테스트 검증 완료 ===");
     }
@@ -192,23 +199,27 @@ class CreateNotificationUseCaseImplTest {
 
         // when
         log.info("=== UseCase 실행 시작 ===");
-        NotificationCreateResponse response = createNotificationUseCase.execute(request);
+        createNotificationUseCase.execute(request);
         log.info("=== UseCase 실행 완료 ===");
-        
-        log.info("반환된 Response: notificationCnt={}, message={}", 
-                response.notificationCnt(), response.message());
 
         // then
         log.info("=== 검증 시작 ===");
         
+        // ArgumentCaptor를 사용해서 실제 저장되는 알림 리스트 캡처
+        ArgumentCaptor<List<me.jinjjahalgae.domain.notification.entities.Notification>> notificationCaptor = 
+                ArgumentCaptor.forClass(List.class);
+        verify(notificationRepository).saveAll(notificationCaptor.capture());
+        
+        List<me.jinjjahalgae.domain.notification.entities.Notification> savedNotifications = notificationCaptor.getValue();
+        
         // 감독자들에게만 알림이 가야 함 (2명)
-        assertThat(response.notificationCnt()).isEqualTo(2);
-        log.info("✅ 알림 개수 검증 통과: 예상 2개, 실제 {}개", response.notificationCnt());
+        assertThat(savedNotifications).hasSize(2);
+        log.info("✅ 알림 개수 검증 통과: 예상 2개, 실제 {}개", savedNotifications.size());
         
         // 메시지 검증
         String expectedMessage = "'계약자'님이 '테스트 계약' 계약의 인증을 등록하였습니다.";
-        assertThat(response.message()).isEqualTo(expectedMessage);
-        log.info("✅ 메시지 검증 통과: '{}'", response.message());
+        assertThat(savedNotifications.get(0).getContent()).isEqualTo(expectedMessage);
+        log.info("✅ 메시지 검증 통과: '{}'", savedNotifications.get(0).getContent());
         
         log.info("=== 모든 테스트 검증 완료 ===");
     }
@@ -247,23 +258,27 @@ class CreateNotificationUseCaseImplTest {
 
         // when
         log.info("=== UseCase 실행 시작 ===");
-        NotificationCreateResponse response = createNotificationUseCase.execute(request);
+        createNotificationUseCase.execute(request);
         log.info("=== UseCase 실행 완료 ===");
-        
-        log.info("반환된 Response: notificationCnt={}, message={}", 
-                response.notificationCnt(), response.message());
 
         // then
         log.info("=== 검증 시작 ===");
         
+        // ArgumentCaptor를 사용해서 실제 저장되는 알림 리스트 캡처
+        ArgumentCaptor<List<me.jinjjahalgae.domain.notification.entities.Notification>> notificationCaptor = 
+                ArgumentCaptor.forClass(List.class);
+        verify(notificationRepository).saveAll(notificationCaptor.capture());
+        
+        List<me.jinjjahalgae.domain.notification.entities.Notification> savedNotifications = notificationCaptor.getValue();
+        
         // 계약자에게만 알림이 가야 함 (1명) - 감독자 추가는 계약자에게만 알림
-        assertThat(response.notificationCnt()).isEqualTo(1);
-        log.info("✅ 알림 개수 검증 통과: 예상 1개, 실제 {}개 (계약자에게만 알림)", response.notificationCnt());
+        assertThat(savedNotifications).hasSize(1);
+        log.info("✅ 알림 개수 검증 통과: 예상 1개, 실제 {}개 (계약자에게만 알림)", savedNotifications.size());
         
         // 메시지 검증
         String expectedMessage = "'감독자'님이 '테스트 계약' 계약의 감독자로 추가되었습니다.";
-        assertThat(response.message()).isEqualTo(expectedMessage);
-        log.info("✅ 메시지 검증 통과: '{}'", response.message());
+        assertThat(savedNotifications.get(0).getContent()).isEqualTo(expectedMessage);
+        log.info("✅ 메시지 검증 통과: '{}'", savedNotifications.get(0).getContent());
         
         log.info("=== 모든 테스트 검증 완료 ===");
     }
@@ -302,23 +317,27 @@ class CreateNotificationUseCaseImplTest {
 
         // when
         log.info("=== UseCase 실행 시작 ===");
-        NotificationCreateResponse response = createNotificationUseCase.execute(request);
+        createNotificationUseCase.execute(request);
         log.info("=== UseCase 실행 완료 ===");
-        
-        log.info("반환된 Response: notificationCnt={}, message={}", 
-                response.notificationCnt(), response.message());
 
         // then
         log.info("=== 검증 시작 ===");
         
+        // ArgumentCaptor를 사용해서 실제 저장되는 알림 리스트 캡처
+        ArgumentCaptor<List<me.jinjjahalgae.domain.notification.entities.Notification>> notificationCaptor = 
+                ArgumentCaptor.forClass(List.class);
+        verify(notificationRepository).saveAll(notificationCaptor.capture());
+        
+        List<me.jinjjahalgae.domain.notification.entities.Notification> savedNotifications = notificationCaptor.getValue();
+        
         // 유효한 감독자들에게만 알림이 가야 함 (1명) - 무효한 감독자는 제외
-        assertThat(response.notificationCnt()).isEqualTo(1);
-        log.info("✅ 알림 개수 검증 통과: 예상 1개, 실제 {}개 (무효한 감독자 제외)", response.notificationCnt());
+        assertThat(savedNotifications).hasSize(1);
+        log.info("✅ 알림 개수 검증 통과: 예상 1개, 실제 {}개 (무효한 감독자 제외)", savedNotifications.size());
         
         // 메시지 검증
         String expectedMessage = "'계약자'님이 '테스트 계약' 계약의 인증을 등록하였습니다.";
-        assertThat(response.message()).isEqualTo(expectedMessage);
-        log.info("✅ 메시지 검증 통과: '{}'", response.message());
+        assertThat(savedNotifications.get(0).getContent()).isEqualTo(expectedMessage);
+        log.info("✅ 메시지 검증 통과: '{}'", savedNotifications.get(0).getContent());
         
         log.info("=== 모든 테스트 검증 완료 ===");
     }

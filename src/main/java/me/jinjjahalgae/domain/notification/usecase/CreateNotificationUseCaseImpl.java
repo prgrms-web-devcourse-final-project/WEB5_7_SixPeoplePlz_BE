@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.notification.dto.NotificationCreateRequest;
-import me.jinjjahalgae.domain.notification.dto.NotificationCreateResponse;
 import me.jinjjahalgae.domain.notification.entities.Notification;
 import me.jinjjahalgae.domain.notification.repository.NotificationRepository;
 import me.jinjjahalgae.domain.notification.usecase.interfaces.CreateNotificationUseCase;
@@ -32,7 +31,7 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
 
     @Transactional // 트랜잭션 생성
     @Override
-    public NotificationCreateResponse execute(NotificationCreateRequest request) {
+    public void execute(NotificationCreateRequest request) {
 
         // 불필요한 객체 생성 방지. 재사용하기.
         Notification notification;
@@ -137,14 +136,15 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
         // saveAll로 DB 접근횟수과 트랜잭션 수 줄이기
         notificationRepository.saveAll(notificationList);
 
-        return new NotificationCreateResponse(notificationList.size(), message);
+        log.info("생성된 알림 수 : " + notificationList.size());
+        log.info("생성된 메세지 : " + message);
     }
 
     /// 계약과 관련된 유저 중 유효한 감독자만 필터링 해서 반환
     private static List<ParticipantInfoResponse> getSupervisorInfoList(List<ParticipantInfoResponse> participantInfoList) {
         return participantInfoList.stream()
                 .filter(info -> info.role() == Role.SUPERVISOR)
-                .filter(info -> info.validate())
+                .filter(ParticipantInfoResponse::valid)
                 .toList();
     }
 
@@ -152,7 +152,7 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
     private static List<ParticipantInfoResponse> getContractorInfoList(List<ParticipantInfoResponse> participantInfoList) {
         return participantInfoList.stream()
                 .filter(info -> info.role() == Role.CONTRACTOR)
-                .filter(info -> info.validate())
+                .filter(ParticipantInfoResponse::valid)
                 .toList();
     }
 }

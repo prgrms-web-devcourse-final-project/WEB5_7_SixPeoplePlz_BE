@@ -1,7 +1,6 @@
 package me.jinjjahalgae.domain.notification.usecase.interfaces;
 
 import me.jinjjahalgae.domain.notification.dto.NotificationCreateRequest;
-import me.jinjjahalgae.domain.notification.dto.NotificationCreateResponse;
 
 /**
  * 알림 생성 usecase (백엔드에서만 쓰일 예정)
@@ -10,5 +9,5 @@ import me.jinjjahalgae.domain.notification.dto.NotificationCreateResponse;
  */
 public interface CreateNotificationUseCase {
 
-    NotificationCreateResponse execute(NotificationCreateRequest request);
+    void execute(NotificationCreateRequest request);
 }
