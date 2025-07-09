@@ -32,6 +32,7 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     private NotificationType type; // 알림 유형
 
+    @Column(name = "`read`")
     private boolean read = false; // 알림 조회여부 (기본값 false)
 
     @Builder

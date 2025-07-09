@@ -1,48 +1,46 @@
-version: '3.8'
-
 services:
-  mysql:
-    image: mysql
-    container_name: mysql
-    restart: always
-    volumes:
-      - ./mysql-data:/var/lib/mysql
-    environment:
-      MYSQL_DATABASE: ${DEV_DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${DEV_DB_PASSWORD}
-    ports:
-      - "3306:3306"
-    networks:
-      - jjhg-net
+    mysql:
+        image: mysql
+        container_name: mysql
+        restart: always
+        volumes:
+            - ./mysql-data:/var/lib/mysql
+        environment:
+            MYSQL_DATABASE: ${DEV_DB_DATABASE}
+            MYSQL_ROOT_PASSWORD: ${DEV_DB_PASSWORD}
+        ports:
+            - "3306:3306"
+        networks:
+            - jjhg-net
 
-  nginx:
-    image: nginx
-    container_name: nginx
-    restart: always
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./lib:/etc/nginx/conf.d
-      - ./letsencrypt:/etc/letsencrypt
-    depends_on:
-      - mysql
-    networks:
-      - jjhg-net
+    nginx:
+        image: nginx
+        container_name: nginx
+        restart: always
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./lib:/etc/nginx/conf.d
+            - ./letsencrypt:/etc/letsencrypt
+        depends_on:
+            - mysql
+        networks:
+            - jjhg-net
 
-  redis:
-    image: redis
-    container_name: redis
-    restart: always
-    command: redis-server --requirepass ${DEV_REDIS_PASSWORD}
-    ports:
-      - "6379:6379"
-    volumes:
-      - ./redis-data:/data
-    networks:
-      - jjhg-net
+    redis:
+        image: redis
+        container_name: redis
+        restart: always
+        command: redis-server --requirepass ${DEV_REDIS_PASSWORD}
+        ports:
+            - "6379:6379"
+        volumes:
+            - ./redis-data:/data
+        networks:
+            - jjhg-net
 
 networks:
-  jjhg-net:
-    name: jjhg-net
-    driver: bridge
+    jjhg-net:
+        name: jjhg-net
+        driver: bridge
