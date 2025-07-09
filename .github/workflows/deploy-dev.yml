@@ -23,7 +23,7 @@ jobs:
         run: echo "IMAGE_NAME=ghcr.io/prgrms-web-devcourse-final-project/jjhg-api-dev" >> $GITHUB_ENV
 
       - name: GHCR 로그인
-        run: echo ${{ secrets.PAT }} | sudo docker login ghcr.io -u Soohyeok447 --password-stdin
+        run: echo ${{ secrets.PAT }} | docker login ghcr.io -u Soohyeok447 --password-stdin
 
       - name: 인프라 컨테이너 실행 (mysql, nginx)
         run: |
