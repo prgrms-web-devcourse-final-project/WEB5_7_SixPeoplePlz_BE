@@ -20,7 +20,7 @@ public class ContractMapper {
                 .life(request.life())
                 .proofPerWeek(request.proofPerWeek())
                 .oneOff(request.oneOff())
-                .type(ContractType.valueOf(request.type()))
+                .type(ContractType.valueOf(String.valueOf(request.type())))
                 .build();
 
         contract.initialize();

@@ -1,0 +1,45 @@
+# 운영용 설정
+spring:
+
+  # redis 설정
+  data:
+    redis:
+      contract-invite: "contract:invite:"
+      contract-supervisors: "contract:supervisors:"
+      host: localhost
+      port: 6379
+      password:
+
+  # MySQL Connection 정보
+  datasource:
+    url: jdbc:mysql://{도메인}:{도메인_port}/{배포된 DB의 이름}
+    username: root
+    password: {배포된 DB의 password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # JPA 설정
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+# 소셜 로그인 Secret
+oauth2:
+  kakao:
+    client-id:
+    client-secret:
+  naver:
+    client-id:
+    client-secret:
+
+# JWT Secret
+jwt:
+  secret: jinjjahalgae-team6-devcourse-hwaiting-letsgo
+  access-token-expiration: 30m
+  refresh-token-expiration: 30d
+
+
+# 초대 링크 설정값
+invite:
+  expired-time: 24    # 초대 만료시간 24시간
+  max-supervisors: 5  # 최대 감독자 수
+  invite-url-prefix: "https://jinjjahalgae.xyz/api/invite/"

@@ -87,7 +87,7 @@ class ContractCreateUseCaseImplTest {
                 .contract(fakeContract)
                 .user(fakeUser)
                 .role(Role.CONTRACTOR)
-                .validate(true)
+                .valid(true)
                 .imageKey("signature.jpg")
                 .build();
 
