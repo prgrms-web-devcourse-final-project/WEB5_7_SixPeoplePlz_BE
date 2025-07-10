@@ -26,6 +26,6 @@ public class ContractDetailUseCaseImpl implements ContractDetailUseCase {
 
     private Contract findContractByIdAndUserIdWithParticipant(Long contractId, Long userId) {
         return contractRepository.findDetailsByIdAndUserId(contractId, userId)
-                .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException("계약을 찾을 수 없습니다."));
+                .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException("존재하지 않는 계약입니다."));
     }
 }
