@@ -1,4 +1,4 @@
-package me.jinjjahalgae.api;
+package me.jinjjahalgae.presentation.api;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.notification.usecase.deleteAllNotification.DeleteAllNotificationUseCase;
