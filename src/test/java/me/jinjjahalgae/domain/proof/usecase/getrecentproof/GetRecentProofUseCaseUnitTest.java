@@ -5,7 +5,7 @@ import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
 import me.jinjjahalgae.domain.proof.usecase.get.recent.GetRecentProofUseCaseImpl;
-import me.jinjjahalgae.domain.proof.usecase.get.recent.ProofRecentResponse;
+import me.jinjjahalgae.domain.proof.usecase.get.recent.dto.ProofRecentResponse;
 import me.jinjjahalgae.domain.proof.util.ProofTestUtil;
 import me.jinjjahalgae.global.exception.AppException;
 import org.junit.jupiter.api.BeforeEach;

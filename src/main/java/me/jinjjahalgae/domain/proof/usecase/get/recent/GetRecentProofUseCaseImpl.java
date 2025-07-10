@@ -5,6 +5,7 @@ import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.mapper.ProofMapper;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
+import me.jinjjahalgae.domain.proof.usecase.get.recent.dto.ProofRecentResponse;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;

@@ -1,5 +1,7 @@
 package me.jinjjahalgae.domain.proof.usecase.get.await;
 
+import me.jinjjahalgae.domain.proof.usecase.get.await.dto.ProofAwaitResponse;
+
 import java.util.List;
 
 public interface GetAwaitProofUseCase {

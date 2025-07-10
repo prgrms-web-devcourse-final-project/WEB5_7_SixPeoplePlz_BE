@@ -9,6 +9,7 @@ import me.jinjjahalgae.domain.proof.mapper.ProofImageMapper;
 import me.jinjjahalgae.domain.proof.mapper.ProofMapper;
 import me.jinjjahalgae.domain.proof.repository.ProofImageRepository;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
+import me.jinjjahalgae.domain.proof.usecase.create.common.ProofCreateRequest;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

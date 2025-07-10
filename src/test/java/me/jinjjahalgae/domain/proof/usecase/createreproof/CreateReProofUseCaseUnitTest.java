@@ -7,7 +7,7 @@ import me.jinjjahalgae.domain.proof.entities.ProofImage;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 import me.jinjjahalgae.domain.proof.repository.ProofImageRepository;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
-import me.jinjjahalgae.domain.proof.usecase.create.proof.ProofCreateRequest;
+import me.jinjjahalgae.domain.proof.usecase.create.common.ProofCreateRequest;
 import me.jinjjahalgae.domain.proof.usecase.create.reproof.CreateReProofUseCaseImpl;
 import me.jinjjahalgae.domain.proof.util.ProofTestUtil;
 import me.jinjjahalgae.global.exception.AppException;
