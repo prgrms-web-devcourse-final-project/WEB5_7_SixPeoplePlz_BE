@@ -117,16 +117,16 @@ class ContractDetailUseCaseTest {
                 0.0,
                 0.0,
                 List.of(
-                        new ContractDetailResponse.ParticipantInfo(
+                        new ContractDetailResponse.ParticipantResponse(
                                 userId, "계약자", Role.CONTRACTOR, "contractor-signature-key"
                         ),
-                        new ContractDetailResponse.ParticipantInfo(
+                        new ContractDetailResponse.ParticipantResponse(
                                 2L, "감독자1", Role.SUPERVISOR, "supervisor1-signature-key"
                         ),
-                        new ContractDetailResponse.ParticipantInfo(
+                        new ContractDetailResponse.ParticipantResponse(
                                 3L, "감독자2", Role.SUPERVISOR, "supervisor2-signature-key"
                         ),
-                        new ContractDetailResponse.ParticipantInfo(
+                        new ContractDetailResponse.ParticipantResponse(
                                 4L, "감독자3", Role.SUPERVISOR, "supervisor3-signature-key"
                         )
                 )
@@ -158,26 +158,26 @@ class ContractDetailUseCaseTest {
         assertThat(result.participants()).hasSize(4);
 
         // 계약자 검증
-        ContractDetailResponse.ParticipantInfo contractor = result.participants().get(0);
+        ContractDetailResponse.ParticipantResponse contractor = result.participants().get(0);
         assertThat(contractor.userId()).isEqualTo(userId);
         assertThat(contractor.name()).isEqualTo("계약자");
         assertThat(contractor.role()).isEqualTo(Role.CONTRACTOR);
         assertThat(contractor.signatureImageKey()).isEqualTo("contractor-signature-key");
 
         // 감독자들 검증
-        ContractDetailResponse.ParticipantInfo supervisor1 = result.participants().get(1);
+        ContractDetailResponse.ParticipantResponse supervisor1 = result.participants().get(1);
         assertThat(supervisor1.userId()).isEqualTo(2L);
         assertThat(supervisor1.name()).isEqualTo("감독자1");
         assertThat(supervisor1.role()).isEqualTo(Role.SUPERVISOR);
         assertThat(supervisor1.signatureImageKey()).isEqualTo("supervisor1-signature-key");
 
-        ContractDetailResponse.ParticipantInfo supervisor2 = result.participants().get(2);
+        ContractDetailResponse.ParticipantResponse supervisor2 = result.participants().get(2);
         assertThat(supervisor2.userId()).isEqualTo(3L);
         assertThat(supervisor2.name()).isEqualTo("감독자2");
         assertThat(supervisor2.role()).isEqualTo(Role.SUPERVISOR);
         assertThat(supervisor2.signatureImageKey()).isEqualTo("supervisor2-signature-key");
 
-        ContractDetailResponse.ParticipantInfo supervisor3 = result.participants().get(3);
+        ContractDetailResponse.ParticipantResponse supervisor3 = result.participants().get(3);
         assertThat(supervisor3.userId()).isEqualTo(4L);
         assertThat(supervisor3.name()).isEqualTo("감독자3");
         assertThat(supervisor3.role()).isEqualTo(Role.SUPERVISOR);

@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
  import me.jinjjahalgae.domain.contract.enums.ContractType;
  import me.jinjjahalgae.domain.participation.enums.Role;
-import me.jinjjahalgae.global.validation.EnumValue;
 
 /**
  * 계약 상세 response
@@ -67,9 +66,9 @@ import me.jinjjahalgae.global.validation.EnumValue;
         double periodPercent,      // 계산해서 제공
 
         @Schema(description = "참여자 정보", example = "참여자 정보")
-        List<ParticipantInfo> participants //참여한 유저 정보
+        List<ParticipantResponse> participants //참여한 유저 정보
  ) {
-     public record ParticipantInfo(
+     public record ParticipantResponse(
          Long userId,
          String name,
          Role role,

@@ -8,7 +8,6 @@ import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.user.User;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -71,9 +70,9 @@ public class ContractMapper {
         );
     }
 
-    private List<ContractDetailResponse.ParticipantInfo> mapToParticipantInfos(Contract contract) {
+    private List<ContractDetailResponse.ParticipantResponse> mapToParticipantInfos(Contract contract) {
         return contract.getParticipations().stream()
-                .map(participation -> new ContractDetailResponse.ParticipantInfo(
+                .map(participation -> new ContractDetailResponse.ParticipantResponse(
                         participation.getUser().getId(),
                         participation.getUser().getName(),
                         participation.getRole(),
