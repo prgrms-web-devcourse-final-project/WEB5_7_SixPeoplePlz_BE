@@ -7,6 +7,7 @@ import me.jinjjahalgae.domain.proof.mapper.ProofMapper;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class GetAwaitProofUseCaseImpl implements GetAwaitProofUseCase {
     private final ParticipationRepository participationRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProofAwaitResponse> execute(Long contractId, Long userId) {
         // 유저가 계약의 참여자인지 확인
         boolean isUserParticipate = participationRepository.existsByContractIdAndUserId(contractId, userId);

@@ -7,6 +7,7 @@ import me.jinjjahalgae.domain.proof.mapper.ProofMapper;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -23,6 +24,7 @@ public class GetContractorProofListUseCaseImpl implements GetContractorProofList
     private final ContractRepository contractRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<ContractorProofListResponse> execute(Long contractId, int year, int month, Long userId) {
         // 유저의 계약인지 확인
         boolean isUserContract = contractRepository.existsByIdAndUserId(contractId, userId);

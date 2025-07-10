@@ -8,6 +8,7 @@ import me.jinjjahalgae.domain.proof.repository.ProofRepository;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class GetRecentProofUseCaseImpl implements GetRecentProofUseCase {
     private final ContractRepository contractRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProofRecentResponse> execute(Long contractId, Long userId) {
         // 유저의 계약인지 확인
         boolean isUserContract = contractRepository.existsByIdAndUserId(contractId, userId);

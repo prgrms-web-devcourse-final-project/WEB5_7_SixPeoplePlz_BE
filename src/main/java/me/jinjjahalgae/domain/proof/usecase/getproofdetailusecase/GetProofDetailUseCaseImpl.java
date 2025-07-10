@@ -1,7 +1,6 @@
 package me.jinjjahalgae.domain.proof.usecase.getproofdetailusecase;
 
 import lombok.RequiredArgsConstructor;
-import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.participation.repository.ParticipationRepository;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.mapper.ProofImageMapper;
@@ -9,6 +8,7 @@ import me.jinjjahalgae.domain.proof.mapper.ProofMapper;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,6 +19,7 @@ public class GetProofDetailUseCaseImpl implements GetProofDetailUseCase {
     private final ParticipationRepository participationRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public ProofDetailResponse execute(Long proofId, Long userId) {
         // 인증 조회 (이미지 + 피드백)
         Proof proof = proofRepository.findByIdWithProofImagesAndFeedbacks(proofId)
