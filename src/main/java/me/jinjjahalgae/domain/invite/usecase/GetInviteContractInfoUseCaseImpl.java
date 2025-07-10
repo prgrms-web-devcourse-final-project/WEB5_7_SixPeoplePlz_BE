@@ -34,7 +34,7 @@ public class GetInviteContractInfoUseCaseImpl implements GetInviteContractInfoUs
         // 감독자 자리가 다 찼는지 확인
         String supervisorCountKey = SUPERVISOR_COUNT_PREFIX + contract.getId();
         Integer remaining = (Integer) redisTemplate.opsForValue().get(supervisorCountKey);
-        if (remaining != null && remaining <= 0) {
+        if (remaining == null || remaining <= 0) {
             throw ErrorCode.SUPERVISOR_ALREADY_FULL.serviceException("이미 5명의 감독자가 참여했습니다.");
         }
 

@@ -1,50 +1,55 @@
-    package me.jinjjahalgae.domain.participation.entity;
+package me.jinjjahalgae.domain.participation.entity;
 
-    import jakarta.persistence.*;
-    import lombok.AccessLevel;
-    import lombok.Builder;
-    import lombok.Getter;
-    import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-    import me.jinjjahalgae.domain.common.BaseEntity;
-    import me.jinjjahalgae.domain.contract.entity.Contract;
-    import me.jinjjahalgae.domain.participation.enums.Role;
-    import me.jinjjahalgae.domain.user.User;
+import me.jinjjahalgae.domain.common.BaseEntity;
+import me.jinjjahalgae.domain.contract.entity.Contract;
+import me.jinjjahalgae.domain.participation.enums.Role;
+import me.jinjjahalgae.domain.user.User;
 
-    @Entity
-    @Getter
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public class Participation extends BaseEntity {
+@Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Participation extends BaseEntity {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id; //서명 id
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; //서명 id
 
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "contract_id")
-        private Contract contract;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contract_id")
+    private Contract contract;
 
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "user_id")
-        private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-        private String imageKey; //이미지 key (url)
+    private String imageKey; //이미지 key (url)
 
-        @Enumerated(EnumType.STRING)
-        private Role role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-        private Boolean valid;
+    private Boolean valid;
 
-        @Builder
-        private Participation(Contract contract, User user, String imageKey, Role role, Boolean valid) {
-            this.contract = contract;
-            this.user = user;
-            this.imageKey = imageKey;
-            this.role = role;
-            this.valid = valid;
-        }
+    @Builder
+    private Participation(Contract contract, User user, String imageKey, Role role, Boolean valid) {
+        this.contract = contract;
+        this.user = user;
+        this.imageKey = imageKey;
+        this.role = role;
+        this.valid = valid;
+    }
 
-        public void setContract(Contract contract) {
-            this.contract = contract;
-        }
+    public void setContract(Contract contract) {
+        this.contract = contract;
+    }
+
+    // 참여 여부를 false로 변경하는 메서드
+    public void invalidate() {
+        this.valid = false;
+    }
 }

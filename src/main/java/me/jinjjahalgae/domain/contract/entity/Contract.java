@@ -116,4 +116,16 @@ public class Contract extends BaseEntity {
         long totalWeeks = (totalDays + 6) / 7; // 프론트에서 날짜 선택을 막으면 몇주인지 올림하여 계산하기만 하면 되기 때문에 6을 더해서 항상 올림 처리
         return (int) (totalWeeks * proofPerWeek);
     }
+
+    // 참여 정보를 제거하는 메서드
+    public void removeParticipation(Participation participation) {
+        this.participations.remove(participation);
+    }
+
+    // 감독자 수를 감소시키는 메서드
+    public void decrementTotalSupervisor() {
+        if (this.totalSupervisor > 0) {
+            this.totalSupervisor--;
+        }
+    }
 }
