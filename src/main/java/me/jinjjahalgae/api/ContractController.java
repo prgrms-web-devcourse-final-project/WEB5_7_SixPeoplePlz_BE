@@ -62,7 +62,7 @@ public class ContractController {
         return CommonResponse.success(response);
     }
 
-    @PutMapping("{/contractId}")
+    @PutMapping("/{contractId}")
     public CommonResponse<Void> updateContract(
             @AuthenticationPrincipal CustomJwtPrincipal user,
             @PathVariable Long contractId,
