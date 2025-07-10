@@ -1,9 +1,10 @@
 package me.jinjjahalgae.domain.invite.usecase;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.jinjjahalgae.domain.invite.dto.request.InviteLinkVerifyRequest;
-import me.jinjjahalgae.domain.invite.dto.response.ContractUuidResponse;
+import me.jinjjahalgae.domain.invite.usecase.verify.password.dto.VerifyInvitePasswordRequest;
+import me.jinjjahalgae.domain.invite.usecase.verify.password.dto.ContractUuidResponse;
 import me.jinjjahalgae.domain.invite.model.InviteInfo;
+import me.jinjjahalgae.domain.invite.usecase.verify.password.VerifyInvitePasswordUseCaseImpl;
 import me.jinjjahalgae.global.exception.AppException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -44,7 +45,7 @@ class VerifyInvitePasswordUseCaseImplTest {
         String inviteCode = "valid123";
         String password = "password123";
         String contractUuid = "contract-uuid-123";
-        InviteLinkVerifyRequest request = new InviteLinkVerifyRequest(password);
+        VerifyInvitePasswordRequest request = new VerifyInvitePasswordRequest(password);
         InviteInfo inviteInfo = new InviteInfo(contractUuid, password);
 
         when(valueOperations.get(inviteCode)).thenReturn(objectMapper.convertValue(inviteInfo, java.util.Map.class));
@@ -65,7 +66,7 @@ class VerifyInvitePasswordUseCaseImplTest {
         String correctPassword = "password123";
         String wrongPassword = "wrongPassword";
         String contractUuid = "contract-uuid-123";
-        InviteLinkVerifyRequest request = new InviteLinkVerifyRequest(wrongPassword);
+        VerifyInvitePasswordRequest request = new VerifyInvitePasswordRequest(wrongPassword);
         InviteInfo inviteInfo = new InviteInfo(contractUuid, correctPassword);
 
         when(valueOperations.get(inviteCode)).thenReturn(objectMapper.convertValue(inviteInfo, java.util.Map.class));

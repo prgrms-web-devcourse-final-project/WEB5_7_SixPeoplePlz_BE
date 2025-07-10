@@ -1,9 +1,7 @@
-package me.jinjjahalgae.domain.invite.usecase;
+package me.jinjjahalgae.domain.invite.usecase.verify.link;
 
 import lombok.RequiredArgsConstructor;
-import me.jinjjahalgae.domain.invite.usecase.interfaces.VerifyInviteLinkUseCase;
 import me.jinjjahalgae.global.exception.ErrorCode;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 

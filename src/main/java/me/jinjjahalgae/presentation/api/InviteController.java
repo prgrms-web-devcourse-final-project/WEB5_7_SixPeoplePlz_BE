@@ -3,14 +3,14 @@ package me.jinjjahalgae.presentation.api;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jinjjahalgae.domain.invite.dto.request.InviteLinkVerifyRequest;
-import me.jinjjahalgae.domain.invite.dto.response.ContractUuidResponse;
-import me.jinjjahalgae.domain.invite.dto.response.InviteContractInfoResponse;
-import me.jinjjahalgae.domain.invite.dto.response.InviteLinkResponse;
-import me.jinjjahalgae.domain.invite.usecase.interfaces.CreateInviteLinkUseCase;
-import me.jinjjahalgae.domain.invite.usecase.interfaces.GetInviteContractInfoUseCase;
-import me.jinjjahalgae.domain.invite.usecase.interfaces.VerifyInviteLinkUseCase;
-import me.jinjjahalgae.domain.invite.usecase.interfaces.VerifyInvitePasswordUseCase;
+import me.jinjjahalgae.domain.invite.usecase.verify.password.dto.VerifyInvitePasswordRequest;
+import me.jinjjahalgae.domain.invite.usecase.verify.password.dto.ContractUuidResponse;
+import me.jinjjahalgae.domain.invite.usecase.get.contract.dto.InviteContractInfoResponse;
+import me.jinjjahalgae.domain.invite.usecase.create.invite.dto.InviteLinkResponse;
+import me.jinjjahalgae.domain.invite.usecase.create.invite.CreateInviteLinkUseCase;
+import me.jinjjahalgae.domain.invite.usecase.get.contract.GetInviteContractInfoUseCase;
+import me.jinjjahalgae.domain.invite.usecase.verify.link.VerifyInviteLinkUseCase;
+import me.jinjjahalgae.domain.invite.usecase.verify.password.VerifyInvitePasswordUseCase;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
 import me.jinjjahalgae.presentation.api.docs.invite.InviteControllerDocs;
@@ -32,8 +32,10 @@ public class InviteController implements InviteControllerDocs {
     @Override
     @PostMapping("/{contractId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public CommonResponse<InviteLinkResponse> createInviteLink(@PathVariable Long contractId) {
-        InviteLinkResponse result = createInviteLinkUseCase.execute(contractId);
+    public CommonResponse<InviteLinkResponse> createInviteLink(
+            @PathVariable Long contractId,
+            @AuthenticationPrincipal CustomJwtPrincipal principal) {
+        InviteLinkResponse result = createInviteLinkUseCase.execute(contractId, principal.getUser());
         return CommonResponse.success(result);
     }
 
@@ -50,7 +52,7 @@ public class InviteController implements InviteControllerDocs {
     @ResponseStatus(HttpStatus.OK)
     public CommonResponse<ContractUuidResponse> verifyPassword(
             @PathVariable String inviteCode,
-            @Valid @RequestBody InviteLinkVerifyRequest request) {
+            @Valid @RequestBody VerifyInvitePasswordRequest request) {
         ContractUuidResponse result = verifyInvitePasswordUseCase.execute(inviteCode, request);
         return CommonResponse.success(result);
     }

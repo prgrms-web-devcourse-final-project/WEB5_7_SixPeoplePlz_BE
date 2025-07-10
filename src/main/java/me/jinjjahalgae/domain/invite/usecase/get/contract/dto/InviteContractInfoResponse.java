@@ -1,9 +1,9 @@
-package me.jinjjahalgae.domain.invite.dto.response;
+package me.jinjjahalgae.domain.invite.usecase.get.contract.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
-import me.jinjjahalgae.domain.invite.model.SupervisorInfo;
+import me.jinjjahalgae.domain.invite.model.SupervisorResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -107,6 +107,6 @@ public record InviteContractInfoResponse(
         ContractType type,
 
         @Schema(description = "감독자 정보 목록 (이름과 서명 이미지 키)")
-        List<SupervisorInfo> supervisorInfos
+        List<SupervisorResponse> supervisorInfos
 ) {
 }

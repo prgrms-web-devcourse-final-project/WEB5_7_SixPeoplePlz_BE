@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.participation.dto.request;
+package me.jinjjahalgae.domain.participation.usecase.common.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

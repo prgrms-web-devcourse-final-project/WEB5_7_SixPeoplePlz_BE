@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.invite.dto.response;
+package me.jinjjahalgae.domain.invite.usecase.create.invite.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

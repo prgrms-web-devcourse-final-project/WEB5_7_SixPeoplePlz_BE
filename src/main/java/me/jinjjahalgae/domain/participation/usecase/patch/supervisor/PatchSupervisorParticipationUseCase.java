@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.participation.usecase.interfaces;
+package me.jinjjahalgae.domain.participation.usecase.patch.supervisor;
 
 import me.jinjjahalgae.domain.user.User;
 

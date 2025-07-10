@@ -1,13 +1,15 @@
-package me.jinjjahalgae.domain.invite.usecase;
+package me.jinjjahalgae.domain.invite.usecase.create.invite;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.contract.entity.Contract;
+import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
+import me.jinjjahalgae.domain.invite.mapper.InviteMapper;
 import me.jinjjahalgae.domain.invite.model.InviteInfo;
-import me.jinjjahalgae.domain.invite.dto.response.InviteLinkResponse;
-import me.jinjjahalgae.domain.invite.usecase.interfaces.CreateInviteLinkUseCase;
+import me.jinjjahalgae.domain.invite.usecase.create.invite.dto.InviteLinkResponse;
+import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -41,9 +43,19 @@ public class CreateInviteLinkUseCaseImpl implements CreateInviteLinkUseCase {
     private String SUPERVISOR_COUNT_PREFIX;
 
     @Override
-    public InviteLinkResponse execute(Long contractId) {
+    public InviteLinkResponse execute(Long contractId, User user) {
         Contract contract = contractRepository.findById(contractId)
-                .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.serviceException("존재하지 않는 계약 입니다. id=" + contractId));
+                .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.serviceException("존재하지 않는 계약 입니다. id =" + contractId));
+
+        // 자신의 계약만 초대링크 생성 가능
+        if(!contract.getUser().equals(user)) {
+            throw ErrorCode.ACCESS_DENIED.serviceException("자신의 계약에만 초대링크 생성이 가능합니다.");
+        }
+
+        // 계약 시작 전에만 초대링크 생성가능
+        if(contract.getStatus() != ContractStatus.PENDING) {
+            throw ErrorCode.CANNOT_CREATE_INVITE_AFTER_START.serviceException("계약이 시작히기 전에만 초대 코드를 생성할 수 있습니다.");
+        }
 
         // 기존 초대링크가 있으면 반환
         String contractKey = CONTRACT_TO_INVITE_PREFIX + contract.getId();
@@ -56,7 +68,7 @@ public class CreateInviteLinkUseCaseImpl implements CreateInviteLinkUseCase {
             if (data != null) {
                 InviteInfo existingInfo = objectMapper.convertValue(data, InviteInfo.class);
                 String inviteUrl = INVITE_URL_PREFIX + inviteCode;
-                return new InviteLinkResponse(inviteUrl, existingInfo.password());
+                return InviteMapper.toInviteLinkResponse(inviteUrl, existingInfo.password());
             }
         }
 
@@ -90,6 +102,6 @@ public class CreateInviteLinkUseCaseImpl implements CreateInviteLinkUseCase {
 
         // 초대 정보 반환
         String inviteUrl = INVITE_URL_PREFIX + newInviteCode;
-        return new InviteLinkResponse(inviteUrl, password);
+        return InviteMapper.toInviteLinkResponse(inviteUrl, password);
     }
 }
