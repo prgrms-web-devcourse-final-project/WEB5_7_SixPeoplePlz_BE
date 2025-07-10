@@ -16,12 +16,12 @@ public class DeleteAllNotificationUseCaseImpl implements DeleteAllNotificationUs
     /**
      * userid에 해당하는 알림들을 일괄 삭제함
      * @param userId 알림 일괄 삭제할 userid
-     * @return 삭제된 알림 개수
+     * @return 없음
      */
     @Override
     @Transactional // 트랜잭션 생성
-    public Long execute(Long userId) {
+    public void execute(Long userId) {
 
-        return notificationRepository.deleteAllByUserId(userId);
+        notificationRepository.deleteAllByUserId(userId);
     }
 }

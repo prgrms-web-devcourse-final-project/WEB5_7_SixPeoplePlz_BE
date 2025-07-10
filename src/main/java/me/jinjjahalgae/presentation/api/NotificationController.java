@@ -58,11 +58,12 @@ public class NotificationController implements NotificationControllerDocs {
     /**
      * 현재 로그인한 사용자의 알림을 모두 삭제
      * @param principal
-     * @return 삭제한 알림의 개수
+     * @return 없음
      */
     @DeleteMapping
-    public CommonResponse<Long> deleteAllNotification(@AuthenticationPrincipal CustomJwtPrincipal principal) {
-        return CommonResponse.success(deleteAllNotification.execute(principal.getUserId()));
+    public CommonResponse<Void> deleteAllNotification(@AuthenticationPrincipal CustomJwtPrincipal principal) {
+        deleteAllNotification.execute(principal.getUserId());
+        return CommonResponse.success();
     }
 
     /**

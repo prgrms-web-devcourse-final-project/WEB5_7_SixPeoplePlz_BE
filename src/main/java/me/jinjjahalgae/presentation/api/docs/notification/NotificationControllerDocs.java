@@ -186,18 +186,18 @@ public interface NotificationControllerDocs {
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "삭제 성공 (삭제된 알림 개수 반환)",
+            description = "삭제 성공",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = NoContentSwaggerResponse.class),
                 examples = @ExampleObject(
-                    name = "성공 응답",
-                    value = """
-                    {
-                      "success": true,
-                      "result": 5
-                    }
-                    """
+                        name = "성공 응답",
+                        value = """
+                        {
+                          "success": true,
+                          "result": null
+                        }
+                        """
                 )
             )
         ),
@@ -230,7 +230,7 @@ public interface NotificationControllerDocs {
             )
         )
     })
-    CommonResponse<Long> deleteAllNotification(
+    CommonResponse<Void> deleteAllNotification(
         @Parameter(hidden = true) CustomJwtPrincipal principal
     );
 
