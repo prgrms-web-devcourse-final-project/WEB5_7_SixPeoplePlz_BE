@@ -3,6 +3,7 @@ package me.jinjjahalgae.api;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.dto.request.ContractCreateRequest;
+import me.jinjjahalgae.domain.contract.dto.request.ContractUpdateRequest;
 import me.jinjjahalgae.domain.contract.dto.response.ContractCreateResponse;
 import me.jinjjahalgae.domain.contract.dto.response.ContractDetailResponse;
 import me.jinjjahalgae.domain.contract.dto.response.ContractListResponse;
@@ -10,6 +11,7 @@ import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.usecase.ContractCreateUseCase;
 import me.jinjjahalgae.domain.contract.usecase.ContractDetailUseCase;
 import me.jinjjahalgae.domain.contract.usecase.ContractListUseCase;
+import me.jinjjahalgae.domain.contract.usecase.ContractUpdateUseCase;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
 import org.springframework.data.domain.Page;
@@ -29,6 +31,7 @@ public class ContractController {
     private final ContractCreateUseCase contractCreateUseCase;
     private final ContractListUseCase contractListUseCase;
     private final ContractDetailUseCase contractDetailUseCase;
+    private final ContractUpdateUseCase contractUpdateUseCase;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -58,4 +61,37 @@ public class ContractController {
         ContractDetailResponse response = contractDetailUseCase.execute(user.getUserId(), contractId);
         return CommonResponse.success(response);
     }
+
+    @PutMapping("{/contractId}")
+    public CommonResponse<Void> updateContract(
+            @AuthenticationPrincipal CustomJwtPrincipal user,
+            @PathVariable Long contractId,
+            @Valid @RequestBody ContractUpdateRequest request
+    ) {
+        contractUpdateUseCase.execute(user.getUserId(), contractId, request);
+        return CommonResponse.success();
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
