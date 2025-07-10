@@ -2,11 +2,9 @@ package me.jinjjahalgae.domain.contract.repository;
 
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
-import me.jinjjahalgae.domain.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,5 +17,5 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     Page<Contract> findByUserIdAndStatusInOrderByIdDesc(Long userId, List<ContractStatus> status, Pageable pageable);
 
     //사용자별 계약 상세 조회
-    Optional<Contract> findByIdAndUserIdWithParticipation(@Param("contractId") Long contractId, @Param("userId") Long userId);
+    Optional<Contract> findDetailsByIdAndUserId(Long contractId, Long userId);
 }

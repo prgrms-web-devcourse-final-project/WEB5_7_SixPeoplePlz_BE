@@ -10,8 +10,6 @@ import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -27,7 +25,7 @@ public class ContractDetailUseCaseImpl implements ContractDetailUseCase {
     }
 
     private Contract findContractByIdAndUserId(Long contractId, Long userId) {
-        return contractRepository.findByIdAndUserIdWithParticipation(contractId, userId)
+        return contractRepository.findDetailsByIdAndUserId(contractId, userId)
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException("계약을 찾을 수 없습니다."));
     }
 }
