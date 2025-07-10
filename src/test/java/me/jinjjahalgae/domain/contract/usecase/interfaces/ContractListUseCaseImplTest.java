@@ -1,11 +1,12 @@
 package me.jinjjahalgae.domain.contract.usecase.interfaces;
 
-import me.jinjjahalgae.domain.contract.dto.response.ContractListResponse;
+import me.jinjjahalgae.domain.contract.usecase.get.list.dto.ContractListResponse;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.contract.mapper.ContractMapper;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
+import me.jinjjahalgae.domain.contract.usecase.get.list.GetContractListUseCaseImpl;
 import me.jinjjahalgae.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +28,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class ContractListUseCaseTest {
+class GetContractListUseCaseTest {
 
     @Mock
     private ContractRepository contractRepository;
@@ -36,7 +37,7 @@ class ContractListUseCaseTest {
     private ContractMapper contractMapper;
 
     @InjectMocks
-    private ContractListUseCaseImpl contractListUseCase;
+    private GetContractListUseCaseImpl contractListUseCase;
 
     private User user;
     private Contract pendingContract;

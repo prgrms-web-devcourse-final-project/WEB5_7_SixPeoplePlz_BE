@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.contract.dto.request;
+package me.jinjjahalgae.domain.contract.usecase.update.dto;
 
 import java.time.LocalDateTime;
 

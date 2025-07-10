@@ -1,11 +1,10 @@
-package me.jinjjahalgae.domain.contract.usecase.interfaces;
+package me.jinjjahalgae.domain.contract.usecase.get.detail;
 
 import lombok.RequiredArgsConstructor;
-import me.jinjjahalgae.domain.contract.dto.response.ContractDetailResponse;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.mapper.ContractMapper;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
-import me.jinjjahalgae.domain.contract.usecase.ContractDetailUseCase;
+import me.jinjjahalgae.domain.contract.usecase.get.detail.dto.ContractDetailResponse;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ContractDetailUseCaseImpl implements ContractDetailUseCase {
+public class GetContractDetailUseCaseImpl implements GetContractDetailUseCase {
 
     private final ContractRepository contractRepository;
     private final ContractMapper contractMapper;

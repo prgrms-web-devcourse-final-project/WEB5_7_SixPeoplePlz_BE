@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.contract.dto.response;
+package me.jinjjahalgae.domain.contract.usecase.get.detail.dto;
 
  import java.time.LocalDateTime;
  import java.util.List;

@@ -1,12 +1,11 @@
-package me.jinjjahalgae.domain.contract.usecase.interfaces;
+package me.jinjjahalgae.domain.contract.usecase.get.list;
 
 import lombok.RequiredArgsConstructor;
-import me.jinjjahalgae.domain.contract.dto.response.ContractListResponse;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.mapper.ContractMapper;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
-import me.jinjjahalgae.domain.contract.usecase.ContractListUseCase;
+import me.jinjjahalgae.domain.contract.usecase.get.list.dto.ContractListResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ContractListUseCaseImpl implements ContractListUseCase {
+public class GetContractListUseCaseImpl implements GetContractListUseCase {
 
     private final ContractRepository contractRepository;
     private final ContractMapper contractMapper;

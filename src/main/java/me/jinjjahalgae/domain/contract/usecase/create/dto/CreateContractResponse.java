@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.contract.dto.response;
+package me.jinjjahalgae.domain.contract.usecase.create.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
     title = "단순 계약 생성 성공 응답",
     description = "계약 생성 성공 시 반환되는 응답 DTO"
 )
-public record ContractCreateResponse(
+public record CreateContractResponse(
         @Schema(description = "계약 ID", example = "1")
         Long contractId,
         

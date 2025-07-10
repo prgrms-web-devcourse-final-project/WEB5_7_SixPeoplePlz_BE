@@ -1,11 +1,12 @@
 package me.jinjjahalgae.domain.contract.usecase.interfaces;
 
-import me.jinjjahalgae.domain.contract.dto.response.ContractDetailResponse;
+import me.jinjjahalgae.domain.contract.usecase.get.detail.dto.ContractDetailResponse;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.contract.mapper.ContractMapper;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
+import me.jinjjahalgae.domain.contract.usecase.get.detail.GetContractDetailUseCaseImpl;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.global.exception.AppException;
@@ -27,7 +28,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class ContractDetailUseCaseTest {
+class GetContractDetailUseCaseTest {
 
     @Mock
     private ContractRepository contractRepository;
@@ -36,7 +37,7 @@ class ContractDetailUseCaseTest {
     private ContractMapper contractMapper;
 
     @InjectMocks
-    private ContractDetailUseCaseImpl contractDetailUseCase;
+    private GetContractDetailUseCaseImpl contractDetailUseCase;
 
     private User contractor;
     private User supervisor1;

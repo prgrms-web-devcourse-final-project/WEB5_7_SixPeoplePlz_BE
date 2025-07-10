@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.contract.dto.request;
+package me.jinjjahalgae.domain.contract.usecase.create.dto;
 
 import java.time.LocalDateTime;
 
@@ -18,7 +18,7 @@ import me.jinjjahalgae.domain.contract.enums.ContractType;
     title = "계약 생성 요청",
     description = "새로운 계약을 생성하기 위한 요청 DTO"
 )
-public record ContractCreateRequest(
+public record CreateContractRequest(
     @Schema(description = "계약 제목",
         example = "매일 운동하기",
         requiredMode = Schema.RequiredMode.REQUIRED)

@@ -1,11 +1,10 @@
-package me.jinjjahalgae.domain.contract.usecase.interfaces;
+package me.jinjjahalgae.domain.contract.usecase.update;
 
 import lombok.RequiredArgsConstructor;
-import me.jinjjahalgae.domain.contract.dto.request.ContractUpdateRequest;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
-import me.jinjjahalgae.domain.contract.usecase.ContractUpdateUseCase;
+import me.jinjjahalgae.domain.contract.usecase.update.dto.ContractUpdateRequest;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ContractUpdateUseCaseImpl implements ContractUpdateUseCase {
+public class UpdateContractUseCaseImpl implements UpdateContractUseCase {
 
     private final ContractRepository contractRepository;
 

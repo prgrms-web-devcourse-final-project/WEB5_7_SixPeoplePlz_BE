@@ -6,12 +6,13 @@ import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import me.jinjjahalgae.domain.contract.dto.request.ContractCreateRequest;
-import me.jinjjahalgae.domain.contract.dto.response.ContractCreateResponse;
+import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractRequest;
+import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractResponse;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.contract.mapper.ContractMapper;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
+import me.jinjjahalgae.domain.contract.usecase.create.CreateContractUseCaseImpl;
 import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.participation.mapper.ParticipationMapper;
@@ -25,10 +26,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class) // JUnit5에서 Mockito를 사용하겠다는 선언
-class ContractCreateUseCaseImplTest {
+class CreateContractUseCaseImplTest {
 
     @InjectMocks // 테스트 대상 클래스에 @Mock으로 선언된 가짜 객체들을 이 클래스에 주입
-    private ContractCreateUseCaseImpl contractCreateUseCase;
+    private CreateContractUseCaseImpl contractCreateUseCase;
 
     @Mock // 가짜(Mock) 객체로 만들 의존성들
     private ContractRepository contractRepository;
@@ -47,7 +48,7 @@ class ContractCreateUseCaseImplTest {
     void givenContractInfo_whenCreatingContract_thenReturnsCreatedContractInfo() {
         // Arrange (준비): 테스트 시나리오를 설정
         Long userId = 1L;
-        ContractCreateRequest request = new ContractCreateRequest(
+        CreateContractRequest request = new CreateContractRequest(
                 "매일 운동하기", // title
                 "매일 30분 이상 운동하기", // goal
                 "치킨 못 먹기", // penalty
@@ -95,7 +96,7 @@ class ContractCreateUseCaseImplTest {
         when(userRepository.findByIdAndDeletedAtIsNull(userId)).thenReturn(Optional.of(fakeUser));
 
         // 만약 contractMapper.toEntity가 호출되면 fakeContract를 반환
-        when(contractMapper.toEntity(any(User.class), any(ContractCreateRequest.class))).thenReturn(fakeContract);
+        when(contractMapper.toEntity(any(User.class), any(CreateContractRequest.class))).thenReturn(fakeContract);
 
         // 만약 participationMapper.toEntity가 호출되면 fakeParticipation을 반환
         when(participationMapper.toEntity(any(Contract.class), any(User.class), any(String.class), any(Role.class), any(Boolean.class))).thenReturn(fakeParticipation);
@@ -105,7 +106,7 @@ class ContractCreateUseCaseImplTest {
 
 
         // Act (실행): 테스트하려는 메서드를 호출
-        ContractCreateResponse response = contractCreateUseCase.execute(userId, request);
+        CreateContractResponse response = contractCreateUseCase.execute(userId, request);
 
         // Assert (검증): 결과가 우리의 예상과 맞는지 확인
         assertThat(response).isNotNull();
