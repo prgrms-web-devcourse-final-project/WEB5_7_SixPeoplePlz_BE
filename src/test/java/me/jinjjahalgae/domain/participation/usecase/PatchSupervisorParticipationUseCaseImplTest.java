@@ -6,6 +6,7 @@ import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.invite.util.InviteTestUtil;
 import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;
+import me.jinjjahalgae.domain.participation.usecase.patch.supervisor.PatchSupervisorParticipationUseCaseImpl;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.global.exception.AppException;
 import org.junit.jupiter.api.BeforeEach;

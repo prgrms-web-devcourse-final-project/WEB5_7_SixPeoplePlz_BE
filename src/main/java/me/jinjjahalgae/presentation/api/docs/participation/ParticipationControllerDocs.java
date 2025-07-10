@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import me.jinjjahalgae.domain.participation.dto.request.ParticipationCreateRequest;
+import me.jinjjahalgae.domain.participation.usecase.common.dto.ParticipationCreateRequest;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.exception.ErrorResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
