@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - dev
-      - release # TODO cicd 도입용 임시 브랜치.... 삭제 필수
 
 jobs:
   build:
