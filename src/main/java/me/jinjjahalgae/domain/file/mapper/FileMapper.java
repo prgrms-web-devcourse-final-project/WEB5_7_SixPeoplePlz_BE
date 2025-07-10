@@ -1,6 +1,6 @@
 package me.jinjjahalgae.domain.file.mapper;
 
-import me.jinjjahalgae.domain.file.usecase.create_presigned_url.dto.CreatePreSignedUrlResponse;
+import me.jinjjahalgae.domain.file.usecase.presign.dto.CreatePreSignedUrlResponse;
 import org.springframework.stereotype.Component;
 
 /**

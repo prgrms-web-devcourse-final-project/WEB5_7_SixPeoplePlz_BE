@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.file.usecase.create_presigned_url.dto;
+package me.jinjjahalgae.domain.file.usecase.presign.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
