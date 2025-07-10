@@ -28,8 +28,7 @@ public class Feedback extends BaseEntity {
     private Proof proof;
 
     @Builder
-    public Feedback(Long id, Long userId, String comment, FeedbackStatus status, Proof proof) {
-        this.id = id;
+    public Feedback(Long userId, String comment, FeedbackStatus status, Proof proof) {
         this.userId = userId;
         this.comment = comment;
         this.status = status;

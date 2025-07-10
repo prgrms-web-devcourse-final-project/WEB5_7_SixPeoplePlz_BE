@@ -1,6 +1,7 @@
 package me.jinjjahalgae.domain.proof.entities;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +30,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Proof extends BaseEntity {
 
     @Id
@@ -56,8 +57,7 @@ public class Proof extends BaseEntity {
     private List<Feedback> feedbacks = new ArrayList<>();
 
     @Builder
-    public Proof(Long id, String comment, int checkedSupervisors, int totalSupervisors, ProofStatus status, Long contractId, Long proofId) {
-        this.id = id;
+    public Proof(String comment, int checkedSupervisors, int totalSupervisors, ProofStatus status, Long contractId, Long proofId) {
         this.comment = comment;
         this.checkedSupervisors = checkedSupervisors;
         this.totalSupervisors = totalSupervisors;
