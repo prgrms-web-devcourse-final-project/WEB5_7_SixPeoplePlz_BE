@@ -1,11 +1,11 @@
-package me.jinjjahalgae.domain.invite.usecase;
+package me.jinjjahalgae.domain.invite.usecase.verify.password;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import me.jinjjahalgae.domain.invite.mapper.InviteMapper;
 import me.jinjjahalgae.domain.invite.model.InviteInfo;
-import me.jinjjahalgae.domain.invite.dto.request.InviteLinkVerifyRequest;
-import me.jinjjahalgae.domain.invite.dto.response.ContractUuidResponse;
-import me.jinjjahalgae.domain.invite.usecase.interfaces.VerifyInvitePasswordUseCase;
+import me.jinjjahalgae.domain.invite.usecase.verify.password.dto.VerifyInvitePasswordRequest;
+import me.jinjjahalgae.domain.invite.usecase.verify.password.dto.ContractUuidResponse;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ public class VerifyInvitePasswordUseCaseImpl implements VerifyInvitePasswordUseC
     private final ObjectMapper objectMapper;
 
     @Override
-    public ContractUuidResponse execute(String inviteCode, InviteLinkVerifyRequest request) {
+    public ContractUuidResponse execute(String inviteCode, VerifyInvitePasswordRequest request) {
         Object data = redisTemplate.opsForValue().get(inviteCode);
 
         // 초대 정보가 존재하는지 확인
@@ -34,7 +34,7 @@ public class VerifyInvitePasswordUseCaseImpl implements VerifyInvitePasswordUseC
             throw ErrorCode.INVALID_INVITE_PASSWORD.serviceException("초대 비밀번호가 일치하지 않습니다. inviteCode: " + inviteCode);
         }
 
-        // 성공 시 contractUuid 반환
-        return new ContractUuidResponse(inviteInfo.contractUuid());
+        // 계약의 UUID 반환
+        return InviteMapper.toContractUuidResponse(inviteInfo.contractUuid());
     }
 }

@@ -51,6 +51,7 @@ public enum ErrorCode {
     INVITE_ALREADY_PARTICIPATED(HttpStatus.BAD_REQUEST, "이미 참여한 계약입니다."),
     CONTRACTOR_PARTICIPATION_NOT_FOUND(HttpStatus.NOT_FOUND, "계약자의 정보가 없는 계약입니다."),
     SUPERVISOR_PARTICIPATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 감독자의 정보가 없는 계약입니다."),
+    CANNOT_CREATE_INVITE_AFTER_START(HttpStatus.CONFLICT, "계약이 시작히기 전에만 초대 코드를 생성할 수 있습니다."),
 
     // 알림 관련
     NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 알림 타입입니다."),

@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.participation.usecase;
+package me.jinjjahalgae.domain.participation.usecase.patch.supervisor;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
@@ -6,7 +6,6 @@ import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;
-import me.jinjjahalgae.domain.participation.usecase.interfaces.PatchSupervisorParticipationUseCase;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;

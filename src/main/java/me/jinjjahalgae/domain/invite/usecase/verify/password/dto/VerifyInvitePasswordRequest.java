@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.invite.dto.request;
+package me.jinjjahalgae.domain.invite.usecase.verify.password.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotBlank;
         title = "초대시 계약서 미리보기 요청",
         description = "초대시 계약서 미리보기 요청 DTO"
 )
-public record InviteLinkVerifyRequest(
+public record VerifyInvitePasswordRequest(
         @Schema(
                 description = "초대코드에 맞는 비밀번호",
                 requiredMode = Schema.RequiredMode.REQUIRED,

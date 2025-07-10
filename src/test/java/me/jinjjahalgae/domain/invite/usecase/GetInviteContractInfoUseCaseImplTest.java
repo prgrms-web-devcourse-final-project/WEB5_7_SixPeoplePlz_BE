@@ -2,7 +2,8 @@ package me.jinjjahalgae.domain.invite.usecase;
 
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
-import me.jinjjahalgae.domain.invite.dto.response.InviteContractInfoResponse;
+import me.jinjjahalgae.domain.invite.usecase.get.contract.dto.InviteContractInfoResponse;
+import me.jinjjahalgae.domain.invite.usecase.get.contract.GetInviteContractInfoUseCaseImpl;
 import me.jinjjahalgae.domain.invite.util.InviteTestUtil;
 import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;

@@ -1,6 +1,6 @@
-package me.jinjjahalgae.domain.invite.usecase.interfaces;
+package me.jinjjahalgae.domain.invite.usecase.get.contract;
 
-import me.jinjjahalgae.domain.invite.dto.response.InviteContractInfoResponse;
+import me.jinjjahalgae.domain.invite.usecase.get.contract.dto.InviteContractInfoResponse;
 import me.jinjjahalgae.domain.user.User;
 
 public interface GetInviteContractInfoUseCase {
