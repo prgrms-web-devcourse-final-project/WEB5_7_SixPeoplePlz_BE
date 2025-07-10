@@ -9,7 +9,9 @@ import me.jinjjahalgae.domain.common.BaseEntity;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.participation.entity.Participation;
+import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.user.User;
+import me.jinjjahalgae.global.exception.ErrorCode;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -148,5 +150,33 @@ public class Contract extends BaseEntity {
         if (this.totalSupervisor > 0) {
             this.totalSupervisor--;
         }
+    }
+
+    //감독자가 이미 있는지 검증 (수정은 감독자가 없어야 가능)
+    public void validateUpdatable() {
+        boolean hasSignedSupervisor = this.participations.stream()
+                .anyMatch(participation -> participation.getRole() == Role.SUPERVISOR);
+        if (hasSignedSupervisor) {
+            throw ErrorCode.CONTRACT_ALREADY_SIGNED.domainException("감독자가 서명한 계약은 수정할 수 없습니다.");
+        }
+    }
+
+    //계약 수정
+    public void updateContract(String title, String goal, String penalty, String reward,
+                               int life, int proofPerWeek, boolean oneOff,
+                               LocalDateTime startDate, LocalDateTime endDate, ContractType type) {
+        this.title = title;
+        this.goal = goal;
+        this.penalty = penalty;
+        this.reward = reward;
+        this.life = life;
+        this.proofPerWeek = proofPerWeek;
+        this.oneOff = oneOff;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.type = type;
+
+        // 수정 시 총 인증 횟수도 다시 계산
+        this.totalProof = calculateTotalProof(startDate, endDate, proofPerWeek);
     }
 }
