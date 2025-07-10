@@ -2,16 +2,16 @@ package me.jinjjahalgae.presentation.api;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import me.jinjjahalgae.domain.contract.dto.request.ContractCreateRequest;
-import me.jinjjahalgae.domain.contract.dto.request.ContractUpdateRequest;
-import me.jinjjahalgae.domain.contract.dto.response.ContractCreateResponse;
-import me.jinjjahalgae.domain.contract.dto.response.ContractDetailResponse;
-import me.jinjjahalgae.domain.contract.dto.response.ContractListResponse;
+import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractRequest;
+import me.jinjjahalgae.domain.contract.usecase.update.ContractUpdateRequest;
+import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractResponse;
+import me.jinjjahalgae.domain.contract.usecase.get.detail.ContractDetailResponse;
+import me.jinjjahalgae.domain.contract.usecase.get.list.ContractListResponse;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
-import me.jinjjahalgae.domain.contract.usecase.ContractCreateUseCase;
-import me.jinjjahalgae.domain.contract.usecase.ContractDetailUseCase;
-import me.jinjjahalgae.domain.contract.usecase.ContractListUseCase;
-import me.jinjjahalgae.domain.contract.usecase.ContractUpdateUseCase;
+import me.jinjjahalgae.domain.contract.usecase.create.CreateContractUseCase;
+import me.jinjjahalgae.domain.contract.usecase.get.detail.GetContractDetailUseCase;
+import me.jinjjahalgae.domain.contract.usecase.get.list.GetContractListUseCase;
+import me.jinjjahalgae.domain.contract.usecase.update.UpdateContractUpdateUseCase;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
 import org.springframework.data.domain.Page;
@@ -28,18 +28,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ContractController {
 
-    private final ContractCreateUseCase contractCreateUseCase;
-    private final ContractListUseCase contractListUseCase;
-    private final ContractDetailUseCase contractDetailUseCase;
-    private final ContractUpdateUseCase contractUpdateUseCase;
+    private final CreateContractUseCase createContractUseCase;
+    private final GetContractListUseCase getContractListUseCase;
+    private final GetContractDetailUseCase getContractDetailUseCase;
+    private final UpdateContractUpdateUseCase updateContractUpdateUseCase;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CommonResponse<ContractCreateResponse> createContract(
+    public CommonResponse<CreateContractResponse> createContract(
             @AuthenticationPrincipal CustomJwtPrincipal user,
-            @Valid @RequestBody ContractCreateRequest request
+            @Valid @RequestBody CreateContractRequest request
     ) {
-        ContractCreateResponse response = contractCreateUseCase.execute(user.getUserId(), request);
+        CreateContractResponse response = createContractUseCase.execute(user.getUserId(), request);
         return CommonResponse.success(response);
     }
 
@@ -49,7 +49,7 @@ public class ContractController {
             @RequestParam List<ContractStatus> statuses,
             @PageableDefault(size = 10) Pageable pageable
     ){
-        Page<ContractListResponse> response = contractListUseCase.execute(user.getUserId(), statuses, pageable);
+        Page<ContractListResponse> response = getContractListUseCase.execute(user.getUserId(), statuses, pageable);
         return CommonResponse.success(response);
     }
 
@@ -58,7 +58,7 @@ public class ContractController {
             @AuthenticationPrincipal CustomJwtPrincipal user,
             @PathVariable Long contractId
     ) {
-        ContractDetailResponse response = contractDetailUseCase.execute(user.getUserId(), contractId);
+        ContractDetailResponse response = getContractDetailUseCase.execute(user.getUserId(), contractId);
         return CommonResponse.success(response);
     }
 
@@ -68,7 +68,7 @@ public class ContractController {
             @PathVariable Long contractId,
             @Valid @RequestBody ContractUpdateRequest request
     ) {
-        contractUpdateUseCase.execute(user.getUserId(), contractId, request);
+        updateContractUpdateUseCase.execute(user.getUserId(), contractId, request);
         return CommonResponse.success();
     }
 }

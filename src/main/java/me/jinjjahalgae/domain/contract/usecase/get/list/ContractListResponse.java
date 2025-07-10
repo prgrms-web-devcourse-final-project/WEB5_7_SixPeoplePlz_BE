@@ -1,11 +1,10 @@
-package me.jinjjahalgae.domain.contract.dto.response;
+package me.jinjjahalgae.domain.contract.usecase.get.list;
 
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 
 import java.time.LocalDateTime;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import me.jinjjahalgae.global.validation.EnumValue;
 
 /**
  * 계약 리스트 response

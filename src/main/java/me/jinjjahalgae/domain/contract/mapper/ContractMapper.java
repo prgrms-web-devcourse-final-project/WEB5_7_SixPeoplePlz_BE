@@ -1,8 +1,8 @@
 package me.jinjjahalgae.domain.contract.mapper;
 
-import me.jinjjahalgae.domain.contract.dto.request.ContractCreateRequest;
-import me.jinjjahalgae.domain.contract.dto.response.ContractDetailResponse;
-import me.jinjjahalgae.domain.contract.dto.response.ContractListResponse;
+import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractRequest;
+import me.jinjjahalgae.domain.contract.usecase.get.detail.ContractDetailResponse;
+import me.jinjjahalgae.domain.contract.usecase.get.list.ContractListResponse;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.user.User;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @Component
 public class ContractMapper {
-    public Contract toEntity(User user, ContractCreateRequest request) {
+    public Contract toEntity(User user, CreateContractRequest request) {
         Contract contract = Contract.builder()
                 .user(user)
                 .startDate(request.startDate())
