@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import me.jinjjahalgae.domain.user.usecase.common.dto.MyInfoResponse;
-import me.jinjjahalgae.domain.user.usecase.update_my_info.dto.UpdateMyInfoRequest;
+import me.jinjjahalgae.domain.user.usecase.update.myinfo.dto.UpdateMyInfoRequest;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.exception.ErrorResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;

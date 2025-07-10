@@ -1,9 +1,9 @@
-package me.jinjjahalgae.domain.file.usecase.create_presigned_url;
+package me.jinjjahalgae.domain.file.usecase.presign;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.file.mapper.FileMapper;
-import me.jinjjahalgae.domain.file.usecase.create_presigned_url.dto.CreatePreSignedUrlRequest;
-import me.jinjjahalgae.domain.file.usecase.create_presigned_url.dto.CreatePreSignedUrlResponse;
+import me.jinjjahalgae.domain.file.usecase.presign.dto.CreatePreSignedUrlRequest;
+import me.jinjjahalgae.domain.file.usecase.presign.dto.CreatePreSignedUrlResponse;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

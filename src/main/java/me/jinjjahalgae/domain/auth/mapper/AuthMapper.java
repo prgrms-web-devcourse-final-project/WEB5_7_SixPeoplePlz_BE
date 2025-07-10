@@ -1,7 +1,7 @@
 package me.jinjjahalgae.domain.auth.mapper;
 
 import me.jinjjahalgae.domain.auth.usecase.refresh.dto.RefreshResponse;
-import me.jinjjahalgae.domain.auth.usecase.social_login.dto.SocialLoginResponse;
+import me.jinjjahalgae.domain.auth.usecase.login.social.dto.SocialLoginResponse;
 import me.jinjjahalgae.global.security.jwt.Token;
 import org.springframework.stereotype.Component;
 
