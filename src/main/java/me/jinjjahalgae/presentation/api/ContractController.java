@@ -1,4 +1,4 @@
-package me.jinjjahalgae.api;
+package me.jinjjahalgae.presentation.api;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
