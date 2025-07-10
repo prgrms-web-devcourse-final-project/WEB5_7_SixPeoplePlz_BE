@@ -1,9 +1,8 @@
 package me.jinjjahalgae.domain.auth.strategy;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.auth.dto.social.KakaoPayload;
-import me.jinjjahalgae.domain.auth.dto.social.SocialProfile;
+import me.jinjjahalgae.domain.auth.model.SocialProfile;
 import me.jinjjahalgae.domain.auth.enums.Provider;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Component;

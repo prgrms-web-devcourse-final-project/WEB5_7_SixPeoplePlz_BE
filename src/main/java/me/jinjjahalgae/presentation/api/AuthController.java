@@ -5,17 +5,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jinjjahalgae.domain.auth.dto.login.SocialLoginRequest;
-import me.jinjjahalgae.domain.auth.dto.login.SocialLoginResponse;
-import me.jinjjahalgae.domain.auth.usecase.interfaces.SocialLoginUseCase;
-import me.jinjjahalgae.domain.auth.usecase.interfaces.LogoutUseCase;
-import me.jinjjahalgae.domain.auth.usecase.interfaces.RefreshTokenUseCase;
-import me.jinjjahalgae.domain.auth.dto.refresh.RefreshRequest;
-import me.jinjjahalgae.domain.auth.dto.refresh.RefreshResponse;
+import me.jinjjahalgae.domain.auth.usecase.social_login.dto.SocialLoginRequest;
+import me.jinjjahalgae.domain.auth.usecase.social_login.dto.SocialLoginResponse;
+import me.jinjjahalgae.domain.auth.usecase.social_login.SocialLoginUseCase;
+import me.jinjjahalgae.domain.auth.usecase.logout.LogoutUseCase;
+import me.jinjjahalgae.domain.auth.usecase.refresh.RefreshUseCase;
+import me.jinjjahalgae.domain.auth.usecase.refresh.dto.RefreshRequest;
+import me.jinjjahalgae.domain.auth.usecase.refresh.dto.RefreshResponse;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.security.jwt.JwtProperties;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
-import me.jinjjahalgae.global.security.jwt.Token;
 import me.jinjjahalgae.presentation.api.docs.auth.AuthControllerDocs;
 import me.jinjjahalgae.presentation.util.CookieGenerator;
 import org.springframework.http.HttpStatus;
@@ -32,7 +31,7 @@ public class AuthController implements AuthControllerDocs {
 
     private final SocialLoginUseCase socialLoginUseCase;
     private final LogoutUseCase logoutUseCase;
-    private final RefreshTokenUseCase refreshTokenUseCase;
+    private final RefreshUseCase refreshUseCase;
 
     @Override
     @PostMapping("/login/social/body")
@@ -84,7 +83,7 @@ public class AuthController implements AuthControllerDocs {
     public CommonResponse<RefreshResponse> refresh(
             @Valid @RequestBody RefreshRequest request
     ) {
-        RefreshResponse result = refreshTokenUseCase.execute(request);
+        RefreshResponse result = refreshUseCase.execute(request);
         
         return CommonResponse.success(result);
     }

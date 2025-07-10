@@ -1,11 +1,10 @@
-package me.jinjjahalgae.domain.auth.usecase;
+package me.jinjjahalgae.domain.auth.usecase.refresh;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.auth.Auth;
 import me.jinjjahalgae.domain.auth.AuthRepository;
-import me.jinjjahalgae.domain.auth.dto.refresh.RefreshRequest;
-import me.jinjjahalgae.domain.auth.dto.refresh.RefreshResponse;
-import me.jinjjahalgae.domain.auth.usecase.interfaces.RefreshTokenUseCase;
+import me.jinjjahalgae.domain.auth.usecase.refresh.dto.RefreshRequest;
+import me.jinjjahalgae.domain.auth.usecase.refresh.dto.RefreshResponse;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import me.jinjjahalgae.global.security.jwt.JwtTokenProvider;
 import me.jinjjahalgae.global.security.jwt.Token;
@@ -17,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
-public class RefreshTokenUseCaseImpl implements RefreshTokenUseCase {
+public class RefreshUseCaseImpl implements RefreshUseCase {
     private final AuthRepository authRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
