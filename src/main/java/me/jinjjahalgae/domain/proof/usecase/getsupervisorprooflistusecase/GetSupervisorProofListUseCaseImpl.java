@@ -51,10 +51,10 @@ public class GetSupervisorProofListUseCaseImpl implements GetSupervisorProofList
         // 감독자가 처리한 원본 인증들
         List<Proof> proofs = proofRepository.findProofsWithProofImagesByIds(proofIds);
 
-        // 한 달에 해당하는 모든 재인증 id들 (감독자가 피드백을 한 것만)
+        // 입력 받은 달에 해당하는 모든 재인증 id들 (감독자가 피드백을 한 것만)
         List<Long> reProofIds = proofRepository.findReProofIdsByMonthForSupervisor(contractId, startDate, endDate, userId);
 
-        // 감독자가 처리한 재인등들
+        // 감독자가 처리한 재인증 객체들
         List<Proof> reProofs = proofRepository.findProofsWithProofImagesByIds(reProofIds);
 
         // 원본 인증 id를 기반으로 재인증을 Map으로 매핑

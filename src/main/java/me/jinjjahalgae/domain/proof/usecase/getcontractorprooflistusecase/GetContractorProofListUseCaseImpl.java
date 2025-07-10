@@ -46,10 +46,10 @@ public class GetContractorProofListUseCaseImpl implements GetContractorProofList
         // 모든 원본 인증들
         List<Proof> proofs = proofRepository.findProofsWithProofImagesByIds(proofIds);
 
-        // 한 달에 해당하는 모든 재인증 id들
+        // 입력 받은 달에 해당하는 모든 재인증 id들
         List<Long> reProofIds = proofRepository.findReProofIdsByMonth(contractId, startDate, endDate);
 
-        // 모든 재인등들
+        // 모든 재인증 객체들
         List<Proof> reProofs = proofRepository.findProofsWithProofImagesByIds(reProofIds);
 
         // 원본 인증 id를 기반으로 재인증을 Map으로 매핑
