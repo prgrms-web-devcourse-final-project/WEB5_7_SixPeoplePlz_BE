@@ -1,10 +1,9 @@
-package me.jinjjahalgae.domain.user.usecase;
+package me.jinjjahalgae.domain.user.usecase.get_my_info;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.domain.user.UserRepository;
-import me.jinjjahalgae.domain.user.dto.MyInfoResponse;
-import me.jinjjahalgae.domain.user.usecase.interfaces.GetMyInfoUseCase;
+import me.jinjjahalgae.domain.user.usecase.common.dto.MyInfoResponse;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 

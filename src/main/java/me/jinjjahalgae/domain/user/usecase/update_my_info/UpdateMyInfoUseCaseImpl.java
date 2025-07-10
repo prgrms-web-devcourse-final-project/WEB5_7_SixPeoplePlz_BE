@@ -1,11 +1,10 @@
-package me.jinjjahalgae.domain.user.usecase;
+package me.jinjjahalgae.domain.user.usecase.update_my_info;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.domain.user.UserRepository;
-import me.jinjjahalgae.domain.user.dto.MyInfoResponse;
-import me.jinjjahalgae.domain.user.dto.UpdateMyInfoRequest;
-import me.jinjjahalgae.domain.user.usecase.interfaces.UpdateMyInfoUseCase;
+import me.jinjjahalgae.domain.user.usecase.common.dto.MyInfoResponse;
+import me.jinjjahalgae.domain.user.usecase.update_my_info.dto.UpdateMyInfoRequest;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

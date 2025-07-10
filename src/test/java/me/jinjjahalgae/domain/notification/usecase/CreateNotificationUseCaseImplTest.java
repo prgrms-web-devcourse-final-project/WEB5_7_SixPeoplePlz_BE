@@ -9,8 +9,8 @@
 //import me.jinjjahalgae.domain.participation.dto.response.ParticipantInfoResponse;
 //import me.jinjjahalgae.domain.participation.usecase.GetParticipantInfoByContractIdUseCaseImpl;
 //import me.jinjjahalgae.domain.user.User;
-//import me.jinjjahalgae.domain.user.dto.MyInfoResponse;
-//import me.jinjjahalgae.domain.user.usecase.GetMyInfoUseCaseImpl;
+//import me.jinjjahalgae.domain.user.usecase.common.dto.MyInfoResponse;
+//import me.jinjjahalgae.domain.user.usecase.get_my_info.GetMyInfoUseCaseImpl;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 //import org.mockito.InjectMocks;
