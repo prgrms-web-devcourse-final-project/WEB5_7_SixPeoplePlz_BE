@@ -1,12 +1,12 @@
-package me.jinjjahalgae.domain.auth.usecase.social_login;
+package me.jinjjahalgae.domain.auth.usecase.login.social;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.auth.Auth;
 import me.jinjjahalgae.domain.auth.AuthRepository;
 import me.jinjjahalgae.domain.auth.mapper.AuthMapper;
-import me.jinjjahalgae.domain.auth.usecase.social_login.dto.SocialLoginRequest;
-import me.jinjjahalgae.domain.auth.usecase.social_login.dto.SocialLoginResponse;
+import me.jinjjahalgae.domain.auth.usecase.login.social.dto.SocialLoginRequest;
+import me.jinjjahalgae.domain.auth.usecase.login.social.dto.SocialLoginResponse;
 import me.jinjjahalgae.domain.auth.model.SocialProfile;
 import me.jinjjahalgae.domain.auth.strategy.SocialLogin;
 import me.jinjjahalgae.domain.auth.strategy.SocialLoginFactory;

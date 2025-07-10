@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.user.usecase.get_my_info;
+package me.jinjjahalgae.domain.user.usecase.get.myinfo;
 
 import me.jinjjahalgae.domain.user.usecase.common.dto.MyInfoResponse;
 

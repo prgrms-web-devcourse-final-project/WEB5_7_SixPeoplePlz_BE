@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.user.usecase.update_my_info.dto;
+package me.jinjjahalgae.domain.user.usecase.update.myinfo.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

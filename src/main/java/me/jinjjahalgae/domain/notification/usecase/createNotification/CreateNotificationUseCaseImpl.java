@@ -10,7 +10,7 @@ import me.jinjjahalgae.domain.notification.repository.NotificationRepository;
 import me.jinjjahalgae.domain.participation.dto.response.ParticipantInfoResponse;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.participation.usecase.interfaces.GetParticipantInfoByContractIdUseCase;
-import me.jinjjahalgae.domain.user.usecase.get_my_info.GetMyInfoUseCase;
+import me.jinjjahalgae.domain.user.usecase.get.myinfo.GetMyInfoUseCase;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
