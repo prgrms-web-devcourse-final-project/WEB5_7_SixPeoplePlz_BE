@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.notification.usecase.markSingleNotificationAsRead;
+package me.jinjjahalgae.domain.notification.usecase.update.asread;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MarkSingleNotificationAsReadUseCaseImpl implements MarkSingleNotificationAsReadUseCase {
+public class UpdateSingleNotificationAsReadUseCaseImpl implements UpdateSingleNotificationAsReadUseCase {
 
     private final NotificationRepository notificationRepository;
 

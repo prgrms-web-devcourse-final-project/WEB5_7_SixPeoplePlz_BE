@@ -1,12 +1,12 @@
 package me.jinjjahalgae.presentation.api;
 
 import lombok.RequiredArgsConstructor;
-import me.jinjjahalgae.domain.notification.usecase.deleteAllNotification.DeleteAllNotificationUseCase;
-import me.jinjjahalgae.domain.notification.usecase.deleteSingleNotification.DeleteSingleNotificationUseCase;
-import me.jinjjahalgae.domain.notification.usecase.getAllNotification.GetAllNotificationUseCase;
-import me.jinjjahalgae.domain.notification.usecase.getAllNotification.NotificationGetResponse;
-import me.jinjjahalgae.domain.notification.usecase.countUnreadNotificationByUserId.CountUnreadNotificationByUserIdUseCase;
-import me.jinjjahalgae.domain.notification.usecase.markSingleNotificationAsRead.MarkSingleNotificationAsReadUseCase;
+import me.jinjjahalgae.domain.notification.usecase.delete.all.DeleteAllNotificationUseCase;
+import me.jinjjahalgae.domain.notification.usecase.delete.single.DeleteSingleNotificationUseCase;
+import me.jinjjahalgae.domain.notification.usecase.get.all.GetAllNotificationUseCase;
+import me.jinjjahalgae.domain.notification.usecase.get.all.dto.NotificationGetResponse;
+import me.jinjjahalgae.domain.notification.usecase.get.unreadcount.GetCountUnreadNotificationUseCase;
+import me.jinjjahalgae.domain.notification.usecase.update.asread.UpdateSingleNotificationAsReadUseCase;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
 import me.jinjjahalgae.presentation.api.docs.notification.NotificationControllerDocs;
@@ -24,10 +24,10 @@ import org.springframework.web.bind.annotation.*;
 public class NotificationController implements NotificationControllerDocs {
 
     private final GetAllNotificationUseCase getAllNotification;
-    private final CountUnreadNotificationByUserIdUseCase countUnreadNotificationByUserId;
+    private final GetCountUnreadNotificationUseCase countUnreadNotificationByUserId;
     private final DeleteAllNotificationUseCase deleteAllNotification;
     private final DeleteSingleNotificationUseCase deleteSingleNotification;
-    private final MarkSingleNotificationAsReadUseCase markSingleNotificationAsRead;
+    private final UpdateSingleNotificationAsReadUseCase markSingleNotificationAsRead;
 
     /**
      * 현재 로그인한 사용자의 모든 알림 목록 조회

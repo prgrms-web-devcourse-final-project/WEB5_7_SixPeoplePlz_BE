@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.notification.usecase.deleteSingleNotification;
+package me.jinjjahalgae.domain.notification.usecase.delete.single;
 
 /**
  * 알림 개별 삭제

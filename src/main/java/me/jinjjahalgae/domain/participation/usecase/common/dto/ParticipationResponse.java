@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.participation.dto.response;
+package me.jinjjahalgae.domain.participation.usecase.common.dto;
 
 import me.jinjjahalgae.domain.participation.enums.Role;
 import java.time.LocalDateTime;

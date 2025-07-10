@@ -1,7 +1,7 @@
 package me.jinjjahalgae.domain.participation.mapper;
 
 import me.jinjjahalgae.domain.contract.entity.Contract;
-import me.jinjjahalgae.domain.participation.dto.response.ParticipationResponse;
+import me.jinjjahalgae.domain.participation.usecase.common.dto.ParticipationResponse;
 import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.user.User;

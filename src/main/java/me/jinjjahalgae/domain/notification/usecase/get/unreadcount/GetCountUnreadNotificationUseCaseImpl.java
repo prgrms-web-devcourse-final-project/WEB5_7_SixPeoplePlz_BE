@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.notification.usecase.countUnreadNotificationByUserId;
+package me.jinjjahalgae.domain.notification.usecase.get.unreadcount;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.notification.repository.NotificationRepository;
@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class CountUnreadNotificationByUserIdUseCaseImpl implements CountUnreadNotificationByUserIdUseCase {
+public class GetCountUnreadNotificationUseCaseImpl implements GetCountUnreadNotificationUseCase {
 
     private final NotificationRepository notificationRepository;
 
