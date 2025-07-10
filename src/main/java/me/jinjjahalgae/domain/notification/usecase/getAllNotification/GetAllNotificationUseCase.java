@@ -1,6 +1,5 @@
-package me.jinjjahalgae.domain.notification.usecase.interfaces;
+package me.jinjjahalgae.domain.notification.usecase.getAllNotification;
 
-import me.jinjjahalgae.domain.notification.dto.NotificationGetResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

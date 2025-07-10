@@ -1,13 +1,12 @@
-package me.jinjjahalgae.domain.notification.usecase;
+package me.jinjjahalgae.domain.notification.usecase.createNotification;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
-import me.jinjjahalgae.domain.notification.dto.NotificationCreateRequest;
 import me.jinjjahalgae.domain.notification.entities.Notification;
+import me.jinjjahalgae.domain.notification.enums.NotificationType;
 import me.jinjjahalgae.domain.notification.repository.NotificationRepository;
-import me.jinjjahalgae.domain.notification.usecase.interfaces.CreateNotificationUseCase;
 import me.jinjjahalgae.domain.participation.dto.response.ParticipantInfoResponse;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.participation.usecase.interfaces.GetParticipantInfoByContractIdUseCase;
@@ -57,7 +56,7 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
         List<ParticipantInfoResponse> participantInfoList = getParticipantInfoByContractId.execute(request.contractId());
 
         // 알림 타입에 따라 알림 보낼 대상 리스트, 메세지를 다르게 설정
-        switch (request.type()) {
+        switch (NotificationType.valueOf(request.type())) {
             // 감독자 추가됨 (to 계약자)
             case SUPERVISOR_ADDED -> {
                 targetUserList = getContractorInfoList(participantInfoList);
@@ -130,7 +129,7 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
                     .userId(target.userId()) // 메세지를 보낼 대상
                     .contractId(request.contractId())
                     .content(message)
-                    .type(request.type())
+                    .type(NotificationType.valueOf(request.type()))
                     .build();
 
             notificationList.add(notification);
