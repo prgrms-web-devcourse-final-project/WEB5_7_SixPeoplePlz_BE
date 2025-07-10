@@ -13,7 +13,7 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     Optional<Contract> findByUuid(String uuid);
     Optional<Contract> findContractById(Long contractId);
 
-    //해당 유저의 계약 생태로 내림차순 조회
+    //해당 유저의 계약 상태로 내림차순 조회
     Page<Contract> findByUserIdAndStatusInOrderByIdDesc(Long userId, List<ContractStatus> status, Pageable pageable);
 
     //사용자별 계약 상세 조회
