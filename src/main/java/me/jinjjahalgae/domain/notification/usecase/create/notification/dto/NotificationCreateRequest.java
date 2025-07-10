@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.notification.usecase.create.notification;
+package me.jinjjahalgae.domain.notification.usecase.create.notification.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;

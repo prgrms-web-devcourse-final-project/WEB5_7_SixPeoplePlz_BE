@@ -1,5 +1,7 @@
 package me.jinjjahalgae.domain.notification.usecase.create.notification;
 
+import me.jinjjahalgae.domain.notification.usecase.create.notification.dto.NotificationCreateRequest;
+
 /**
  * 알림 생성 usecase (백엔드에서만 쓰일 예정)
  * REQ : NotificationCreateRequest

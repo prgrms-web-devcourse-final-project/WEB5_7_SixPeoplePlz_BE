@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.notification.usecase.get.all;
+package me.jinjjahalgae.domain.notification.usecase.get.all.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import me.jinjjahalgae.domain.notification.entities.Notification;

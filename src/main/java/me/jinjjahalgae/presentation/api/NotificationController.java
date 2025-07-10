@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.notification.usecase.delete.all.DeleteAllNotificationUseCase;
 import me.jinjjahalgae.domain.notification.usecase.delete.single.DeleteSingleNotificationUseCase;
 import me.jinjjahalgae.domain.notification.usecase.get.all.GetAllNotificationUseCase;
-import me.jinjjahalgae.domain.notification.usecase.get.all.NotificationGetResponse;
+import me.jinjjahalgae.domain.notification.usecase.get.all.dto.NotificationGetResponse;
 import me.jinjjahalgae.domain.notification.usecase.get.unreadcount.GetCountUnreadNotificationUseCase;
 import me.jinjjahalgae.domain.notification.usecase.update.asread.UpdateSingleNotificationAsReadUseCase;
 import me.jinjjahalgae.global.common.CommonResponse;
