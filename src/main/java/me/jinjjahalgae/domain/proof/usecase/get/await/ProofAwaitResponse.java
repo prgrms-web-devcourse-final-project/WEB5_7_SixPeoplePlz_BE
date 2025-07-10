@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.proof.usecase.getawaitproof;
+package me.jinjjahalgae.domain.proof.usecase.get.await;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;

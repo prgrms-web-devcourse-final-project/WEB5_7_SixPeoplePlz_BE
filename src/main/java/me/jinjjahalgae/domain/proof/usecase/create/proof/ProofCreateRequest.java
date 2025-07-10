@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.proof.usecase.createproof;
+package me.jinjjahalgae.domain.proof.usecase.create.proof;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

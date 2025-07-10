@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.proof.usecase.getproofdetail;
+package me.jinjjahalgae.domain.proof.usecase.get.detail;
 
 public interface GetProofDetailUseCase {
 

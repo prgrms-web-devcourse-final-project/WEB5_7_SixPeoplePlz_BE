@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.proof.usecase.getrecentproof;
+package me.jinjjahalgae.domain.proof.usecase.get.recent;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;

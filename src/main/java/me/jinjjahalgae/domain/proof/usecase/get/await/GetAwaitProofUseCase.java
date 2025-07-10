@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.proof.usecase.getawaitproof;
+package me.jinjjahalgae.domain.proof.usecase.get.await;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.proof.usecase.createproof;
+package me.jinjjahalgae.domain.proof.usecase.create.proof;
 
 public interface CreateProofUseCase {
 

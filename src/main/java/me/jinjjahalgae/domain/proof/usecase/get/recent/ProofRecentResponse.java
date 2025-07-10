@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.proof.usecase.getrecentproof;
+package me.jinjjahalgae.domain.proof.usecase.get.recent;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;

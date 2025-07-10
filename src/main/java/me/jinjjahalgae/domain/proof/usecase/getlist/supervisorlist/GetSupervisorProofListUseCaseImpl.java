@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.proof.usecase.getsupervisorprooflist;
+package me.jinjjahalgae.domain.proof.usecase.getlist.supervisorlist;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.feedback.entity.Feedback;

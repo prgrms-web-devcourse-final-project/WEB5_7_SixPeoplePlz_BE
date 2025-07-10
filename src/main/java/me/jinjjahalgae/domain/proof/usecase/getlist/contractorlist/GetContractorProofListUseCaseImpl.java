@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.proof.usecase.getcontractorprooflist;
+package me.jinjjahalgae.domain.proof.usecase.getlist.contractorlist;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
