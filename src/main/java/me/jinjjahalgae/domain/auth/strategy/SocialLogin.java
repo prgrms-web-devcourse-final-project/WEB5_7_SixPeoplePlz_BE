@@ -1,6 +1,6 @@
 package me.jinjjahalgae.domain.auth.strategy;
 
-import me.jinjjahalgae.domain.auth.dto.social.SocialProfile;
+import me.jinjjahalgae.domain.auth.model.SocialProfile;
 import me.jinjjahalgae.domain.auth.enums.Provider;
 
 public interface SocialLogin {

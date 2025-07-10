@@ -10,16 +10,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
-import me.jinjjahalgae.domain.auth.dto.login.SocialLoginRequest;
-import me.jinjjahalgae.domain.auth.dto.login.SocialLoginResponse;
+import me.jinjjahalgae.domain.auth.usecase.social_login.dto.SocialLoginRequest;
+import me.jinjjahalgae.domain.auth.usecase.social_login.dto.SocialLoginResponse;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.exception.ErrorResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
 import me.jinjjahalgae.presentation.api.docs.NoContentSwaggerResponse;
 import me.jinjjahalgae.presentation.api.docs.auth.login.SocialLoginBodySwaggerResponse;
 import me.jinjjahalgae.presentation.api.docs.auth.login.SocialLoginCookieSwaggerResponse;
-import me.jinjjahalgae.domain.auth.dto.refresh.RefreshRequest;
-import me.jinjjahalgae.domain.auth.dto.refresh.RefreshResponse;
+import me.jinjjahalgae.domain.auth.usecase.refresh.dto.RefreshRequest;
+import me.jinjjahalgae.domain.auth.usecase.refresh.dto.RefreshResponse;
 import me.jinjjahalgae.presentation.api.docs.auth.refresh.RefreshSwaggerResponse;
 
 @Tag(name = "Auth API", description = "소셜 로그인 등 인증 관련 API")
