@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.auth.Auth;
 import me.jinjjahalgae.domain.auth.AuthRepository;
+import me.jinjjahalgae.domain.auth.mapper.AuthMapper;
 import me.jinjjahalgae.domain.auth.usecase.social_login.dto.SocialLoginRequest;
 import me.jinjjahalgae.domain.auth.usecase.social_login.dto.SocialLoginResponse;
 import me.jinjjahalgae.domain.auth.model.SocialProfile;
@@ -26,6 +27,7 @@ public class SocialLoginUseCaseImpl implements SocialLoginUseCase {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthRepository authRepository;
     private final UserRepository userRepository;
+    private final AuthMapper authMapper;
 
     @Override
     @Transactional
@@ -76,6 +78,6 @@ public class SocialLoginUseCaseImpl implements SocialLoginUseCase {
         // 리프레시 토큰 갱신
         auth.updateRefreshToken(token.refreshToken());
 
-        return new SocialLoginResponse(token.accessToken(), token.refreshToken());
+        return authMapper.toSocialLoginResponse(token);
     }
 }
