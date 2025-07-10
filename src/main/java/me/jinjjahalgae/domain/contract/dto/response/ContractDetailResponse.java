@@ -66,9 +66,9 @@ import me.jinjjahalgae.domain.contract.enums.ContractStatus;
         double periodPercent,      // 계산해서 제공
 
         @Schema(description = "참여자 정보", example = "참여자 정보")
-        List<ParticipantResponse> participants //참여한 유저 정보
+        List<ParticipantSimpleResponse> participants //참여한 유저 정보
  ) {
-     public record ParticipantResponse(
+     public record ParticipantSimpleResponse(
          Long userId,
          String name,
          Role role,

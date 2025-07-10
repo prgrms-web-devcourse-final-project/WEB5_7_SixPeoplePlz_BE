@@ -70,9 +70,9 @@ public class ContractMapper {
         );
     }
 
-    private List<ContractDetailResponse.ParticipantResponse> mapToParticipantInfos(Contract contract) {
+    private List<ContractDetailResponse.ParticipantSimpleResponse> mapToParticipantInfos(Contract contract) {
         return contract.getParticipations().stream()
-                .map(participation -> new ContractDetailResponse.ParticipantResponse(
+                .map(participation -> new ContractDetailResponse.ParticipantSimpleResponse(
                         participation.getUser().getId(),
                         participation.getUser().getName(),
                         participation.getRole(),
