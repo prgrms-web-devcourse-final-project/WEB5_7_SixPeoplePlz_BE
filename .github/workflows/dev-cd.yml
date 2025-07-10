@@ -5,9 +5,6 @@ on:
       - dev
       - release # TODO cicd 도입용 임시 브랜치.... 삭제 필수
 
-env:
-  IMAGE_NAME: ghcr.io/jjhg-api-dev
-
 jobs:
   build:
     name: 도커 이미지 빌드 및 GHCR 푸시
@@ -23,6 +20,9 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 소문자 이미지 이름 설정
+        run: echo "IMAGE_NAME=ghcr.io/prgrms-web-devcourse-final-project/jjhg-api-dev" >> $GITHUB_ENV
 
       - name: Docker 이미지 빌드 및 푸시
         uses: docker/build-push-action@v5

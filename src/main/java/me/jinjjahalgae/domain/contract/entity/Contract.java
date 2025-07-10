@@ -137,4 +137,16 @@ public class Contract extends BaseEntity {
 
         return ( (double) passedDays / totalDays * 100);
     }
+
+    // 참여 정보를 제거하는 메서드
+    public void removeParticipation(Participation participation) {
+        this.participations.remove(participation);
+    }
+
+    // 감독자 수를 감소시키는 메서드
+    public void decrementTotalSupervisor() {
+        if (this.totalSupervisor > 0) {
+            this.totalSupervisor--;
+        }
+    }
 }
