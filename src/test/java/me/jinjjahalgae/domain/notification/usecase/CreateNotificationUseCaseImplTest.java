@@ -6,8 +6,9 @@
 //import me.jinjjahalgae.domain.notification.dto.NotificationCreateRequest;
 //import me.jinjjahalgae.domain.notification.enums.NotificationType;
 //import me.jinjjahalgae.domain.notification.repository.NotificationRepository;
+//import me.jinjjahalgae.domain.notification.usecase.create.notification.CreateNotificationUseCaseImpl;
 //import me.jinjjahalgae.domain.participation.dto.response.ParticipantInfoResponse;
-//import me.jinjjahalgae.domain.participation.usecase.get.GetParticipantInfoByContractIdUseCaseImpl;
+//import me.jinjjahalgae.domain.participation.usecase.get.participant.GetParticipantInfoByContractIdUseCaseImpl;
 //import me.jinjjahalgae.domain.user.User;
 //import me.jinjjahalgae.domain.user.usecase.common.dto.MyInfoResponse;
 //import me.jinjjahalgae.domain.user.usecase.get_my_info.GetMyInfoUseCaseImpl;

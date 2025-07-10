@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MarkSingleNotificationAsReadUseCaseImpl implements MarkSingleNotificationAsReadUseCase {
+public class UpdateSingleNotificationAsReadUseCaseImpl implements UpdateSingleNotificationAsReadUseCase {
 
     private final NotificationRepository notificationRepository;
 

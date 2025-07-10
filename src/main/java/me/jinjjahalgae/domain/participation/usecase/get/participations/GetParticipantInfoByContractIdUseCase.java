@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.participation.usecase.get;
+package me.jinjjahalgae.domain.participation.usecase.get.participations;
 
 import me.jinjjahalgae.domain.participation.dto.response.ParticipantInfoResponse;
 

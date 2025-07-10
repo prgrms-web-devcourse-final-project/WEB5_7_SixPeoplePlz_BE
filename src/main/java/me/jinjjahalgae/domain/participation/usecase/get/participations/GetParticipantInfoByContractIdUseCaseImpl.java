@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.participation.usecase.get;
+package me.jinjjahalgae.domain.participation.usecase.get.participations;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

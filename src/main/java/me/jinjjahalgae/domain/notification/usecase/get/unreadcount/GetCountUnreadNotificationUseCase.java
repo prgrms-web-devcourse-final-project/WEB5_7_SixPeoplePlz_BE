@@ -1,6 +1,6 @@
 package me.jinjjahalgae.domain.notification.usecase.get.unreadcount;
 
-public interface CountUnreadNotificationByUserIdUseCase {
+public interface GetCountUnreadNotificationUseCase {
 
     Long execute(Long userId);
 }

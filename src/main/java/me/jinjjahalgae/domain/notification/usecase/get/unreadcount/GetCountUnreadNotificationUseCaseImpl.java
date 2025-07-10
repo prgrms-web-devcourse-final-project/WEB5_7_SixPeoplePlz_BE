@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class CountUnreadNotificationByUserIdUseCaseImpl implements CountUnreadNotificationByUserIdUseCase {
+public class GetCountUnreadNotificationUseCaseImpl implements GetCountUnreadNotificationUseCase {
 
     private final NotificationRepository notificationRepository;
 
