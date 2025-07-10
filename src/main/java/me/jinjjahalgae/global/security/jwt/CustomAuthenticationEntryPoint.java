@@ -32,11 +32,16 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        // ApiResponse 타입 json 응답 생성
+        // ErrorResponse 타입 json 응답 생성
         ErrorCode errorCode = ErrorCode.INVALID_TOKEN;
+        String message = authException.getMessage();
+
+        // 만료된 토큰 처리
+        if (message != null && message.contains("만료")) {
+            errorCode = ErrorCode.EXPIRED_TOKEN;
+        }
 
         ErrorResponse errorResponseDto = ErrorResponse.from(errorCode);
-
 
         // json으로 response
         response.getWriter().write(objectMapper.writeValueAsString(errorResponseDto));

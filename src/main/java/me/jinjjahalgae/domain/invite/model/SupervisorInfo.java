@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.invite.dto;
+package me.jinjjahalgae.domain.invite.model;
 
 /**
  * 감독자 정보를 담는 record
