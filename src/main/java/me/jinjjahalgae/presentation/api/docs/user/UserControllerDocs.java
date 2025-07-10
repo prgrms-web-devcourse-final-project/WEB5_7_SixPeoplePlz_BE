@@ -127,20 +127,32 @@ public interface UserControllerDocs {
         ),
         @ApiResponse(
             responseCode = "400",
-            description = "잘못된 요청 (nickname이 없거나 공백)",
+            description = "잘못된 요청 (nickname이 없거나 공백, 또는 10자 초과)",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponse.class),
-                examples = @ExampleObject(
-                    name = "닉네임 누락",
-                    value = """
-                    {
-                      "success": false,
-                      "code": "BAD_REQUEST",
-                      "message": "nickname은 필수입니다."
-                    }
-                    """
-                )
+                examples = {
+                    @ExampleObject(
+                        name = "닉네임 누락",
+                        value = """
+                        {
+                          "success": false,
+                          "code": "BAD_REQUEST",
+                          "message": "nickname은 필수입니다."
+                        }
+                        """
+                    ),
+                    @ExampleObject(
+                        name = "닉네임 길이 초과",
+                        value = """
+                        {
+                          "success": false,
+                          "code": "BAD_REQUEST",
+                          "message": "닉네임은 최대 10자까지 입력 가능합니다."
+                        }
+                        """
+                    )
+                }
             )
         ),
         @ApiResponse(
