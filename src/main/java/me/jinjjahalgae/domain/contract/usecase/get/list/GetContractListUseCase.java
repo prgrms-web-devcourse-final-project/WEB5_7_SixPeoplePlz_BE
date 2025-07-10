@@ -1,6 +1,7 @@
 package me.jinjjahalgae.domain.contract.usecase.get.list;
 
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
+import me.jinjjahalgae.domain.contract.usecase.get.list.dto.ContractListResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

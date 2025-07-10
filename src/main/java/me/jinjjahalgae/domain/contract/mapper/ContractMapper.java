@@ -1,8 +1,8 @@
 package me.jinjjahalgae.domain.contract.mapper;
 
 import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractRequest;
-import me.jinjjahalgae.domain.contract.usecase.get.detail.ContractDetailResponse;
-import me.jinjjahalgae.domain.contract.usecase.get.list.ContractListResponse;
+import me.jinjjahalgae.domain.contract.usecase.get.detail.dto.ContractDetailResponse;
+import me.jinjjahalgae.domain.contract.usecase.get.list.dto.ContractListResponse;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.user.User;

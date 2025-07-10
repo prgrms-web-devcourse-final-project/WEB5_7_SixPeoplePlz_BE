@@ -1,6 +1,6 @@
 package me.jinjjahalgae.domain.contract.usecase.interfaces;
 
-import me.jinjjahalgae.domain.contract.usecase.update.ContractUpdateRequest;
+import me.jinjjahalgae.domain.contract.usecase.update.dto.ContractUpdateRequest;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;

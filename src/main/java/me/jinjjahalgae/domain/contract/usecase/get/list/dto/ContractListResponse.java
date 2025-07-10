@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.contract.usecase.get.list;
+package me.jinjjahalgae.domain.contract.usecase.get.list.dto;
 
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 
