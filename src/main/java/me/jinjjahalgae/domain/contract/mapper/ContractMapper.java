@@ -66,11 +66,11 @@ public class ContractMapper {
                 contract.getLife(), // remainingLife
                 contract.calculateAchievementPercent(),
                 contract.calculatePeriodPercent(),
-                mapToParticipantInfos(contract) // 참여자 정보
+                mapToParticipantSimpleResponse(contract) // 참여자 정보
         );
     }
 
-    private List<ContractDetailResponse.ParticipantSimpleResponse> mapToParticipantInfos(Contract contract) {
+    private List<ContractDetailResponse.ParticipantSimpleResponse> mapToParticipantSimpleResponse(Contract contract) {
         return contract.getParticipations().stream()
                 .map(participation -> new ContractDetailResponse.ParticipantSimpleResponse(
                         participation.getUser().getId(),

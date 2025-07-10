@@ -14,6 +14,7 @@ import me.jinjjahalgae.domain.contract.usecase.get.list.GetContractListUseCase;
 import me.jinjjahalgae.domain.contract.usecase.update.UpdateContractUseCase;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
+import me.jinjjahalgae.presentation.api.docs.contract.ContractControllerDocs;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -26,13 +27,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/contracts")
 @RequiredArgsConstructor
-public class ContractController {
+public class ContractController implements ContractControllerDocs {
 
     private final CreateContractUseCase createContractUseCase;
     private final GetContractListUseCase getContractListUseCase;
     private final GetContractDetailUseCase getContractDetailUseCase;
     private final UpdateContractUseCase updateContractUseCase;
 
+    @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CommonResponse<CreateContractResponse> createContract(
@@ -43,6 +45,7 @@ public class ContractController {
         return CommonResponse.success(response);
     }
 
+    @Override
     @GetMapping
     public CommonResponse<Page<ContractListResponse>> getContracts(
             @AuthenticationPrincipal CustomJwtPrincipal user,
@@ -53,6 +56,7 @@ public class ContractController {
         return CommonResponse.success(response);
     }
 
+    @Override
     @GetMapping("/{contractId}")
     public CommonResponse<ContractDetailResponse> getContractDetail(
             @AuthenticationPrincipal CustomJwtPrincipal user,
@@ -62,6 +66,7 @@ public class ContractController {
         return CommonResponse.success(response);
     }
 
+    @Override
     @PutMapping("/{contractId}")
     public CommonResponse<Void> updateContract(
             @AuthenticationPrincipal CustomJwtPrincipal user,
