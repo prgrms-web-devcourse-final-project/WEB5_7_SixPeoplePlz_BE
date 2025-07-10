@@ -1,6 +1,7 @@
 package me.jinjjahalgae.domain.file.usecase.create_presigned_url;
 
 import lombok.RequiredArgsConstructor;
+import me.jinjjahalgae.domain.file.mapper.FileMapper;
 import me.jinjjahalgae.domain.file.usecase.create_presigned_url.dto.CreatePreSignedUrlRequest;
 import me.jinjjahalgae.domain.file.usecase.create_presigned_url.dto.CreatePreSignedUrlResponse;
 import me.jinjjahalgae.global.exception.ErrorCode;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CreatePresignedUrlUseCaseImpl implements CreatePresignedUrlUseCase {
     private final S3Presigner s3Presigner;
+    private final FileMapper fileMapper;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -30,10 +32,10 @@ public class CreatePresignedUrlUseCaseImpl implements CreatePresignedUrlUseCase 
         String objectKey = createObjectKey(request.fileName());
 
         // 클라이언트가 스토리지에 직접 파일을 업로드할 수 있는 presigned url 생성
-        String uploadUrl = createPreSignedUrlForUpload(objectKey);
+        String preSignedUrl = createPreSignedUrl(objectKey);
 
         // presigned url, objectKey 반환
-        return new CreatePreSignedUrlResponse(uploadUrl, objectKey);
+        return fileMapper.toCreatePreSignedUrlResponse(preSignedUrl, objectKey);
     }
 
 
@@ -57,7 +59,7 @@ public class CreatePresignedUrlUseCaseImpl implements CreatePresignedUrlUseCase 
     }
 
     // presigned url 생성
-    private String createPreSignedUrlForUpload(String objectKey) {
+    private String createPreSignedUrl(String objectKey) {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder().bucket(bucket).key(objectKey).build();
 
         // presigned url 생성에 필요한 설정 세팅
