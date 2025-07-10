@@ -172,4 +172,19 @@ public class Contract extends BaseEntity {
         // 수정 시 총 인증 횟수도 다시 계산
         this.totalProof = calculateTotalProof(startDate, endDate, proofPerWeek);
     }
+
+    //권한 검증 (계약자인가?)
+    public void validateContractor(Long userId) {
+        if (!this.user.getId().equals(userId)) {
+            throw ErrorCode.ACCESS_DENIED.domainException("계약에 대한 접근 권한이 없습니다.");
+        }
+    }
+
+    //계약 상태 변경 (중도 포기)
+    public void withdrawContract() {
+        if (this.status != ContractStatus.IN_PROGRESS) {
+            throw ErrorCode.CONTRACT_NOT_IN_PROGRESS.domainException("진행 중인 계약만 포기할 수 있습니다.");
+        }
+        this.status = ContractStatus.ABANDONED;
+    }
 }
