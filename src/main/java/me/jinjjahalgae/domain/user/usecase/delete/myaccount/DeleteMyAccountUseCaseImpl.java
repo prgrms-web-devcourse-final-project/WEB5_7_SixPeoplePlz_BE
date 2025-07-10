@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.user.usecase.delete_my_account;
+package me.jinjjahalgae.domain.user.usecase.delete.myaccount;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.user.UserRepository;

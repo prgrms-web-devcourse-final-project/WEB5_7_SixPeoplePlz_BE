@@ -2,9 +2,9 @@ package me.jinjjahalgae.presentation.api;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import me.jinjjahalgae.domain.file.usecase.create_presigned_url.CreatePresignedUrlUseCase;
-import me.jinjjahalgae.domain.file.usecase.create_presigned_url.dto.CreatePreSignedUrlRequest;
-import me.jinjjahalgae.domain.file.usecase.create_presigned_url.dto.CreatePreSignedUrlResponse;
+import me.jinjjahalgae.domain.file.usecase.presign.CreatePresignedUrlUseCase;
+import me.jinjjahalgae.domain.file.usecase.presign.dto.CreatePreSignedUrlRequest;
+import me.jinjjahalgae.domain.file.usecase.presign.dto.CreatePreSignedUrlResponse;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.presentation.api.docs.file.FileControllerDocs;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
