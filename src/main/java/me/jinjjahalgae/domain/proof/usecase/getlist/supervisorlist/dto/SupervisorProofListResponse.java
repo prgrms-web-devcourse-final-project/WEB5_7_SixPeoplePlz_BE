@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.proof.usecase.getlist.supervisorlist;
+package me.jinjjahalgae.domain.proof.usecase.getlist.supervisorlist.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import me.jinjjahalgae.domain.feedback.enums.FeedbackStatus;

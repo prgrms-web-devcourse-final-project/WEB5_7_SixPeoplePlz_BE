@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.proof.usecase.get.detail;
+package me.jinjjahalgae.domain.proof.usecase.get.detail.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import me.jinjjahalgae.domain.feedback.dto.FeedbackResponse;
