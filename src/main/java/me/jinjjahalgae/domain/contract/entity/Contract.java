@@ -9,7 +9,9 @@ import me.jinjjahalgae.domain.common.BaseEntity;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.participation.entity.Participation;
+import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.user.User;
+import me.jinjjahalgae.global.exception.ErrorCode;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,15 +21,8 @@ import java.util.UUID;
 /**
  * 계약과 유저 : 관계 매핑
  * 계약서 정보가 필요한 상황에서는
- * 유저의 이름이나 닉네임이 항상 필요할 것으로 생각됨.
- * 때문에 관계 매핑을 통해 조인.
- *
- * 외래키로 단순하게 연결할 경우 N+1 문제를 방지할 수 있지만
- * 닉네임이 필요한 순간마다
- * 계속 userRepository를 사용하는 것 보다는
- * contract.getUser.getNickname 한 줄로 사용(한줄로 처리)
- *
- * 또한 지연 로딩을 사용하여 N+1 문제 방지
+ * 유저의 이름이나 닉네임이 항상 필요할 것으로 생각됨. (아마 이름..)
+ * 지연 로딩으로 설정하되 조회 시에는 fetch join 으로 N+1 문제를 방지
  */
 
 @Entity
@@ -117,6 +112,27 @@ public class Contract extends BaseEntity {
         return (int) (totalWeeks * proofPerWeek);
     }
 
+    public double calculateAchievementPercent() {
+        return ( (double) currentProof / totalProof * 100);
+    }
+
+    public double calculatePeriodPercent() {
+
+        LocalDateTime now = LocalDateTime.now();
+
+        if (now.isBefore(startDate)) {
+            return 0.0; // 시작 전이면 0%
+        }
+        if (now.isAfter(endDate)) {
+            return 100.0; // 종료 후면 100%
+        }
+
+        long totalDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1;
+        long passedDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, now) +1;
+
+        return ( (double) passedDays / totalDays * 100);
+    }
+
     // 참여 정보를 제거하는 메서드
     public void removeParticipation(Participation participation) {
         this.participations.remove(participation);
@@ -127,5 +143,33 @@ public class Contract extends BaseEntity {
         if (this.totalSupervisor > 0) {
             this.totalSupervisor--;
         }
+    }
+
+    //감독자가 이미 있는지 검증 (수정은 감독자가 없어야 가능)
+    public void validateUpdatable() {
+        boolean hasSignedSupervisor = this.participations.stream()
+                .anyMatch(participation -> participation.getRole() == Role.SUPERVISOR);
+        if (hasSignedSupervisor) {
+            throw ErrorCode.CONTRACT_ALREADY_SIGNED.domainException("감독자가 서명한 계약은 수정할 수 없습니다.");
+        }
+    }
+
+    //계약 수정
+    public void updateContract(String title, String goal, String penalty, String reward,
+                               int life, int proofPerWeek, boolean oneOff,
+                               LocalDateTime startDate, LocalDateTime endDate, ContractType type) {
+        this.title = title;
+        this.goal = goal;
+        this.penalty = penalty;
+        this.reward = reward;
+        this.life = life;
+        this.proofPerWeek = proofPerWeek;
+        this.oneOff = oneOff;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.type = type;
+
+        // 수정 시 총 인증 횟수도 다시 계산
+        this.totalProof = calculateTotalProof(startDate, endDate, proofPerWeek);
     }
 }
