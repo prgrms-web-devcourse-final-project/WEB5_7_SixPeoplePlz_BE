@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotBlank;
 )
 public record ParticipationCreateRequest (
     @Schema(description = "서명 이미지 키", 
-        example = "contracts/signatures/supervisor_12345.png", 
+        example = "d868f036-7b91-4fc7-901d-83eb16291da9.png",
         requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "imageKey는 필수입니다.")    
     String imageKey //서명 이미지

@@ -1,10 +1,12 @@
 package me.jinjjahalgae.domain.proof.entities;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.jinjjahalgae.domain.common.BaseEntity;
+import me.jinjjahalgae.domain.feedback.entity.Feedback;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 
 import java.util.ArrayList;
@@ -28,7 +30,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Proof extends BaseEntity {
 
     @Id
@@ -51,9 +53,11 @@ public class Proof extends BaseEntity {
     @OneToMany(mappedBy = "proof", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProofImage> proofImages = new ArrayList<>();
 
+    @OneToMany(mappedBy = "proof", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Feedback> feedbacks = new ArrayList<>();
+
     @Builder
-    public Proof(Long id, String comment, int checkedSupervisors, int totalSupervisors, ProofStatus status, Long contractId, Long proofId) {
-        this.id = id;
+    public Proof(String comment, int checkedSupervisors, int totalSupervisors, ProofStatus status, Long contractId, Long proofId) {
         this.comment = comment;
         this.checkedSupervisors = checkedSupervisors;
         this.totalSupervisors = totalSupervisors;
@@ -66,5 +70,10 @@ public class Proof extends BaseEntity {
     public void addProofImage(ProofImage proofImage) {
         proofImages.add(proofImage);
         proofImage.assignProof(this);
+    }
+
+    public void addFeedback(Feedback feedback) {
+        feedbacks.add(feedback);
+        feedback.assignProof(this);
     }
 }

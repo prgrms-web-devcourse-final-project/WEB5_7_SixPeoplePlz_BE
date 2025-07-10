@@ -51,3 +51,16 @@ invite:
   expired-time: 24
   max-supervisors: 5
   invite-url-prefix: ${DEV_INVITE_URL_PREFIX}
+
+
+# 클라우드
+cloud:
+  # AWS
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY_ID}
+      secret-key: ${AWS_SECRET_ACCESS_KEY}
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: ${AWS_S3_BUCKET_DEV}
