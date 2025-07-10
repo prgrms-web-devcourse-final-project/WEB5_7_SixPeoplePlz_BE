@@ -2,7 +2,7 @@ package me.jinjjahalgae.domain.proof.usecase.getlist.supervisorlist;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import me.jinjjahalgae.domain.feedback.enums.FeedbackStatus;
-import me.jinjjahalgae.domain.proof.usecase.getlist.contractorlist.ProofSimpleResponse;
+import me.jinjjahalgae.domain.proof.usecase.getlist.common.ProofSimpleResponse;
 
 /**
  * 감독자 달력 표시를 위한 response

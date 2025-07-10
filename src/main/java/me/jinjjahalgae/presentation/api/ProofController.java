@@ -2,7 +2,7 @@ package me.jinjjahalgae.presentation.api;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jinjjahalgae.domain.proof.usecase.create.proof.ProofCreateRequest;
+import me.jinjjahalgae.domain.proof.usecase.create.common.ProofCreateRequest;
 import me.jinjjahalgae.domain.proof.usecase.create.proof.CreateProofUseCase;
 import me.jinjjahalgae.domain.proof.usecase.create.reproof.CreateReProofUseCase;
 import me.jinjjahalgae.domain.proof.usecase.get.await.GetAwaitProofUseCase;

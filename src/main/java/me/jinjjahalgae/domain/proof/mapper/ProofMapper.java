@@ -8,7 +8,7 @@ import me.jinjjahalgae.domain.proof.entities.ProofImage;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 import me.jinjjahalgae.domain.proof.usecase.get.await.ProofAwaitResponse;
 import me.jinjjahalgae.domain.proof.usecase.getlist.contractorlist.ContractorProofListResponse;
-import me.jinjjahalgae.domain.proof.usecase.getlist.contractorlist.ProofSimpleResponse;
+import me.jinjjahalgae.domain.proof.usecase.getlist.common.ProofSimpleResponse;
 import me.jinjjahalgae.domain.proof.usecase.get.detail.ProofDetailResponse;
 import me.jinjjahalgae.domain.proof.usecase.get.recent.ProofRecentResponse;
 import me.jinjjahalgae.domain.proof.usecase.getlist.supervisorlist.SupervisorProofListResponse;
