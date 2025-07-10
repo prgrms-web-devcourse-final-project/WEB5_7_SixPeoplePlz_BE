@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.auth.dto.refresh;
+package me.jinjjahalgae.domain.auth.usecase.refresh.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

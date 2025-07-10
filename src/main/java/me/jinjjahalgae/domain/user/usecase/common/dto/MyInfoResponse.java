@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.user.dto;
+package me.jinjjahalgae.domain.user.usecase.common.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

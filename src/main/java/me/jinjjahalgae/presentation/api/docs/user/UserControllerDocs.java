@@ -9,8 +9,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import me.jinjjahalgae.domain.user.dto.MyInfoResponse;
-import me.jinjjahalgae.domain.user.dto.UpdateMyInfoRequest;
+import me.jinjjahalgae.domain.user.usecase.common.dto.MyInfoResponse;
+import me.jinjjahalgae.domain.user.usecase.update_my_info.dto.UpdateMyInfoRequest;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.exception.ErrorResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
@@ -127,20 +127,32 @@ public interface UserControllerDocs {
         ),
         @ApiResponse(
             responseCode = "400",
-            description = "잘못된 요청 (nickname이 없거나 공백)",
+            description = "잘못된 요청 (nickname이 없거나 공백, 또는 10자 초과)",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = ErrorResponse.class),
-                examples = @ExampleObject(
-                    name = "닉네임 누락",
-                    value = """
-                    {
-                      "success": false,
-                      "code": "BAD_REQUEST",
-                      "message": "nickname은 필수입니다."
-                    }
-                    """
-                )
+                examples = {
+                    @ExampleObject(
+                        name = "닉네임 누락",
+                        value = """
+                        {
+                          "success": false,
+                          "code": "BAD_REQUEST",
+                          "message": "nickname은 필수입니다."
+                        }
+                        """
+                    ),
+                    @ExampleObject(
+                        name = "닉네임 길이 초과",
+                        value = """
+                        {
+                          "success": false,
+                          "code": "BAD_REQUEST",
+                          "message": "닉네임은 최대 10자까지 입력 가능합니다."
+                        }
+                        """
+                    )
+                }
             )
         ),
         @ApiResponse(

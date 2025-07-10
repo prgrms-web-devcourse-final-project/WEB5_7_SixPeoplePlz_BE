@@ -1,8 +1,7 @@
-package me.jinjjahalgae.domain.user.usecase;
+package me.jinjjahalgae.domain.user.usecase.delete_my_account;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.user.UserRepository;
-import me.jinjjahalgae.domain.user.usecase.interfaces.DeleteMyAccountUseCase;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.auth.dto.social;
+package me.jinjjahalgae.domain.auth.model;
 
 /**
  * 소셜 로그인 페이로드 응답을 진짜할게에 맞게 표준화
