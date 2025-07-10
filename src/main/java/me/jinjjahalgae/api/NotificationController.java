@@ -9,6 +9,7 @@ import me.jinjjahalgae.domain.notification.usecase.countUnreadNotificationByUser
 import me.jinjjahalgae.domain.notification.usecase.markSingleNotificationAsRead.MarkSingleNotificationAsReadUseCase;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
+import me.jinjjahalgae.presentation.api.docs.notification.NotificationControllerDocs;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/api/notifications")
 @RequiredArgsConstructor
-public class NotificationController {
+public class NotificationController implements NotificationControllerDocs {
 
     private final GetAllNotificationUseCase getAllNotification;
     private final CountUnreadNotificationByUserIdUseCase countUnreadNotificationByUserId;
@@ -37,7 +38,7 @@ public class NotificationController {
     @GetMapping
     public CommonResponse<Page<NotificationGetResponse>> getAllNotifications(
             @AuthenticationPrincipal CustomJwtPrincipal principal,
-            @PageableDefault(page = 0, size = 10, direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         return CommonResponse.success(getAllNotification.execute(principal.getUserId(), pageable));
     }
