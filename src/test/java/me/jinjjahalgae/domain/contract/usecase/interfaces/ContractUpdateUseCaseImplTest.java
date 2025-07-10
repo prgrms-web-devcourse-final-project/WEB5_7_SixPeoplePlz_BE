@@ -4,7 +4,7 @@ import me.jinjjahalgae.domain.contract.usecase.update.ContractUpdateRequest;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
-import me.jinjjahalgae.domain.contract.usecase.update.UpdateContractUpdateUseCaseImpl;
+import me.jinjjahalgae.domain.contract.usecase.update.UpdateContractUseCaseImpl;
 import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.user.User;
@@ -27,13 +27,13 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UpdateContractUpdateUseCaseTest {
+class UpdateContractUseCaseTest {
 
     @Mock
     private ContractRepository contractRepository;
 
     @InjectMocks
-    private UpdateContractUpdateUseCaseImpl contractUpdateUseCase;
+    private UpdateContractUseCaseImpl contractUpdateUseCase;
 
     private User contractor;
     private User otherUser;

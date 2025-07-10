@@ -11,7 +11,7 @@ import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.usecase.create.CreateContractUseCase;
 import me.jinjjahalgae.domain.contract.usecase.get.detail.GetContractDetailUseCase;
 import me.jinjjahalgae.domain.contract.usecase.get.list.GetContractListUseCase;
-import me.jinjjahalgae.domain.contract.usecase.update.UpdateContractUpdateUseCase;
+import me.jinjjahalgae.domain.contract.usecase.update.UpdateContractUseCase;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
 import org.springframework.data.domain.Page;
@@ -31,7 +31,7 @@ public class ContractController {
     private final CreateContractUseCase createContractUseCase;
     private final GetContractListUseCase getContractListUseCase;
     private final GetContractDetailUseCase getContractDetailUseCase;
-    private final UpdateContractUpdateUseCase updateContractUpdateUseCase;
+    private final UpdateContractUseCase updateContractUseCase;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -68,7 +68,7 @@ public class ContractController {
             @PathVariable Long contractId,
             @Valid @RequestBody ContractUpdateRequest request
     ) {
-        updateContractUpdateUseCase.execute(user.getUserId(), contractId, request);
+        updateContractUseCase.execute(user.getUserId(), contractId, request);
         return CommonResponse.success();
     }
 }
