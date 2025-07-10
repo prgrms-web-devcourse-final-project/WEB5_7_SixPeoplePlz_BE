@@ -1,5 +1,6 @@
 package me.jinjjahalgae.domain.invite.usecase;
 
+import me.jinjjahalgae.domain.invite.usecase.verify.link.VerifyInviteLinkUseCaseImpl;
 import me.jinjjahalgae.global.exception.AppException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

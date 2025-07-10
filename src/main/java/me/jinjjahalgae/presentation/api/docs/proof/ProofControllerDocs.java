@@ -8,9 +8,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import me.jinjjahalgae.domain.proof.dto.request.ProofCreateRequest;
-import me.jinjjahalgae.domain.proof.dto.response.*;
+import me.jinjjahalgae.domain.proof.usecase.create.proof.ProofCreateRequest;
+import me.jinjjahalgae.domain.proof.usecase.get.await.ProofAwaitResponse;
+import me.jinjjahalgae.domain.proof.usecase.getlist.contractorlist.ContractorProofListResponse;
+import me.jinjjahalgae.domain.proof.usecase.get.detail.ProofDetailResponse;
+import me.jinjjahalgae.domain.proof.usecase.get.recent.ProofRecentResponse;
+import me.jinjjahalgae.domain.proof.usecase.getlist.supervisorlist.SupervisorProofListResponse;
 import me.jinjjahalgae.global.common.CommonResponse;
+import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -69,6 +74,55 @@ public interface ProofControllerDocs {
                                             """
                                     )
                             }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "인증 실패",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "INVALID_TOKEN",
+                                              "message": "유효하지 않은 토큰입니다."
+                                            }
+                                            """
+                                    ),
+                                    @ExampleObject(
+                                            name = "만료된 토큰",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "EXPIRED_TOKEN",
+                                              "message": "토큰이 만료되었습니다."
+                                            }
+                                            """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "계약에 대한 인증 생성 권한이 없음",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "자신의 계약이 아닌 경우",
+                                    value = """
+                                    {
+                                      "success": false,
+                                      "code": "ACCESS_DENIED",
+                                      "message": "계약에 대한 접근 권한이 없습니다."
+                                    }
+                                    """
+                                    )
+
 
                     )
             ),
@@ -95,7 +149,8 @@ public interface ProofControllerDocs {
     })
     CommonResponse<Void> createProof(
             @Parameter(description = "인증 등록 정보", required = true) ProofCreateRequest req,
-            @Parameter(description = "계약 id", required = true) @PathVariable Long contractId
+            @Parameter(description = "계약 id", required = true) @PathVariable Long contractId,
+            @Parameter(hidden = true) CustomJwtPrincipal user
     );
 
 
@@ -155,6 +210,56 @@ public interface ProofControllerDocs {
                     )
             ),
             @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "인증 실패",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "INVALID_TOKEN",
+                                              "message": "유효하지 않은 토큰입니다."
+                                            }
+                                            """
+                                    ),
+                                    @ExampleObject(
+                                            name = "만료된 토큰",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "EXPIRED_TOKEN",
+                                              "message": "토큰이 만료되었습니다."
+                                            }
+                                            """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "계약에 대한 인증 생성 권한이 없음",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "자신의 계약이 아닌 경우",
+                                    value = """
+                                    {
+                                      "success": false,
+                                      "code": "ACCESS_DENIED",
+                                      "message": "계약에 대한 접근 권한이 없습니다."
+                                    }
+                                    """
+                            )
+
+
+                    )
+            ),
+            @ApiResponse(
                     responseCode = "404",
                     description = "원본 인증이 존재하지 않거나 원본 인증과 연결된 계약이 존재하지 않는 경우",
                     content = @Content(
@@ -188,7 +293,8 @@ public interface ProofControllerDocs {
     })
     CommonResponse<Void> createReProof(
             @Parameter(description = "재인증 등록 정보", required = true) ProofCreateRequest req,
-            @Parameter(description = "원본 인증 id", required = true) @PathVariable Long proofId
+            @Parameter(description = "원본 인증 id", required = true) @PathVariable Long proofId,
+            @Parameter(hidden = true) CustomJwtPrincipal user
     );
 
 
@@ -231,10 +337,61 @@ public interface ProofControllerDocs {
                                     """
                             )
                     )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "인증 실패",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "INVALID_TOKEN",
+                                              "message": "유효하지 않은 토큰입니다."
+                                            }
+                                            """
+                                    ),
+                                    @ExampleObject(
+                                            name = "만료된 토큰",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "EXPIRED_TOKEN",
+                                              "message": "토큰이 만료되었습니다."
+                                            }
+                                            """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "계약에 대한 접근 권한이 없음 ",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "감독중인 계약이 아닌 경우",
+                                    value = """
+                                    {
+                                      "success": false,
+                                      "code": "ACCESS_DENIED",
+                                      "message": "계약에 대한 접근 권한이 없습니다."
+                                    }
+                                    """
+                            )
+
+
+                    )
             )
     })
     CommonResponse<List<ProofAwaitResponse>> getAwaitProofs(
-            @Parameter(description = "계약 id", required = true) @PathVariable Long contractId
+            @Parameter(description = "계약 id", required = true) @PathVariable Long contractId,
+            @Parameter(hidden = true) CustomJwtPrincipal user
     );
 
 
@@ -285,10 +442,61 @@ public interface ProofControllerDocs {
                                     """
                             )
                     )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "인증 실패",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "INVALID_TOKEN",
+                                              "message": "유효하지 않은 토큰입니다."
+                                            }
+                                            """
+                                    ),
+                                    @ExampleObject(
+                                            name = "만료된 토큰",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "EXPIRED_TOKEN",
+                                              "message": "토큰이 만료되었습니다."
+                                            }
+                                            """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "계약에 대한 접근 권한이 없음 ",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "자신의 계약이 아닌 경우",
+                                    value = """
+                                    {
+                                      "success": false,
+                                      "code": "ACCESS_DENIED",
+                                      "message": "계약에 대한 접근 권한이 없습니다."
+                                    }
+                                    """
+                            )
+
+
+                    )
             )
     })
     CommonResponse<List<ProofRecentResponse>> getRecentProofs(
-            @Parameter(description = "계약 id", required = true) @PathVariable Long contractId
+            @Parameter(description = "계약 id", required = true) @PathVariable Long contractId,
+            @Parameter(hidden = true) CustomJwtPrincipal user
     );
 
 
@@ -344,6 +552,56 @@ public interface ProofControllerDocs {
                     )
             ),
             @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "인증 실패",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "INVALID_TOKEN",
+                                              "message": "유효하지 않은 토큰입니다."
+                                            }
+                                            """
+                                    ),
+                                    @ExampleObject(
+                                            name = "만료된 토큰",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "EXPIRED_TOKEN",
+                                              "message": "토큰이 만료되었습니다."
+                                            }
+                                            """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "계약에 대한 접근 권한이 없음 ",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "자신의 계약이 아니거나 감독중인 계약이 아닌 경우",
+                                    value = """
+                                    {
+                                      "success": false,
+                                      "code": "ACCESS_DENIED",
+                                      "message": "계약에 대한 접근 권한이 없습니다."
+                                    }
+                                    """
+                            )
+
+
+                    )
+            ),
+            @ApiResponse(
                     responseCode = "404",
                     description = "인증이 존재하지 않는 경우",
                     content = @Content(
@@ -366,7 +624,8 @@ public interface ProofControllerDocs {
             )
     })
     CommonResponse<ProofDetailResponse> getProofDetail(
-            @Parameter(description = "인증 id", required = true) @PathVariable Long proofId
+            @Parameter(description = "인증 id", required = true) @PathVariable Long proofId,
+            @Parameter(hidden = true) CustomJwtPrincipal user
     );
 
     @Operation(
@@ -442,13 +701,63 @@ public interface ProofControllerDocs {
                             )
 
                     )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "인증 실패",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "INVALID_TOKEN",
+                                              "message": "유효하지 않은 토큰입니다."
+                                            }
+                                            """
+                                    ),
+                                    @ExampleObject(
+                                            name = "만료된 토큰",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "EXPIRED_TOKEN",
+                                              "message": "토큰이 만료되었습니다."
+                                            }
+                                            """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "계약에 대한 접근 권한이 없음 ",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "자신의 계약이 아닌 경우",
+                                    value = """
+                                    {
+                                      "success": false,
+                                      "code": "ACCESS_DENIED",
+                                      "message": "계약에 대한 접근 권한이 없습니다."
+                                    }
+                                    """
+                            )
 
+
+                    )
             )
     })
     CommonResponse<List<ContractorProofListResponse>> getContractorProofList(
             @Parameter(description = "계약 id", required = true) @PathVariable Long contractId,
             @Parameter(description = "년", required = true) int year,
-            @Parameter(description = "월", required = true) int month
+            @Parameter(description = "월", required = true) int month,
+            @Parameter(hidden = true) CustomJwtPrincipal user
     );
 
     @Operation(
@@ -527,11 +836,62 @@ public interface ProofControllerDocs {
 
                     )
 
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "인증 실패",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "INVALID_TOKEN",
+                                              "message": "유효하지 않은 토큰입니다."
+                                            }
+                                            """
+                                    ),
+                                    @ExampleObject(
+                                            name = "만료된 토큰",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "EXPIRED_TOKEN",
+                                              "message": "토큰이 만료되었습니다."
+                                            }
+                                            """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "계약에 대한 접근 권한이 없음 ",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "감독중인 계약이 아닌 경우",
+                                    value = """
+                                    {
+                                      "success": false,
+                                      "code": "ACCESS_DENIED",
+                                      "message": "계약에 대한 접근 권한이 없습니다."
+                                    }
+                                    """
+                            )
+
+
+                    )
             )
     })
     CommonResponse<List<SupervisorProofListResponse>> getSupervisorProofList(
             @Parameter(description = "계약 id", required = true) @PathVariable Long contractId,
             @Parameter(description = "년", required = true) int year,
-            @Parameter(description = "월", required = true) int month
+            @Parameter(description = "월", required = true) int month,
+            @Parameter(hidden = true) CustomJwtPrincipal user
     );
 }

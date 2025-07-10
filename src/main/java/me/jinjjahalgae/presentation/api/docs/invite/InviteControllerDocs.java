@@ -10,10 +10,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import me.jinjjahalgae.domain.invite.dto.request.InviteLinkVerifyRequest;
-import me.jinjjahalgae.domain.invite.dto.response.ContractUuidResponse;
-import me.jinjjahalgae.domain.invite.dto.response.InviteContractInfoResponse;
-import me.jinjjahalgae.domain.invite.dto.response.InviteLinkResponse;
+import me.jinjjahalgae.domain.invite.usecase.verify.password.dto.VerifyInvitePasswordRequest;
+import me.jinjjahalgae.domain.invite.usecase.verify.password.dto.ContractUuidResponse;
+import me.jinjjahalgae.domain.invite.usecase.get.contract.dto.InviteContractInfoResponse;
+import me.jinjjahalgae.domain.invite.usecase.create.invite.dto.InviteLinkResponse;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.exception.ErrorResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
@@ -36,15 +36,52 @@ public interface InviteControllerDocs {
                                      "password": "ac08ee16"
                                    }
                                  }"""))),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(name = "인증 실패", value = """
+                                    {
+                                      "success": false,
+                                      "code": "INVALID_TOKEN",
+                                      "message": "유효하지 않은 토큰입니다."
+                                    }
+                                    """),
+                                    @ExampleObject(name = "만료된 토큰", value = """
+                                    {
+                                      "success": false,
+                                      "code": "EXPIRED_TOKEN",
+                                      "message": "토큰이 만료되었습니다."
+                                    }
+                                    """)
+                            }
+                    )
+            ),
+            @ApiResponse(responseCode = "403", description = "자신의 계약이 아닌 계약의 초대링크 생성을 요청한 경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(name = "자신의 계약이 아닌데 초대코드 생성 요청", value = """
+                                 { "success": false, "code": "ACCESS_DENIED", "message": "자신의 계약에만 초대링크 생성이 가능합니다." }
+                                 """))),
             @ApiResponse(responseCode = "404", description = "초대링크 생성을 요청한 계약이 존재하지 않는 경우",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(name = "CONTRACT_NOT_FOUND", value = """
+                            examples = @ExampleObject(name = "계약이 존재하지 않음", value = """
                                  { "success": false, "code": "CONTRACT_NOT_FOUND", "message": "존재하지 않는 계약입니다." }
+                                 """))),
+            @ApiResponse(responseCode = "409", description = "초대링크 생성을 요청한 계약이 대기 상태가 아닌경우",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(name = "계약 시작 전에만 초대링크 생성 가능", value = """
+                                 { "success": false, "code": "CANNOT_CREATE_INVITE_AFTER_START", "message": "계약이 시작히기 전에만 초대 코드를 생성할 수 있습니다." }
                                  """)))
     })
     CommonResponse<InviteLinkResponse> createInviteLink(
-            @Parameter(description = "계약 ID", example = "1") Long contractId);
+            @Parameter(description = "계약 ID", example = "1") Long contractId,
+            @Parameter(hidden = true) CustomJwtPrincipal principal);
 
 
     @Operation(summary = "초대링크 유효성 검사", description = "초대 코드가 유효한지(만료되지 않았는지) 확인합니다.")
@@ -58,7 +95,7 @@ public interface InviteControllerDocs {
             @ApiResponse(responseCode = "404", description = "존재하지 않거나 만료된 초대링크",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(name = "INVITE_NOT_FOUND", value = """
+                            examples = @ExampleObject(name = "존재하지 않거나 만료된 초대링크", value = """
                                  { "success": false, "code": "INVITE_NOT_FOUND", "message": "존재하지 않거나 만료된 초대입니다." }
                                  """)))
     })
@@ -81,22 +118,22 @@ public interface InviteControllerDocs {
             @ApiResponse(responseCode = "401", description = "비밀번호 불일치",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(name = "INVALID_INVITE_PASSWORD", value = """
+                            examples = @ExampleObject(name = "초대코드에 해당하는 비밀번호가 일치하지 않음", value = """
                                  { "success": false, "code": "INVALID_INVITE_PASSWORD", "message": "초대 비밀번호가 일치하지 않습니다." }
                                  """))),
             @ApiResponse(responseCode = "404", description = "존재하지 않거나 만료된 초대링크",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(name = "INVITE_NOT_FOUND", value = """
+                            examples = @ExampleObject(name = "존재하지 않거나 만료된 초대링크", value = """
                                  { "success": false, "code": "INVITE_NOT_FOUND", "message": "존재하지 않거나 만료된 초대입니다." }
                                  """)))
     })
     CommonResponse<ContractUuidResponse> verifyPassword(
             @Parameter(description = "초대 코드", example = "da2316d7") String inviteCode,
-            @Valid InviteLinkVerifyRequest request);
+            @Valid VerifyInvitePasswordRequest request);
 
 
-    @Operation(summary = "초대 계약서 상세 조회", description = "비밀번호 검증 후 계약서의 상세 정보를 조회합니다. 인증이 필요합니다.",
+    @Operation(summary = "초대 계약서 상세 조회", description = "비밀번호 검증 후 계약서의 상세 정보를 조회합니다. 로그인이 필요합니다.",
             security = { @SecurityRequirement(name = "bearerAuth") })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "계약서 조회 성공",
@@ -130,14 +167,38 @@ public interface InviteControllerDocs {
             @ApiResponse(responseCode = "400", description = "요청한 사용자가 이미 계약에 참여한 경우",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(name = "INVITE_ALREADY_PARTICIPATED", value = """
+                            examples = @ExampleObject(name = "이미 계약에 참여한 사용자", value = """
                                  { "success": false, "code": "INVITE_ALREADY_PARTICIPATED", "message": "이미 참여한 계약입니다." }
                                  """))),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(name = "인증 실패", value = """
+                                    {
+                                      "success": false,
+                                      "code": "INVALID_TOKEN",
+                                      "message": "유효하지 않은 토큰입니다."
+                                    }
+                                    """),
+                                    @ExampleObject(name = "만료된 토큰", value = """
+                                    {
+                                      "success": false,
+                                      "code": "EXPIRED_TOKEN",
+                                      "message": "토큰이 만료되었습니다."
+                                    }
+                                    """)
+                            }
+                    )
+            ),
             @ApiResponse(responseCode = "404", description = "초대링크에 해당하는 계약이 없거나 계약의 계약자가 없는 경우",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = {
-                                    @ExampleObject(name = "CONTRACT_NOT_FOUND", summary = "계약서 없음", value = """
+                                    @ExampleObject(name = "계약서가 존재하지 않음", summary = "계약서 없음", value = """
                                                  { "success": false, "code": "CONTRACT_NOT_FOUND", "message": "존재하지 않는 계약입니다." }
                                                  """),
                                     @ExampleObject(name = "CONTRACTOR_PARTICIPATION_NOT_FOUND", summary = "계약자 정보 없음", value = """
