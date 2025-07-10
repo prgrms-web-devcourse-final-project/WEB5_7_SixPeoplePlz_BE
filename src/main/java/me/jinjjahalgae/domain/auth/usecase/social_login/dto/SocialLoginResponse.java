@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.auth.dto.login;
+package me.jinjjahalgae.domain.auth.usecase.social_login.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

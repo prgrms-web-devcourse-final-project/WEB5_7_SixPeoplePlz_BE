@@ -1,6 +1,6 @@
 package me.jinjjahalgae.presentation.api.docs.user;
 
-import me.jinjjahalgae.domain.user.dto.MyInfoResponse;
+import me.jinjjahalgae.domain.user.usecase.common.dto.MyInfoResponse;
 import me.jinjjahalgae.global.common.CommonResponse;
 
 public class MyInfoSwaggerResponse extends CommonResponse<MyInfoResponse> {

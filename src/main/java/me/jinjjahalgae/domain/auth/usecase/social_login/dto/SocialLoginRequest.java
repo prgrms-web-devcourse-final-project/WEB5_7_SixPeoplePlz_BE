@@ -1,9 +1,8 @@
-package me.jinjjahalgae.domain.auth.dto.login;
+package me.jinjjahalgae.domain.auth.usecase.social_login.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import me.jinjjahalgae.domain.auth.enums.Provider;
 
 /**
  * 로그인 할 때 OAuth 증명을 검증하기 위한 요청 dto
