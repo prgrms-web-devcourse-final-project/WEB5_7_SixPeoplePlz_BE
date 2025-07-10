@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.notification.usecase.createNotification;
+package me.jinjjahalgae.domain.notification.usecase.create.notification;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +9,7 @@ import me.jinjjahalgae.domain.notification.enums.NotificationType;
 import me.jinjjahalgae.domain.notification.repository.NotificationRepository;
 import me.jinjjahalgae.domain.participation.dto.response.ParticipantInfoResponse;
 import me.jinjjahalgae.domain.participation.enums.Role;
-import me.jinjjahalgae.domain.participation.usecase.interfaces.GetParticipantInfoByContractIdUseCase;
+import me.jinjjahalgae.domain.participation.usecase.get.GetParticipantInfoByContractIdUseCase;
 import me.jinjjahalgae.domain.user.usecase.get_my_info.GetMyInfoUseCase;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;

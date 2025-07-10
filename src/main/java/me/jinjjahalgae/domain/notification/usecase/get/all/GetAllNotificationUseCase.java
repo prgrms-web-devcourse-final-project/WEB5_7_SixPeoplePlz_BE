@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.notification.usecase.getAllNotification;
+package me.jinjjahalgae.domain.notification.usecase.get.all;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.notification.usecase.markSingleNotificationAsRead;
+package me.jinjjahalgae.domain.notification.usecase.update.asread;
 
 /**
  * 개별 알림 읽음 처리

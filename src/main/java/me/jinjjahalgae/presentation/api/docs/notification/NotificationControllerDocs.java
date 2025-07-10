@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.exception.ErrorResponse;
 import me.jinjjahalgae.presentation.api.docs.NoContentSwaggerResponse;
-import me.jinjjahalgae.domain.notification.usecase.getAllNotification.NotificationGetResponse;
+import me.jinjjahalgae.domain.notification.usecase.get.all.NotificationGetResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springdoc.core.converters.models.PageableAsQueryParam;

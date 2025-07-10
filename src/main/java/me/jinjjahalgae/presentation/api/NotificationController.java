@@ -1,12 +1,12 @@
 package me.jinjjahalgae.presentation.api;
 
 import lombok.RequiredArgsConstructor;
-import me.jinjjahalgae.domain.notification.usecase.deleteAllNotification.DeleteAllNotificationUseCase;
-import me.jinjjahalgae.domain.notification.usecase.deleteSingleNotification.DeleteSingleNotificationUseCase;
-import me.jinjjahalgae.domain.notification.usecase.getAllNotification.GetAllNotificationUseCase;
-import me.jinjjahalgae.domain.notification.usecase.getAllNotification.NotificationGetResponse;
-import me.jinjjahalgae.domain.notification.usecase.countUnreadNotificationByUserId.CountUnreadNotificationByUserIdUseCase;
-import me.jinjjahalgae.domain.notification.usecase.markSingleNotificationAsRead.MarkSingleNotificationAsReadUseCase;
+import me.jinjjahalgae.domain.notification.usecase.delete.all.DeleteAllNotificationUseCase;
+import me.jinjjahalgae.domain.notification.usecase.delete.single.DeleteSingleNotificationUseCase;
+import me.jinjjahalgae.domain.notification.usecase.get.all.GetAllNotificationUseCase;
+import me.jinjjahalgae.domain.notification.usecase.get.all.NotificationGetResponse;
+import me.jinjjahalgae.domain.notification.usecase.get.unreadcount.CountUnreadNotificationByUserIdUseCase;
+import me.jinjjahalgae.domain.notification.usecase.update.asread.MarkSingleNotificationAsReadUseCase;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
 import me.jinjjahalgae.presentation.api.docs.notification.NotificationControllerDocs;

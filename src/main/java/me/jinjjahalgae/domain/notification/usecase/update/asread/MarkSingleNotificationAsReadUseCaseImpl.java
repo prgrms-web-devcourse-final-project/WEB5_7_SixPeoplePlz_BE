@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.notification.usecase.markSingleNotificationAsRead;
+package me.jinjjahalgae.domain.notification.usecase.update.asread;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

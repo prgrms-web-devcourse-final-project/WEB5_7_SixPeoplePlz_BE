@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.notification.usecase.deleteSingleNotification;
+package me.jinjjahalgae.domain.notification.usecase.delete.single;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.notification.repository.NotificationRepository;

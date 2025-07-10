@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.notification.usecase.deleteAllNotification;
+package me.jinjjahalgae.domain.notification.usecase.delete.all;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

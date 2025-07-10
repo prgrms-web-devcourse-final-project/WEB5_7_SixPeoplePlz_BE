@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.notification.usecase.countUnreadNotificationByUserId;
+package me.jinjjahalgae.domain.notification.usecase.get.unreadcount;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.notification.repository.NotificationRepository;

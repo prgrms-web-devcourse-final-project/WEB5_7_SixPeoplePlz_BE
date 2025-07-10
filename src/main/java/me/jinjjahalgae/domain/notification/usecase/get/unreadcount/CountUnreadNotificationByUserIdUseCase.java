@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.notification.usecase.countUnreadNotificationByUserId;
+package me.jinjjahalgae.domain.notification.usecase.get.unreadcount;
 
 public interface CountUnreadNotificationByUserIdUseCase {
 
