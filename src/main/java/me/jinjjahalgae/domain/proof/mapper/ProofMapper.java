@@ -6,12 +6,12 @@ import me.jinjjahalgae.domain.feedback.mapper.FeedbackMapper;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.entities.ProofImage;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
-import me.jinjjahalgae.domain.proof.usecase.getawaitproofusecase.ProofAwaitResponse;
-import me.jinjjahalgae.domain.proof.usecase.getcontractorprooflistusecase.ContractorProofListResponse;
-import me.jinjjahalgae.domain.proof.usecase.getcontractorprooflistusecase.ProofSimpleResponse;
-import me.jinjjahalgae.domain.proof.usecase.getproofdetailusecase.ProofDetailResponse;
-import me.jinjjahalgae.domain.proof.usecase.getrecentproofusecase.ProofRecentResponse;
-import me.jinjjahalgae.domain.proof.usecase.getsupervisorprooflistusecase.SupervisorProofListResponse;
+import me.jinjjahalgae.domain.proof.usecase.getawaitproof.ProofAwaitResponse;
+import me.jinjjahalgae.domain.proof.usecase.getcontractorprooflist.ContractorProofListResponse;
+import me.jinjjahalgae.domain.proof.usecase.getcontractorprooflist.ProofSimpleResponse;
+import me.jinjjahalgae.domain.proof.usecase.getproofdetail.ProofDetailResponse;
+import me.jinjjahalgae.domain.proof.usecase.getrecentproof.ProofRecentResponse;
+import me.jinjjahalgae.domain.proof.usecase.getsupervisorprooflist.SupervisorProofListResponse;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

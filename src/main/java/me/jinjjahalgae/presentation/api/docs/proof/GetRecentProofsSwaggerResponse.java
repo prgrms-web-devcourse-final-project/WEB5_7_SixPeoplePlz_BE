@@ -1,6 +1,6 @@
 package me.jinjjahalgae.presentation.api.docs.proof;
 
-import me.jinjjahalgae.domain.proof.usecase.getrecentproofusecase.ProofRecentResponse;
+import me.jinjjahalgae.domain.proof.usecase.getrecentproof.ProofRecentResponse;
 import me.jinjjahalgae.global.common.CommonResponse;
 
 public class GetRecentProofsSwaggerResponse extends CommonResponse<ProofRecentResponse> {
