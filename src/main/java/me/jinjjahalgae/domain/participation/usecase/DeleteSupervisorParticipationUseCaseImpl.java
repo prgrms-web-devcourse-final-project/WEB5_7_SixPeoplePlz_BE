@@ -33,11 +33,6 @@ public class DeleteSupervisorParticipationUseCaseImpl implements DeleteSuperviso
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.serviceException("존재하지 않는 계약 입니다. id =" + contractId));
 
-        // 계약 시작 전이 아닌데 감독 철회(계약 시작 전 감독 포기)를 요청 한 경우
-        if(contract.getStatus() != ContractStatus.PENDING) {
-            throw ErrorCode.CANNOT_WITHDRAW_PARTICIPATION_AFTER_START.serviceException("계약이 시작히기 전에만 감독 계약을 철회할 수 있습니다.");
-        }
-
         // 감독자 정보 조회
         // 감독자로 있지 않은 계약의 감독 철회 요청을 한 경우 예외 반환
         Participation supervisorParticipation = contract.getParticipations()
@@ -45,6 +40,11 @@ public class DeleteSupervisorParticipationUseCaseImpl implements DeleteSuperviso
                 .filter(p -> p.getUser().equals(user) && p.getRole() == Role.SUPERVISOR)
                 .findFirst()
                 .orElseThrow(() -> ErrorCode.SUPERVISOR_PARTICIPATION_NOT_FOUND.serviceException("해당 계약에 감독으로 참여하고 있지 않습니다."));
+
+        // 계약 시작 전이 아닌데 감독 철회(계약 시작 전 감독 포기)를 요청 한 경우
+        if(contract.getStatus() != ContractStatus.PENDING) {
+            throw ErrorCode.CANNOT_WITHDRAW_PARTICIPATION_AFTER_START.serviceException("계약이 시작히기 전에만 감독 계약을 철회할 수 있습니다.");
+        }
 
         // 감독자의 참여 정보 제거
         contract.removeParticipation(supervisorParticipation);

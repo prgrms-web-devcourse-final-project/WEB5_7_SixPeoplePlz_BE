@@ -32,19 +32,19 @@ public class CreateSupervisorParticipationUseCaseImpl implements CreateSuperviso
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.serviceException("존재하지 않는 계약 입니다. id =" + contractId));
 
-        // 감독자 자리가 다 찼는지 확인
-        String supervisorCountKey = SUPERVISOR_COUNT_PREFIX + contract.getId();
-        Integer remaining = (Integer) redisTemplate.opsForValue().get(supervisorCountKey);
-        if (remaining == null || remaining <= 0) {
-            throw ErrorCode.SUPERVISOR_ALREADY_FULL.serviceException("이미 5명의 감독자가 참여했습니다.");
-        }
-
         // 이미 참여한 사용자인지 확인
         boolean participated = contract.getParticipations()
                 .stream()
                 .anyMatch(p -> p.getUser().equals(user));
         if (participated) {
             throw ErrorCode.INVITE_ALREADY_PARTICIPATED.serviceException("이미 참여한 계약입니다.");
+        }
+
+        // 감독자 자리가 다 찼는지 확인
+        String supervisorCountKey = SUPERVISOR_COUNT_PREFIX + contract.getId();
+        Integer remaining = (Integer) redisTemplate.opsForValue().get(supervisorCountKey);
+        if (remaining == null || remaining <= 0) {
+            throw ErrorCode.SUPERVISOR_ALREADY_FULL.serviceException("이미 5명의 감독자가 참여했습니다.");
         }
 
         // 새로운 참여 정보 생성
@@ -58,8 +58,6 @@ public class CreateSupervisorParticipationUseCaseImpl implements CreateSuperviso
 
         // 계약에 참여 정보 추가 및 감독자 수 증가
         contract.addParticipation(newParticipation);
-        // db의 감독자 수도 증가시켜야 할지 고민이 되네요.
-        // redis만으로 관리하고 계약이 시작할때 최종 감독자 수만 redis에서 가져오는게 정합성 측면에서 좋을거 같기도?
 
         // redis의 해당 계약 감독자 자리 감소
         redisTemplate.opsForValue().decrement(supervisorCountKey); // decr 연산으로 원자성 보장
