@@ -18,7 +18,7 @@ public class CancelContractUseCaseImpl implements CancelContractUseCase {
     public void execute(Long userId, Long contractId) {
         //유저 확인
         //권한 확인 -> 기존 다른 확인 부분과 같음
-        Contract contract = contractRepository.findById(contractId)
+        Contract contract = contractRepository.findByIdWithUser(contractId)
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException("존재하지 않는 계약입니다."));
 
         //유저 검증 -> 계약자인가?
