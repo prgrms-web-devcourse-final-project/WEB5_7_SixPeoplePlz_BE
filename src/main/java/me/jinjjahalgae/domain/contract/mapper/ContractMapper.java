@@ -5,6 +5,7 @@ import me.jinjjahalgae.domain.contract.usecase.get.detail.dto.ContractDetailResp
 import me.jinjjahalgae.domain.contract.usecase.get.list.dto.ContractListResponse;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
+import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.user.User;
 import org.springframework.stereotype.Component;
 
@@ -43,6 +44,8 @@ public class ContractMapper {
                 contract.getEndDate(),
                 contract.getReward(),
                 contract.getPenalty(),
+                contract.calculateAchievementRatio(), // 5/10 형태
+                contract.calculatePeriodRatio(), // 15/30 형태
                 contract.calculateAchievementPercent(), //횟수 달성률
                 contract.calculatePeriodPercent() //기간 달성률
         );
@@ -63,15 +66,20 @@ public class ContractMapper {
                 contract.getProofPerWeek(),
                 contract.getTotalProof(),
                 contract.getCurrentProof(),
-                contract.getLife(), // remainingLife
+                contract.getLife(),
+                contract.getCurrentFail(),
+                contract.getRemainingLife(),
+                contract.calculateAchievementRatio(), // 5/10 형태
+                contract.calculatePeriodRatio(), // 15/30 형태
                 contract.calculateAchievementPercent(),
                 contract.calculatePeriodPercent(),
-                mapToParticipantInfos(contract) // 참여자 정보
+                mapToParticipantSimpleResponse(contract) // 참여자 정보
         );
     }
 
-    private List<ContractDetailResponse.ParticipantSimpleResponse> mapToParticipantInfos(Contract contract) {
+    private List<ContractDetailResponse.ParticipantSimpleResponse> mapToParticipantSimpleResponse(Contract contract) {
         return contract.getParticipations().stream()
+                .filter(Participation::getValid)
                 .map(participation -> new ContractDetailResponse.ParticipantSimpleResponse(
                         participation.getUser().getId(),
                         participation.getUser().getName(),

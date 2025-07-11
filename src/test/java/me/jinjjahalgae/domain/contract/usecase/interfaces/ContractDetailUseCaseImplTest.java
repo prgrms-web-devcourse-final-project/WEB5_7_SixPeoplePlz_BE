@@ -115,8 +115,12 @@ class GetContractDetailUseCaseTest {
                 12,
                 0,
                 3,
+                0,
+                3,
+                "0/12",
+                "1/31",
                 0.0,
-                0.0,
+                3.2,
                 List.of(
                         new ContractDetailResponse.ParticipantSimpleResponse(
                                 userId, "계약자", Role.CONTRACTOR, "contractor-signature-key"
@@ -183,6 +187,70 @@ class GetContractDetailUseCaseTest {
         assertThat(supervisor3.name()).isEqualTo("감독자3");
         assertThat(supervisor3.role()).isEqualTo(Role.SUPERVISOR);
         assertThat(supervisor3.signatureImageKey()).isEqualTo("supervisor3-signature-key");
+
+        verify(contractRepository).findDetailsByIdAndUserId(contractId, userId);
+        verify(contractMapper).toDetailResponse(contractWithParticipants);
+    }
+
+    @Test
+    @DisplayName("중도포기한 감독자는 참여자 목록에서 제외됨")
+    void getContractDetail_FilterInvalidSupervisor() {
+        // Given
+        User invalidSupervisor = User.builder()
+                .id(5L)
+                .name("중도포기감독자")
+                .build();
+
+        // Contract에 valid=false인 participation이 있다고 가정
+        ContractDetailResponse responseWithValidParticipantsOnly = new ContractDetailResponse(
+                contractId,
+                "uuid-123",
+                "운동하기",
+                "매일 30분 운동",
+                "치킨 못 먹기",
+                "치킨 먹기",
+                ContractType.BASIC,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusDays(30),
+                ContractStatus.PENDING,
+                3,
+                12,
+                0,
+                3,
+                0,
+                3,
+                "0/12",
+                "1/31",
+                0.0,
+                3.2,
+                List.of(
+                        // 중도포기한 감독자는 제외된 상태
+                        new ContractDetailResponse.ParticipantSimpleResponse(
+                                userId, "계약자", Role.CONTRACTOR, "contractor-signature-key"
+                        ),
+                        new ContractDetailResponse.ParticipantSimpleResponse(
+                                2L, "감독자1", Role.SUPERVISOR, "supervisor1-signature-key"
+                        ),
+                        new ContractDetailResponse.ParticipantSimpleResponse(
+                                3L, "감독자2", Role.SUPERVISOR, "supervisor2-signature-key"
+                        )
+                        // 감독자3는 valid=false이므로 제외됨
+                )
+        );
+
+        given(contractRepository.findDetailsByIdAndUserId(contractId, userId))
+                .willReturn(Optional.of(contractWithParticipants));
+        given(contractMapper.toDetailResponse(contractWithParticipants))
+                .willReturn(responseWithValidParticipantsOnly);
+
+        // When
+        ContractDetailResponse result = contractDetailUseCase.execute(userId, contractId);
+
+        // Then
+        assertThat(result.participants()).hasSize(3); // 4명 중 1명 제외
+        assertThat(result.participants())
+                .extracting(ContractDetailResponse.ParticipantSimpleResponse::name)
+                .doesNotContain("감독자3"); // 중도포기한 감독자는 제외됨
 
         verify(contractRepository).findDetailsByIdAndUserId(contractId, userId);
         verify(contractMapper).toDetailResponse(contractWithParticipants);

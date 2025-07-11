@@ -56,8 +56,21 @@ import me.jinjjahalgae.domain.contract.enums.ContractStatus;
         @Schema(description = "현재 인증 수", example = "5")
         int currentProof, //지금까지 성공한 인증 수
 
+
+        @Schema(description = "원본 실패 가능 횟수 (계약서용)", example = "3")
+        int totalLife,
+
+        @Schema(description = "현재 실패한 횟수", example = "1")
+        int currentFail,
+
         @Schema(description = "남은 실패 수", example = "2")
-        int remainingLife, //남아있는 실패 수수
+        int remainingLife, //남아있는 실패 수
+
+        @Schema(description = "현재 인증 횟수 / 총 인증 횟수", example = "5/10")
+        String achievementRatio,
+
+        @Schema(description = "경과 기간 / 총 기간 (일)", example = "15/30")
+        String periodRatio,
 
         @Schema(description = "횟수 달성률", example = "50.0")
         double achievementPercent, // 계산해서 제공
