@@ -3,6 +3,8 @@ package me.jinjjahalgae.presentation.api;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractRequest;
+import me.jinjjahalgae.domain.contract.usecase.delete.CancelContractUseCase;
+import me.jinjjahalgae.domain.contract.usecase.delete.WithdrawContractUseCase;
 import me.jinjjahalgae.domain.contract.usecase.update.dto.ContractUpdateRequest;
 import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractResponse;
 import me.jinjjahalgae.domain.contract.usecase.get.detail.dto.ContractDetailResponse;
@@ -33,6 +35,8 @@ public class ContractController implements ContractControllerDocs {
     private final GetContractListUseCase getContractListUseCase;
     private final GetContractDetailUseCase getContractDetailUseCase;
     private final UpdateContractUseCase updateContractUseCase;
+    private final WithdrawContractUseCase withdrawContractUseCase;
+    private final CancelContractUseCase cancelContractUseCase;
 
     @Override
     @PostMapping
@@ -74,6 +78,24 @@ public class ContractController implements ContractControllerDocs {
             @Valid @RequestBody ContractUpdateRequest request
     ) {
         updateContractUseCase.execute(user.getUserId(), contractId, request);
+        return CommonResponse.success();
+    }
+
+    @PatchMapping("/{contractId}/withdraw")
+    public CommonResponse<Void> withdrawContract(
+            @AuthenticationPrincipal CustomJwtPrincipal user,
+            @PathVariable Long contractId
+    ) {
+        withdrawContractUseCase.execute(user.getUserId(), contractId);
+        return CommonResponse.success();
+    }
+
+    @DeleteMapping("/{contractId}")
+    public CommonResponse<Void> cancelContract(
+            @AuthenticationPrincipal CustomJwtPrincipal user,
+            @PathVariable Long contractId
+    ) {
+        cancelContractUseCase.execute(user.getUserId(), contractId);
         return CommonResponse.success();
     }
 }
