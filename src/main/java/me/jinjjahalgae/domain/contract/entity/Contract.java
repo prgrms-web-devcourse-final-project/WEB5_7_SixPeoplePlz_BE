@@ -197,6 +197,22 @@ public class Contract extends BaseEntity {
         this.totalProof = calculateTotalProof(startDate, endDate, proofPerWeek);
     }
 
+    // 총 감독자 수를 받아 계약을 시작
+    public void start(int finalSupervisorCount) {
+        this.totalSupervisor = finalSupervisorCount;
+        this.status = ContractStatus.IN_PROGRESS;
+    }
+
+    // 계약 성공 처리
+    public void complete() {
+        this.status = ContractStatus.COMPLETED;
+    }
+
+    // 계약 실패 처리
+    public void fail() {
+        this.status = ContractStatus.FAILED;
+    }
+  
     //권한 검증 (계약자인가?)
     public void validateContractor(Long userId) {
         if (!this.user.getId().equals(userId)) {

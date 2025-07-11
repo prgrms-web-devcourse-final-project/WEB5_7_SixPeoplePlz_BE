@@ -76,6 +76,12 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
                 message = "'" + actionUserName + "'님의 '" + contractName + "' 계약이 시작되었습니다.";
             }
 
+            // 감독자 부족으로 계약 삭제됨 (to 계약자)
+            case CONTRACT_AUTO_DELETED -> {
+                targetUserList = getContractorInfoList(participantInfoList);
+                message = "시작일까지 '" + contractName + "' 계약에 참여한 감독자가 없어 자동으로 삭제되었습니다.";
+            }
+
             // 계약 실패 상태로 종료됨 (to 계약자, 감독자들)
             case CONTRACT_ENDED_FAIL -> {
                 targetUserList = participantInfoList;
