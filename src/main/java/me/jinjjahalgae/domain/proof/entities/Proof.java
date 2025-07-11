@@ -9,7 +9,6 @@ import me.jinjjahalgae.domain.common.BaseEntity;
 import me.jinjjahalgae.domain.feedback.entity.Feedback;
 import me.jinjjahalgae.domain.feedback.enums.FeedbackStatus;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
-import me.jinjjahalgae.global.exception.ErrorCode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,18 +94,23 @@ public class Proof extends BaseEntity {
         }
 
         // 승인 갯수
-        long approvedCount = feedbacks.stream()
-                .filter(feedback -> feedback.getStatus() == FeedbackStatus.APPROVED)
-                .count();
+        long approvedCount = countApprovedFeedbacks(feedbacks);
 
         int totalCount = feedbacks.size();
 
         // approvedCount가 전체의 절반을 초과하면 승인
-        if (approvedCount > totalCount / 2) {
+        if (approvedCount > totalCount / 2.0) {
             approve();
         } else {
             reject();
         }
+    }
+
+    // 승인 갯수 카운팅
+    private long countApprovedFeedbacks(List<Feedback> feedbacks) {
+        return feedbacks.stream()
+                .filter(feedback -> feedback.getStatus() == FeedbackStatus.APPROVED)
+                .count();
     }
 
     // 상태를 승인으로 변경
