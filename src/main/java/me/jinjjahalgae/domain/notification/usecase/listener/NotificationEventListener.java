@@ -28,7 +28,7 @@ public class NotificationEventListener {
         try {
             createNotificationUseCase.execute(
                     new NotificationCreateRequest(
-                            event.notificationType().name(),
+                            event.notificationType(),
                             event.contractId(),
                             event.actorUserId()
                     )
