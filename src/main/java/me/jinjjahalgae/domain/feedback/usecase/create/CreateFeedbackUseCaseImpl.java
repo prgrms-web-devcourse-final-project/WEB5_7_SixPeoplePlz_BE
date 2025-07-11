@@ -51,6 +51,8 @@ public class CreateFeedbackUseCaseImpl implements CreateFeedbackUseCase {
 
         feedbackRepository.save(feedback);
 
+        proof.addFeedback(feedback);
+
         // Proof의 checked_superviors + 1
         boolean isAllSupervisorsChecked = proof.increaseCheckedSupervisors(1);
 
