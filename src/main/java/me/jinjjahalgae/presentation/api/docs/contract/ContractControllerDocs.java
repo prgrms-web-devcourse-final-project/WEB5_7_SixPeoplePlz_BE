@@ -24,7 +24,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-@Tag(name = "계약 API", description = "계약 생성, 조회, 수정 관련 API")
+@Tag(name = "계약 API", description = "계약 생성, 조회, 수정, 포기 관련 API")
 public interface ContractControllerDocs {
 
     @Operation(
@@ -539,5 +539,231 @@ public interface ContractControllerDocs {
             @Parameter(hidden = true) CustomJwtPrincipal user,
             @Parameter(description = "수정할 계약 ID", required = true, example = "1") Long contractId,
             @Parameter(description = "계약 수정 요청 DTO", required = true) ContractUpdateRequest request
+    );
+
+    @Operation(
+            summary = "계약 중도 포기",
+            description = "진행 중인 계약을 중도에 포기합니다. 계약 상태가 ABANDONED로 변경되며, 계약자만 실행할 수 있습니다.",
+            security = { @SecurityRequirement(name = "bearerAuth") }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "계약 중도 포기 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = NoContentSwaggerResponse.class),
+                            examples = @ExampleObject(
+                                    name = "성공 응답",
+                                    value = """
+                {
+                  "success": true,
+                  "result": null
+                }
+                """
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "인증 실패",
+                                            value = """
+                    {
+                      "success": false,
+                      "code": "INVALID_TOKEN",
+                      "message": "유효하지 않은 토큰입니다."
+                    }
+                    """
+                                    ),
+                                    @ExampleObject(
+                                            name = "만료된 토큰",
+                                            value = """
+                    {
+                      "success": false,
+                      "code": "EXPIRED_TOKEN",
+                      "message": "토큰이 만료되었습니다."
+                    }
+                    """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "접근 권한 없음 (계약자가 아닌 사용자)",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "접근 권한 없음",
+                                    value = """
+                {
+                  "success": false,
+                  "code": "ACCESS_DENIED",
+                  "message": "계약에 대한 접근 권한이 없습니다."
+                }
+                """
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "계약을 찾을 수 없음",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "계약 없음",
+                                    value = """
+                {
+                  "success": false,
+                  "code": "CONTRACT_NOT_FOUND",
+                  "message": "존재하지 않는 계약입니다."
+                }
+                """
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "계약 상태 오류 (진행 중이 아닌 계약)",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "진행 중이 아님",
+                                    value = """
+                {
+                  "success": false,
+                  "code": "CONTRACT_NOT_IN_PROGRESS",
+                  "message": "진행 중인 계약만 포기할 수 있습니다."
+                }
+                """
+                            )
+                    )
+            )
+    })
+    CommonResponse<Void> withdrawContract(
+            @Parameter(hidden = true) CustomJwtPrincipal user,
+            @Parameter(description = "포기할 계약 ID", required = true, example = "1") Long contractId
+    );
+
+    @Operation(
+            summary = "계약 취소 및 삭제",
+            description = "시작 전 계약을 취소하고 완전히 삭제합니다. PENDING 상태의 계약만 취소할 수 있으며, 계약자만 실행할 수 있습니다.",
+            security = { @SecurityRequirement(name = "bearerAuth") }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "계약 취소 및 삭제 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = NoContentSwaggerResponse.class),
+                            examples = @ExampleObject(
+                                    name = "성공 응답",
+                                    value = """
+                {
+                  "success": true,
+                  "result": null
+                }
+                """
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "인증 실패",
+                                            value = """
+                    {
+                      "success": false,
+                      "code": "INVALID_TOKEN",
+                      "message": "유효하지 않은 토큰입니다."
+                    }
+                    """
+                                    ),
+                                    @ExampleObject(
+                                            name = "만료된 토큰",
+                                            value = """
+                    {
+                      "success": false,
+                      "code": "EXPIRED_TOKEN",
+                      "message": "토큰이 만료되었습니다."
+                    }
+                    """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "접근 권한 없음 (계약자가 아닌 사용자)",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "접근 권한 없음",
+                                    value = """
+                {
+                  "success": false,
+                  "code": "ACCESS_DENIED",
+                  "message": "계약에 대한 접근 권한이 없습니다."
+                }
+                """
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "계약을 찾을 수 없음",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "계약 없음",
+                                    value = """
+                {
+                  "success": false,
+                  "code": "CONTRACT_NOT_FOUND",
+                  "message": "존재하지 않는 계약입니다."
+                }
+                """
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "계약 상태 오류 (시작 전이 아닌 계약)",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "시작 전이 아님",
+                                    value = """
+                {
+                  "success": false,
+                  "code": "CONTRACT_NOT_PENDING",
+                  "message": "시작 전인 계약만 취소할 수 있습니다."
+                }
+                """
+                            )
+                    )
+            )
+    })
+    CommonResponse<Void> cancelContract(
+            @Parameter(hidden = true) CustomJwtPrincipal user,
+            @Parameter(description = "취소할 계약 ID", required = true, example = "1") Long contractId
     );
 }

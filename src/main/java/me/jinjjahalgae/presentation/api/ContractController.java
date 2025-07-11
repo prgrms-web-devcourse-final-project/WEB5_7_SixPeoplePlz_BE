@@ -81,6 +81,7 @@ public class ContractController implements ContractControllerDocs {
         return CommonResponse.success();
     }
 
+    @Override
     @PatchMapping("/{contractId}/withdraw")
     public CommonResponse<Void> withdrawContract(
             @AuthenticationPrincipal CustomJwtPrincipal user,
@@ -90,6 +91,7 @@ public class ContractController implements ContractControllerDocs {
         return CommonResponse.success();
     }
 
+    @Override
     @DeleteMapping("/{contractId}")
     public CommonResponse<Void> cancelContract(
             @AuthenticationPrincipal CustomJwtPrincipal user,
