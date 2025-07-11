@@ -9,6 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +31,14 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
 
     // PENDING 상태 계약 확인용
     boolean existsByIdAndStatus(Long id, ContractStatus status);
+
+    // 시작일로 대기중 계약 조회
+    @Query("SELECT c FROM Contract c WHERE c.status = :status AND FUNCTION('DATE', c.startDate) = :date")
+    List<Contract> findByStatusAndStartDateOn(@Param("status") ContractStatus status, @Param("date") LocalDate date);
+
+    // 종료일로 진행중 계약 조회
+    @Query("SELECT c FROM Contract c WHERE c.status = :status AND FUNCTION('DATE', c.endDate) = :date")
+    List<Contract> findByStatusAndEndDateOn(@Param("status") ContractStatus status, @Param("date") LocalDate date);
 
     // 계약 조회 시 관련한 유저 정보도 한번에
     @Query("SELECT c FROM Contract c JOIN FETCH c.user WHERE c.id = :contractId")
