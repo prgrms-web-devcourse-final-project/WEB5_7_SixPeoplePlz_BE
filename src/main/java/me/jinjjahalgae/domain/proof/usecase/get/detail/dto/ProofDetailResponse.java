@@ -1,7 +1,7 @@
 package me.jinjjahalgae.domain.proof.usecase.get.detail.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import me.jinjjahalgae.domain.feedback.dto.FeedbackResponse;
+import me.jinjjahalgae.domain.feedback.usecase.common.dto.FeedbackResponse;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 
 import java.time.LocalDateTime;

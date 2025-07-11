@@ -1,6 +1,6 @@
 package me.jinjjahalgae.domain.proof.mapper;
 
-import me.jinjjahalgae.domain.feedback.dto.FeedbackResponse;
+import me.jinjjahalgae.domain.feedback.usecase.common.dto.FeedbackResponse;
 import me.jinjjahalgae.domain.feedback.entity.Feedback;
 import me.jinjjahalgae.domain.feedback.enums.FeedbackStatus;
 import me.jinjjahalgae.domain.feedback.mapper.FeedbackMapper;

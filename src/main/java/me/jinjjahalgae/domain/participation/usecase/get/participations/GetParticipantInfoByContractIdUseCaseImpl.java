@@ -19,7 +19,7 @@ public class GetParticipantInfoByContractIdUseCaseImpl implements GetParticipant
     @Transactional(readOnly = true)
     public List<ParticipantInfoResponse> execute(long contractId) {
 
-        return repository.findByContract_Id(contractId).stream()
+        return repository.findByContractId(contractId).stream()
                 .map(ParticipantInfoResponse::from)
                 .toList();
 

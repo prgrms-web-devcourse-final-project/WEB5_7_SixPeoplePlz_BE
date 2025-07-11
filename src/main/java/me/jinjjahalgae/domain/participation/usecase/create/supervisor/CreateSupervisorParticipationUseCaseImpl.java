@@ -3,6 +3,7 @@ package me.jinjjahalgae.domain.participation.usecase.create.supervisor;
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
+import me.jinjjahalgae.domain.participation.repository.ParticipationRepository;
 import me.jinjjahalgae.domain.participation.usecase.common.dto.ParticipationCreateRequest;
 import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;
@@ -16,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class CreateSupervisorParticipationUseCaseImpl implements CreateSupervisorParticipationUseCase {
-
+    private final ParticipationRepository participationRepository;
     private final ContractRepository contractRepository;
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -29,11 +30,17 @@ public class CreateSupervisorParticipationUseCaseImpl implements CreateSuperviso
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.serviceException("존재하지 않는 계약 입니다. id =" + contractId));
 
+        // 본인이 계약자인지 확인
+        boolean isContractor = participationRepository.existsByContractIdAndUserIdAndRole(contractId, user.getId(), Role.CONTRACTOR);
+
+        if (isContractor) {
+            throw ErrorCode.CANNOT_PARTICIPATE_SELF_CONTRACT.serviceException("본인이 생성한 계약에는 감독자로 참여할 수 없습니다.");
+        }
+
         // 이미 참여한 사용자인지 확인
-        boolean participated = contract.getParticipations()
-                .stream()
-                .anyMatch(p -> p.getUser().equals(user));
-        if (participated) {
+        boolean isParticipated = participationRepository.existsByContractIdAndUserId(contract.getId(), user.getId());
+
+        if (isParticipated) {
             throw ErrorCode.INVITE_ALREADY_PARTICIPATED.serviceException("이미 참여한 계약입니다.");
         }
 
