@@ -23,7 +23,7 @@
 //    private ParticipationRepository participationRepository;
 //
 //    @InjectMocks
-//    private GetParticipantInfoByContractIdUseCaseImpl getParticipantInfoByContractId;
+//    private GetValidParticipantInfoByContractIdUseCaseImpl getParticipantInfoByContractId;
 //
 //    @BeforeEach
 //    void setUp() {
@@ -59,8 +59,8 @@
 //        List<Participation> participationList = List.of(participation1, participation2, participation3);
 //        log.info("Repository에 전달할 Participation 리스트 크기: {}", participationList.size());
 //
-//        when(participationRepository.findByContract_Id(contractId)).thenReturn(participationList);
-//        log.info("Repository Mock 설정 완료: findByContract_Id({}) 호출 시 {}개의 Participation 반환",
+//        when(participationRepository.findByContract_IdAndValidIsTrue(contractId)).thenReturn(participationList);
+//        log.info("Repository Mock 설정 완료: findByContract_IdAndValidIsTrue({}) 호출 시 {}개의 Participation 반환",
 //                contractId, participationList.size());
 //
 //        // when
