@@ -172,9 +172,4 @@ public class Contract extends BaseEntity {
         // 수정 시 총 인증 횟수도 다시 계산
         this.totalProof = calculateTotalProof(startDate, endDate, proofPerWeek);
     }
-
-    public void start(int finalSupervisorCount) {
-        this.totalSupervisor = finalSupervisorCount;
-        this.status = ContractStatus.IN_PROGRESS;
-    }
 }
