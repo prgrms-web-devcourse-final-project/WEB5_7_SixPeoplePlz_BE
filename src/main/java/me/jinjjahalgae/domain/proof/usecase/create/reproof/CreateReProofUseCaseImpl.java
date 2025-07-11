@@ -2,6 +2,7 @@ package me.jinjjahalgae.domain.proof.usecase.create.reproof;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
+import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.proof.usecase.create.common.ProofCreateRequest;
 import me.jinjjahalgae.domain.proof.entities.Proof;
@@ -49,6 +50,11 @@ public class CreateReProofUseCaseImpl implements CreateReProofUseCase {
             throw ErrorCode.ACCESS_DENIED.domainException("계약에 대한 접근 권한이 없습니다.");
         }
 
+        // 시작 전이라면 예외
+        if (isPendingContract(contract)) {
+            throw ErrorCode.CONTRACT_NOT_STARTED.domainException("시작 전인 계약에 인증 생성을 요청하였습니다");
+        }
+
         // 해당 계약에 대해 오늘자 재인증이 존재하는 지 검증
         boolean isReProofExist = todayReProofExist(contract.getId());
         if(isReProofExist) {
@@ -77,6 +83,10 @@ public class CreateReProofUseCaseImpl implements CreateReProofUseCase {
             ProofImage savedThirdImage = proofImageRepository.save(thirdImage);
             savedReproof.addProofImage(savedThirdImage);
         }
+    }
+
+    private boolean isPendingContract(Contract contract) {
+        return contract.getStatus() == ContractStatus.PENDING;
     }
 
     // 계약에 오늘자 재인증이 존재하는 지 확인하는 메서드
