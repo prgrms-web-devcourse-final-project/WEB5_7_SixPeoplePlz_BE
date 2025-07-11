@@ -105,14 +105,21 @@ public class ProofMapper {
      * @return {@link ProofAwaitResponse}
      */
     public static ProofAwaitResponse toAwaitResponse(Proof proof) {
-        String imageKey = proof.getProofImages().stream()
-                .filter(img -> img.getIndex() == 1)
-                .findFirst()
-                .map(ProofImage::getImageKey)
-                .orElse(null);
+        String firstImageKey = null;
+        String secondImageKey = null;
+        String thirdImageKey = null;
 
+        for (ProofImage proofImage : proof.getProofImages()) {
+            switch (proofImage.getIndex()) {
+                case 1 -> firstImageKey = proofImage.getImageKey();
+                case 2 -> secondImageKey = proofImage.getImageKey();
+                case 3 -> thirdImageKey = proofImage.getImageKey();
+            }
+        }
         return new ProofAwaitResponse(
-                imageKey,
+                firstImageKey,
+                secondImageKey,
+                thirdImageKey,
                 proof.getComment(),
                 proof.getCreatedAt(),
                 proof.getStatus(),
