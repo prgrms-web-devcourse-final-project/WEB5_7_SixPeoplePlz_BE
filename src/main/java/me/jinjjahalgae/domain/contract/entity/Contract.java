@@ -52,7 +52,9 @@ public class Contract extends BaseEntity {
 
     private String reward; //보상
 
-    private int life; //실패 가능 횟수
+    private int life; //실패 가능 횟수 (계약서용 - 불변)
+
+    private int currentFail; //현재까지 실패한 횟수
 
     private int proofPerWeek; //주간 인증 횟수
 
@@ -92,6 +94,7 @@ public class Contract extends BaseEntity {
     public void initialize() {
         this.uuid = UUID.randomUUID().toString();
         this.totalProof = calculateTotalProof(this.startDate, this.endDate, this.proofPerWeek);
+        this.currentFail = 0;
         this.currentProof = 0;
         this.totalSupervisor = 0;
         this.status = ContractStatus.PENDING;
@@ -112,8 +115,18 @@ public class Contract extends BaseEntity {
         return (int) (totalWeeks * proofPerWeek);
     }
 
+    public String calculateAchievementRatio() {
+        return currentProof + "/" + totalProof;
+    }
+
     public double calculateAchievementPercent() {
         return ( (double) currentProof / totalProof * 100);
+    }
+
+    public String calculatePeriodRatio() {
+        long totalDays = getTotalDays();
+        long passedDays = getPassedDays();
+        return passedDays + "/" + totalDays;
     }
 
     public double calculatePeriodPercent() {
@@ -127,10 +140,21 @@ public class Contract extends BaseEntity {
             return 100.0; // 종료 후면 100%
         }
 
-        long totalDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1;
-        long passedDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, now) +1;
+        long totalDays = getTotalDays();
+        long passedDays = getPassedDays();
 
         return ( (double) passedDays / totalDays * 100);
+    }
+
+    private long getTotalDays() {
+        return java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1;
+    }
+
+    private long getPassedDays() {
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isBefore(startDate)) return 0;
+        if (now.isAfter(endDate)) return getTotalDays();
+        return java.time.temporal.ChronoUnit.DAYS.between(startDate, now) + 1;
     }
 
     // 참여 정보를 제거하는 메서드
@@ -193,5 +217,10 @@ public class Contract extends BaseEntity {
         if (this.status != ContractStatus.PENDING) {
             throw ErrorCode.CONTRACT_NOT_PENDING.domainException("시작 전인 계약만 포기할 수 있습니다.");
         }
+    }
+
+    // 남은 실패 가능 횟수 계산
+    public int getRemainingLife() {
+        return Math.max(0, this.life - this.currentFail);
     }
 }
