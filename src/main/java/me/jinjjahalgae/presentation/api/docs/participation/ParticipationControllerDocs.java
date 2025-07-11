@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import me.jinjjahalgae.domain.participation.usecase.common.dto.ParticipationCreateRequest;
+import me.jinjjahalgae.domain.participation.usecase.create.contractor.dto.CreateContractorParticipationRequest;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.exception.ErrorResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
@@ -120,7 +120,7 @@ public interface ParticipationControllerDocs {
     })
     CommonResponse<Void> joinAsSupervisor(
             @Parameter(description = "계약 ID", example = "1") Long contractId,
-            @Valid @RequestBody ParticipationCreateRequest request,
+            @Valid @RequestBody CreateContractorParticipationRequest request,
             @Parameter(hidden = true) CustomJwtPrincipal principal);
 
     @Operation(
