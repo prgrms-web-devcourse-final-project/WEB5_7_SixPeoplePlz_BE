@@ -35,46 +35,45 @@ import me.jinjjahalgae.domain.contract.enums.ContractStatus;
         @Schema(description = "보상", example = "치킨 먹기")
         String reward, //보상
 
+        //프리뷰 전용
         @Schema(description = "계약서 디자인 타입", example = "BASIC")
         ContractType type, //계약서 디자인 타입
 
+        //공통
         @Schema(description = "시작 날짜", example = "2024-01-01T09:00:00")
         LocalDateTime startDate, //시작 날짜
-
         @Schema(description = "종료 날짜", example = "2024-01-31T23:59:59")
         LocalDateTime endDate, //종료 날짜
 
+        //상세 조회 전용
         @Schema(description = "계약 상태", example = "ACTIVE")
         ContractStatus contractStatus, //현재 상태(진행중 등)
-
         @Schema(description = "한 주 인증 수", example = "3")
         int proofPerWeek, //설정한 한 주 인증 수
 
+        //공통
         @Schema(description = "총 인증 수", example = "10")
         int totalProof, // 총 필요한 인증 수
 
+        //상세 전용
         @Schema(description = "현재 인증 수", example = "5")
         int currentProof, //지금까지 성공한 인증 수
 
-
+        //공통
         @Schema(description = "원본 실패 가능 횟수 (계약서용)", example = "3")
         int totalLife,
 
+        //상세 페이지 전용
         @Schema(description = "현재 실패한 횟수", example = "1")
         int currentFail,
-
         @Schema(description = "남은 실패 수", example = "2")
         int remainingLife, //남아있는 실패 수
-
         @Schema(description = "현재 인증 횟수 / 총 인증 횟수", example = "5/10")
         String achievementRatio,
-
         @Schema(description = "경과 기간 / 총 기간 (일)", example = "15/30")
         String periodRatio,
-
         @Schema(description = "횟수 달성률", example = "50.0")
         double achievementPercent, // 계산해서 제공
-
         @Schema(description = "기간 달성률", example = "75.0")
         double periodPercent,      // 계산해서 제공
 

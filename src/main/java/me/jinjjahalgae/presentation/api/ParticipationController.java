@@ -3,7 +3,7 @@ package me.jinjjahalgae.presentation.api;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jinjjahalgae.domain.participation.usecase.common.dto.ParticipationCreateRequest;
+import me.jinjjahalgae.domain.participation.usecase.create.contractor.dto.CreateContractorParticipationRequest;
 import me.jinjjahalgae.domain.participation.usecase.create.supervisor.CreateSupervisorParticipationUseCase;
 import me.jinjjahalgae.domain.participation.usecase.delete.supervisor.DeleteSupervisorParticipationUseCase;
 import me.jinjjahalgae.domain.participation.usecase.patch.supervisor.PatchSupervisorParticipationUseCase;
@@ -29,7 +29,7 @@ public class ParticipationController implements ParticipationControllerDocs {
     @ResponseStatus(HttpStatus.CREATED)
     public CommonResponse<Void> joinAsSupervisor(
             @PathVariable Long contractId,
-            @Valid @RequestBody ParticipationCreateRequest request,
+            @Valid @RequestBody CreateContractorParticipationRequest request,
             @AuthenticationPrincipal CustomJwtPrincipal principal) {
         createSupervisorParticipationUseCase.execute(contractId, request, principal.getUser());
         return CommonResponse.success();
