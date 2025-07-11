@@ -187,4 +187,11 @@ public class Contract extends BaseEntity {
         }
         this.status = ContractStatus.ABANDONED;
     }
+
+    //계약 삭제 (시작 전 포기)
+    public void cancelContract() {
+        if (this.status != ContractStatus.PENDING) {
+            throw ErrorCode.CONTRACT_NOT_PENDING.domainException("시작 전인 계약만 포기할 수 있습니다.");
+        }
+    }
 }

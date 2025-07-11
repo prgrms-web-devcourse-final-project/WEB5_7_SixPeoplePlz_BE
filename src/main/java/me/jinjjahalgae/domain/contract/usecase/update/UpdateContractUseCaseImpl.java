@@ -20,7 +20,7 @@ public class UpdateContractUseCaseImpl implements UpdateContractUseCase {
     public void execute(Long userId, Long contractId, ContractUpdateRequest request) {
         // 계약 조회
         Contract contract = contractRepository.findById(contractId)
-                .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException("계약을 찾을 수 없습니다."));
+                .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException("존재하지 않는 계약입니다."));
 
         // 계약자 권한 검증
         contract.validateContractor(userId);
