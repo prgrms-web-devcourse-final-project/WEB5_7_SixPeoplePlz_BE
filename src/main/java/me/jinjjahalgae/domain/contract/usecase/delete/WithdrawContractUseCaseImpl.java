@@ -25,6 +25,6 @@ public class WithdrawContractUseCaseImpl implements WithdrawContractUseCase {
 
         //계약이 진행중인가? (중도 포기는 진행중인 계약만 가능)
         //계약 상태가 진해중이 아니면 예외, 진행중이면 계약 상태 변경 (진행중 -> 포기)
-        contract.withdrawContract();
+        contract.withdraw();
     }
 }

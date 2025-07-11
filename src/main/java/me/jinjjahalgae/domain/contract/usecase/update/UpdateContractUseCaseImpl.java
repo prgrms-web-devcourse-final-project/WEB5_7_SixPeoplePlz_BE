@@ -28,7 +28,7 @@ public class UpdateContractUseCaseImpl implements UpdateContractUseCase {
         //감독자 서명이 있는가? (시작 전에만 수정이 가능)
         contract.validateUpdatable();
         //계약 수정 진행
-        contract.updateContract(
+        contract.update(
                 request.title(),
                 request.goal(),
                 request.penalty(),

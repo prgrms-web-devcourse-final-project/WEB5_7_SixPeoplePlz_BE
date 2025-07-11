@@ -179,9 +179,9 @@ public class Contract extends BaseEntity {
     }
 
     //계약 수정
-    public void updateContract(String title, String goal, String penalty, String reward,
-                               int life, int proofPerWeek, boolean oneOff,
-                               LocalDateTime startDate, LocalDateTime endDate, ContractType type) {
+    public void update(String title, String goal, String penalty, String reward,
+                       int life, int proofPerWeek, boolean oneOff,
+                       LocalDateTime startDate, LocalDateTime endDate, ContractType type) {
         this.title = title;
         this.goal = goal;
         this.penalty = penalty;
@@ -205,7 +205,7 @@ public class Contract extends BaseEntity {
     }
 
     //계약 상태 변경 (중도 포기)
-    public void withdrawContract() {
+    public void withdraw() {
         if (this.status != ContractStatus.IN_PROGRESS) {
             throw ErrorCode.CONTRACT_NOT_IN_PROGRESS.domainException("진행 중인 계약만 포기할 수 있습니다.");
         }
@@ -213,7 +213,7 @@ public class Contract extends BaseEntity {
     }
 
     //계약 삭제 (시작 전 포기)
-    public void cancelContract() {
+    public void cancel() {
         if (this.status != ContractStatus.PENDING) {
             throw ErrorCode.CONTRACT_NOT_PENDING.domainException("시작 전인 계약만 포기할 수 있습니다.");
         }

@@ -30,7 +30,7 @@ class CancelContractUseCaseImplTest {
 
     @Test
     @DisplayName("계약 시작 전 취소")
-    void cancelContract_Success() {
+    void cancel_Success() {
         // given
         Long userId = 1L;
         Long contractId = 1L;
@@ -50,7 +50,7 @@ class CancelContractUseCaseImplTest {
 
     @Test
     @DisplayName("존재하지 않는 계약을 취소하려 할 때")
-    void cancelContract_ContractNotFound() {
+    void cancelContract_NotFound() {
         // given
         Long userId = 1L;
         Long contractId = 999L;
@@ -64,7 +64,7 @@ class CancelContractUseCaseImplTest {
 
     @Test
     @DisplayName("계약자가 아닐 때")
-    void cancelContract_AccessDenied() {
+    void cancel_AccessDenied() {
         // given
         Long contractorId = 1L;
         Long otherUserId = 2L;
@@ -82,7 +82,7 @@ class CancelContractUseCaseImplTest {
 
     @Test
     @DisplayName("이미 진행 중인 계약을 취소하려 할 때")
-    void cancelContract_AlreadyInProgress() {
+    void cancel_AlreadyInProgress() {
         // given
         Long userId = 1L;
         Long contractId = 1L;

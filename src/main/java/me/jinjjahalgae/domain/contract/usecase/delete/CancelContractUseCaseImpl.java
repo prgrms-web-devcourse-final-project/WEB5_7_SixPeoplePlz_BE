@@ -25,7 +25,7 @@ public class CancelContractUseCaseImpl implements CancelContractUseCase {
         contract.validateContractor(userId);
 
         //계약이 시작했는가 (계약 취소는 대기 상태에서만 가능) + 그렇다면 취소 및 삭제
-        contract.cancelContract();
+        contract.cancel();
         contractRepository.delete(contract);
     }
 }

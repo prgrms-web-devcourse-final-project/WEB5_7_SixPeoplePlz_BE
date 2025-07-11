@@ -107,7 +107,7 @@ class UpdateContractUseCaseTest {
 
     @Test
     @DisplayName("계약 수정 성공 - 감독자가 없는 경우")
-    void updateContract_Success() {
+    void update_Success() {
         // Given
         given(contractRepository.findById(contractId))
                 .willReturn(Optional.of(contract));
@@ -130,7 +130,7 @@ class UpdateContractUseCaseTest {
 
     @Test
     @DisplayName("계약을 찾을 수 없는 경우 예외 발생")
-    void updateContract_ContractNotFound() {
+    void updateContract_NotFound() {
         // Given
         given(contractRepository.findById(contractId))
                 .willReturn(Optional.empty());
@@ -145,7 +145,7 @@ class UpdateContractUseCaseTest {
 
     @Test
     @DisplayName("접근 권한이 없는 경우 예외 발생")
-    void updateContract_AccessDenied() {
+    void update_AccessDenied() {
         // Given
         Long otherUserId = 999L;
         given(contractRepository.findById(contractId))
@@ -161,7 +161,7 @@ class UpdateContractUseCaseTest {
 
     @Test
     @DisplayName("감독자가 서명한 계약 수정 시 예외 발생")
-    void updateContract_SupervisorAlreadySigned() {
+    void update_SupervisorAlreadySigned() {
         // Given
         // 감독자 참여 정보 추가
         Participation supervisorParticipation = Participation.builder()
@@ -187,7 +187,7 @@ class UpdateContractUseCaseTest {
 
     @Test
     @DisplayName("계약 수정 후 totalProof가 재계산됨")
-    void updateContract_RecalculatesTotalProof() {
+    void update_RecalculatesTotalProof() {
         // Given
         given(contractRepository.findById(contractId))
                 .willReturn(Optional.of(contract));
