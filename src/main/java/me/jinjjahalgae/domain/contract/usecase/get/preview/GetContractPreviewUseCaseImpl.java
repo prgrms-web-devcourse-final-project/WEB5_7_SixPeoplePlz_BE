@@ -4,11 +4,8 @@ import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.mapper.ContractMapper;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
-import me.jinjjahalgae.domain.contract.usecase.get.detail.GetContractDetailUseCase;
-import me.jinjjahalgae.domain.contract.usecase.get.detail.dto.ContractDetailResponse;
 import me.jinjjahalgae.domain.contract.usecase.get.preview.dto.ContractPreviewResponse;
 import me.jinjjahalgae.domain.participation.entity.Participation;
-import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.participation.repository.ParticipationRepository;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
@@ -45,8 +42,8 @@ public class GetContractPreviewUseCaseImpl implements GetContractPreviewUseCase 
             throw ErrorCode.ACCESS_DENIED.serviceException("참여자로 등록되어있지 않은 계약서를 열람 시도함");
         }
 
-        // valid한 참여자들 리스트를 계약id로 조회
-        List<Participation> participationList = participationRepository.findByContract_IdAndValidIsTrue(contractId);
+        // 모든 참여자들 리스트를 계약id로 조회
+        List<Participation> participationList = participationRepository.findByContract_Id(contractId);
 
         // detailResponse로 매핑하여 반환
         return contractMapper.toPreviewResponse(contract, participationList);

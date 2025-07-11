@@ -53,7 +53,7 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.serviceException("계약 ID에 맞는 계약을 찾지 못했습니다 : " + request.contractId()));
         String contractName = contract.getTitle();
 
-        // 계약id와 관련 있는 유저들의 정보 모음 (이름, id, role)
+        // 계약id와 관련 있는 valid 유저들의 정보 모음 (이름, id, role)
         List<ParticipantInfoResponse> participantInfoList = getValidParticipantInfo.execute(request.contractId());
 
         // 알림 타입에 따라 알림 보낼 대상 리스트, 메세지를 다르게 설정

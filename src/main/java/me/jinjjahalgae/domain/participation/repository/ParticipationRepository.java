@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ParticipationRepository extends JpaRepository<Participation, Long> {
     // contract id가 일치하고 valid가 true인 모든 participation 객체를 리스트로 조회
-    List<Participation> findByContract_IdAndValidIsTrue(Long contractId);
+    List<Participation> findByContract_Id(Long contractId);
 
     // 해당 유저가 계약의 valid한 참여자로 존재하는지 여부
     boolean existsByContractIdAndUserIdAndValidIsTrue(Long contractId, Long userId);
