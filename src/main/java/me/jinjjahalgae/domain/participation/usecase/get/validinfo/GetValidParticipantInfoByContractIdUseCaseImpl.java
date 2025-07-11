@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.participation.usecase.get.participations;
+package me.jinjjahalgae.domain.participation.usecase.get.validinfo;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class GetParticipantInfoByContractIdUseCaseImpl implements GetParticipantInfoByContractIdUseCase {
+public class GetValidParticipantInfoByContractIdUseCaseImpl implements GetValidParticipantInfoByContractIdUseCase {
 
     private final ParticipationRepository repository;
 
@@ -19,7 +19,7 @@ public class GetParticipantInfoByContractIdUseCaseImpl implements GetParticipant
     @Transactional(readOnly = true)
     public List<ParticipantInfoResponse> execute(long contractId) {
 
-        return repository.findByContract_Id(contractId).stream()
+        return repository.findByContract_IdAndValidIsTrue(contractId).stream()
                 .map(ParticipantInfoResponse::from)
                 .toList();
 
