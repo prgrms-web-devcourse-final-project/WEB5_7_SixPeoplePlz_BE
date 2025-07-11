@@ -39,7 +39,7 @@ class WithdrawContractUseCaseImplTest {
         User user = createUser(userId);
         Contract contract = createContract(contractId, user, ContractStatus.IN_PROGRESS);
 
-        given(contractRepository.findById(contractId)).willReturn(Optional.of(contract));
+        given(contractRepository.findByIdWithUser(contractId)).willReturn(Optional.of(contract));
 
         // when
         withdrawContractUseCase.execute(userId, contractId);
@@ -55,7 +55,7 @@ class WithdrawContractUseCaseImplTest {
         Long userId = 1L;
         Long contractId = 999L;
 
-        given(contractRepository.findById(contractId)).willReturn(Optional.empty());
+        given(contractRepository.findByIdWithUser(contractId)).willReturn(Optional.empty());
 
         // when & then
         assertThatThrownBy(() -> withdrawContractUseCase.execute(userId, contractId))
@@ -74,7 +74,7 @@ class WithdrawContractUseCaseImplTest {
         User contractor = createUser(contractorId);
         Contract contract = createContract(contractId, contractor, ContractStatus.IN_PROGRESS);
 
-        given(contractRepository.findById(contractId)).willReturn(Optional.of(contract));
+        given(contractRepository.findByIdWithUser(contractId)).willReturn(Optional.of(contract));
 
         // when & then
         assertThatThrownBy(() -> withdrawContractUseCase.execute(otherUserId, contractId))
@@ -92,7 +92,7 @@ class WithdrawContractUseCaseImplTest {
         User user = createUser(userId);
         Contract contract = createContract(contractId, user, ContractStatus.PENDING); // PENDING 상태
 
-        given(contractRepository.findById(contractId)).willReturn(Optional.of(contract));
+        given(contractRepository.findByIdWithUser(contractId)).willReturn(Optional.of(contract));
 
         // when & then
         assertThatThrownBy(() -> withdrawContractUseCase.execute(userId, contractId))

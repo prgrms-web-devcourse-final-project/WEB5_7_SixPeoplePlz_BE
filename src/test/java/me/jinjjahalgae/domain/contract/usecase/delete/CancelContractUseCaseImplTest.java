@@ -38,7 +38,7 @@ class CancelContractUseCaseImplTest {
         // "PENDING" 상태의 계약을 준비
         Contract contract = createContract(contractId, user, ContractStatus.PENDING);
 
-        given(contractRepository.findById(contractId)).willReturn(Optional.of(contract));
+        given(contractRepository.findByIdWithUser(contractId)).willReturn(Optional.of(contract));
 
         // when
         cancelContractUseCase.execute(userId, contractId);
@@ -54,7 +54,7 @@ class CancelContractUseCaseImplTest {
         // given
         Long userId = 1L;
         Long contractId = 999L;
-        given(contractRepository.findById(contractId)).willReturn(Optional.empty());
+        given(contractRepository.findByIdWithUser(contractId)).willReturn(Optional.empty());
 
         // when & then
         assertThatThrownBy(() -> cancelContractUseCase.execute(userId, contractId))
@@ -72,7 +72,7 @@ class CancelContractUseCaseImplTest {
         User contractor = createUser(contractorId);
         Contract contract = createContract(contractId, contractor, ContractStatus.PENDING);
 
-        given(contractRepository.findById(contractId)).willReturn(Optional.of(contract));
+        given(contractRepository.findByIdWithUser(contractId)).willReturn(Optional.of(contract));
 
         // when & then
         assertThatThrownBy(() -> cancelContractUseCase.execute(otherUserId, contractId))
@@ -90,7 +90,7 @@ class CancelContractUseCaseImplTest {
         // "IN_PROGRESS" 상태의 계약을 준비
         Contract contract = createContract(contractId, user, ContractStatus.IN_PROGRESS);
 
-        given(contractRepository.findById(contractId)).willReturn(Optional.of(contract));
+        given(contractRepository.findByIdWithUser(contractId)).willReturn(Optional.of(contract));
 
         // when & then
         assertThatThrownBy(() -> cancelContractUseCase.execute(userId, contractId))
