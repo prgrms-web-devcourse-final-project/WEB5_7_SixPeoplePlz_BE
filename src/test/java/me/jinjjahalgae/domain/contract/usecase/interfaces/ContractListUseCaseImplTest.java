@@ -215,8 +215,10 @@ class GetContractListUseCaseTest {
                 LocalDateTime.now().plusDays(30),
                 "보상",
                 "벌칙",
-                50.0,
-                25.0
+                "5/12",
+                "15/31",
+                41.7,
+                48.4
         );
     }
 }

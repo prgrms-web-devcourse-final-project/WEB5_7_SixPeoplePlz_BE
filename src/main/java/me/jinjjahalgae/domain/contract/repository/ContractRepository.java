@@ -25,4 +25,8 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     // 해당 유저의 계약인지 확인용
     @Query("SELECT CASE WHEN COUNT(c) > 0 THEN TRUE ELSE FALSE END FROM Contract c WHERE c.id = :contractId AND c.user.id = :userId")
     boolean existsByIdAndUserId(@Param("contractId") Long contractId, @Param("userId") Long userId);
+
+    // 계약 조회 시 관련한 유저 정보도 한번에
+    @Query("SELECT c FROM Contract c JOIN FETCH c.user WHERE c.id = :contractId")
+    Optional<Contract> findByIdWithUser(@Param("contractId") Long contractId);
 }
