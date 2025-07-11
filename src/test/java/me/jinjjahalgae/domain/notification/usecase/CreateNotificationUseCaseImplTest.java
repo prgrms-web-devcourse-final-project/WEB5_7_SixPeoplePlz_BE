@@ -8,7 +8,7 @@
 //import me.jinjjahalgae.domain.notification.repository.NotificationRepository;
 //import me.jinjjahalgae.domain.notification.usecase.create.CreateNotificationUseCaseImpl;
 //import me.jinjjahalgae.domain.participation.usecase.get.participations.ParticipantInfoResponse;
-//import me.jinjjahalgae.domain.participation.usecase.get.participant.GetParticipantInfoByContractIdUseCaseImpl;
+//import me.jinjjahalgae.domain.participation.usecase.get.participant.GetValidParticipantInfoByContractIdUseCaseImpl;
 //import me.jinjjahalgae.domain.user.User;
 //import me.jinjjahalgae.domain.user.usecase.common.dto.MyInfoResponse;
 //import me.jinjjahalgae.domain.user.usecase.get.myinfo.GetMyInfoUseCaseImpl;
@@ -38,7 +38,7 @@
 //    private ContractRepository contractRepository;
 //
 //    @Mock
-//    private GetParticipantInfoByContractIdUseCaseImpl getParticipantInfoByContractId;
+//    private GetValidParticipantInfoByContractIdUseCaseImpl getParticipantInfoByContractId;
 //
 //    @Mock
 //    private GetMyInfoUseCaseImpl getMyInfo;
