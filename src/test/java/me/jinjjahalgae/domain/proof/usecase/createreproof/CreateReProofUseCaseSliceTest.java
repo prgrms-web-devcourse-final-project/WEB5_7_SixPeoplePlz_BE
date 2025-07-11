@@ -85,6 +85,7 @@ class CreateReProofUseCaseSliceTest {
     @DisplayName("재인증 생성 성공 - 슬라이스 테스트")
     void execute_Success() {
         // when
+        contract.start(3);
         createReProofUseCase.execute(validRequest, proofId, userId);
 
         // then
@@ -109,6 +110,7 @@ class CreateReProofUseCaseSliceTest {
     @DisplayName("이미지가 없으면 예외 발생 - 슬라이스 테스트")
     void execute_ThrowsException_WhenNoImage() {
         // given
+        contract.start(3);
         ProofCreateRequest requestWithoutImage = new ProofCreateRequest(null, null, null, "코멘트");
 
         // when & then
@@ -121,6 +123,7 @@ class CreateReProofUseCaseSliceTest {
     @DisplayName("원본 인증이 존재하지 않으면 예외 발생 - 슬라이스 테스트")
     void execute_ThrowsException_WhenProofNotFound() {
         // given
+        contract.start(3);
         Long nonExistentProofId = 999L;
 
         // when & then
@@ -130,9 +133,22 @@ class CreateReProofUseCaseSliceTest {
     }
 
     @Test
+    @DisplayName("계약이 PENDING 상태일 경우 예외 발생 - 슬라이스 테스트")
+    void execute_ThrowsException_ContractPending() {
+        // given
+        ProofCreateRequest requestWithoutImage = new ProofCreateRequest("image1.jpg", null, null, null);
+
+        // when & then
+        assertThatThrownBy(() -> createReProofUseCase.execute(requestWithoutImage, contractId, userId))
+                .isInstanceOf(AppException.class)
+                .hasMessageContaining("계약 시작 전에는 인증을 생성할 수 없습니다.");
+    }
+
+    @Test
     @DisplayName("오늘자 재인증이 이미 존재하면 예외 발생 - 슬라이스 테스트")
     void execute_ThrowsException_WhenReProofAlreadyExists() {
         // given
+        contract.start(3);
         Proof existingReProof = ProofTestUtil.createProofBeforeSave("기존 재인증", ProofStatus.APPROVE_PENDING, contractId, proofId);
         proofRepository.save(existingReProof);
 
@@ -146,6 +162,7 @@ class CreateReProofUseCaseSliceTest {
     @DisplayName("세 번째 이미지까지 포함한 재인증 생성 성공 - 슬라이스 테스트")
     void execute_Success_WithThirdImage() {
         // given
+        contract.start(3);
         ProofCreateRequest requestWithThirdImage = new ProofCreateRequest("image1.jpg", "image2.jpg", "image3.jpg", "테스트 코멘트");
 
         // when
@@ -163,6 +180,7 @@ class CreateReProofUseCaseSliceTest {
     @DisplayName("계약이 존재하지 않으면 예외 발생 - 슬라이스 테스트")
     void execute_ThrowsException_WhenContractNotFound() {
         // given
+        contract.start(3);
         Proof proofWithNonExistentContract = ProofTestUtil.createProofBeforeSave("테스트", ProofStatus.REJECTED, 999L, null);
         proofWithNonExistentContract = proofRepository.save(proofWithNonExistentContract);
         Long id = proofWithNonExistentContract.getId();

@@ -79,6 +79,7 @@ class CreateProofUseCaseSliceTest {
     @DisplayName("인증 생성 성공 - 슬라이스 테스트")
     void execute_Success() {
         // when
+        contract.start(3);
         createProofUseCase.execute(validRequest, contractId, userId);
 
         // then
@@ -98,6 +99,7 @@ class CreateProofUseCaseSliceTest {
     @DisplayName("이미지가 없으면 예외 발생 - 슬라이스 테스트")
     void execute_ThrowsException_WhenNoImage() {
         // given
+        contract.start(3);
         ProofCreateRequest requestWithoutImage = new ProofCreateRequest(null, null, null, null);
 
         // when & then
@@ -107,9 +109,22 @@ class CreateProofUseCaseSliceTest {
     }
 
     @Test
+    @DisplayName("계약이 PENDING 상태일 경우 예외 발생 - 슬라이스 테스트")
+    void execute_ThrowsException_ContractPending() {
+        // given
+        ProofCreateRequest requestWithoutImage = new ProofCreateRequest("image1.jpg", null, null, null);
+
+        // when & then
+        assertThatThrownBy(() -> createProofUseCase.execute(requestWithoutImage, contractId, userId))
+                .isInstanceOf(AppException.class)
+                .hasMessageContaining("계약 시작 전에는 인증을 생성할 수 없습니다.");
+    }
+
+    @Test
     @DisplayName("오늘자 인증이 이미 존재하면 예외 발생 - 슬라이스 테스트")
     void execute_ThrowsException_WhenProofAlreadyExists() {
         // given
+        contract.start(3);
         Proof existingProof = ProofTestUtil.createProofBeforeSave("기존 인증", ProofStatus.APPROVE_PENDING, contractId, null);
         proofRepository.save(existingProof);
 
@@ -123,6 +138,7 @@ class CreateProofUseCaseSliceTest {
     @DisplayName("세 번째 이미지까지 포함한 인증 생성 성공 - 슬라이스 테스트")
     void execute_Success_WithThirdImage() {
         // given
+        contract.start(3);
         ProofCreateRequest requestWithThirdImage = new ProofCreateRequest("image1.jpg", "image2.jpg", "image3.jpg", "테스트 코멘트");
 
         // when
@@ -140,6 +156,7 @@ class CreateProofUseCaseSliceTest {
     @DisplayName("첫 번째 이미지만 있는 인증 생성 성공 - 슬라이스 테스트")
     void execute_Success_WithOnlyFirstImage() {
         // given
+        contract.start(3);
         ProofCreateRequest requestWithOnlyFirstImage = new ProofCreateRequest("image1.jpg", null, null, "테스트 코멘트");
 
         // when
