@@ -178,4 +178,14 @@ public class Contract extends BaseEntity {
         this.totalSupervisor = finalSupervisorCount;
         this.status = ContractStatus.IN_PROGRESS;
     }
+
+    // 계약 성공 처리
+    public void complete() {
+        this.status = ContractStatus.COMPLETED;
+    }
+
+    // 계약 실패 처리
+    public void fail() {
+        this.status = ContractStatus.FAILED;
+    }
 }

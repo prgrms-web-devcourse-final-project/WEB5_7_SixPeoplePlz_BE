@@ -29,10 +29,11 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     @Query("SELECT CASE WHEN COUNT(c) > 0 THEN TRUE ELSE FALSE END FROM Contract c WHERE c.id = :contractId AND c.user.id = :userId")
     boolean existsByIdAndUserId(@Param("contractId") Long contractId, @Param("userId") Long userId);
 
-    // 계약 시작을 위해 날짜와 상태를 받아 계약 목록을 반환
+    // 시작일로 대기중 계약 조회
     @Query("SELECT c FROM Contract c WHERE c.status = :status AND FUNCTION('DATE', c.startDate) = :date")
-    List<Contract> findByStatusAndStartDateOn(
-            @Param("status") ContractStatus status,
-            @Param("date") LocalDate date
-    );
+    List<Contract> findByStatusAndStartDateOn(@Param("status") ContractStatus status, @Param("date") LocalDate date);
+
+    // 종료일로 진행중 계약 조회
+    @Query("SELECT c FROM Contract c WHERE c.status = :status AND FUNCTION('DATE', c.endDate) = :date")
+    List<Contract> findByStatusAndEndDateOn(@Param("status") ContractStatus status, @Param("date") LocalDate date);
 }
