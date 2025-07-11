@@ -44,7 +44,7 @@ public class CreateInviteLinkUseCaseImpl implements CreateInviteLinkUseCase {
 
     @Override
     public InviteLinkResponse execute(Long contractId, User user) {
-        Contract contract = contractRepository.findById(contractId)
+        Contract contract = contractRepository.findByIdWithUser(contractId)
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.serviceException("존재하지 않는 계약 입니다. id =" + contractId));
 
         // 자신의 계약만 초대링크 생성 가능
