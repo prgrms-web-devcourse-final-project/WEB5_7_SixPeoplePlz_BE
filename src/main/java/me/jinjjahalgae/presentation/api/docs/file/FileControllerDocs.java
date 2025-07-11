@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import me.jinjjahalgae.domain.file.usecase.presign.dto.CreatePreSignedUrlRequest;
 import me.jinjjahalgae.domain.file.usecase.presign.dto.CreatePreSignedUrlResponse;
@@ -20,7 +21,8 @@ public interface FileControllerDocs {
 
     @Operation(
             summary = "Presigned URL 생성",
-            description = "파일 업로드를 위한 presigned URL을 생성합니다. <br> - fileName은 필수입니다.<br> - fileName에는 확장자가 포함되어야 합니다. <br><br>  `presigned URL의 유효시간은 10분입니다.` <br><br> `response되는 fileKey로 S3에 PUT한 뒤, 서명, 인증사진 생성에 똑같이 사용하면 됩니다.` <br><br> `파일명만 받기 때문에 이미지 mimetype 검증은 없습니다. 이미지파일을 잘 보내주세요`"
+            description = "파일 업로드를 위한 presigned URL을 생성합니다. <br> - fileName은 필수입니다.<br> - fileName에는 확장자가 포함되어야 합니다. <br><br>  `presigned URL의 유효시간은 10분입니다.` <br><br> `response되는 fileKey로 S3에 PUT한 뒤, 서명, 인증사진 생성에 똑같이 사용하면 됩니다.` <br><br> `파일명만 받기 때문에 이미지 mimetype 검증은 없습니다. 이미지파일을 잘 보내주세요`",
+            security = { @SecurityRequirement(name = "bearerAuth") }
     )
     @ApiResponses(value = {
             @ApiResponse(
