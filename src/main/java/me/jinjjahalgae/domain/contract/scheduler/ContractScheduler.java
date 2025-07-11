@@ -64,12 +64,12 @@ public class ContractScheduler {
         }
 
         for (Contract contract : progressingContracts) {
-            if (contract.getLife() >= contract.getCurrentFail()){
-                contract.complete();
-                createNotificationUseCase.execute(new NotificationCreateRequest("CONTRACT_ENDED_SUCCESS", contract.getId(), contract.getUser().getId()));
-            } else {
+            if (contract.getLife() < contract.getCurrentFail()){
                 contract.fail();
                 createNotificationUseCase.execute(new NotificationCreateRequest("CONTRACT_ENDED_FAIL", contract.getId(), contract.getUser().getId()));
+            } else {
+                contract.complete();
+                createNotificationUseCase.execute(new NotificationCreateRequest("CONTRACT_ENDED_SUCCESS", contract.getId(), contract.getUser().getId()));
             }
         }
     }
