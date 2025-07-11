@@ -107,16 +107,16 @@ class UpdateContractUseCaseTest {
 
     @Test
     @DisplayName("계약 수정 성공 - 감독자가 없는 경우")
-    void updateContract_Success() {
+    void update_Success() {
         // Given
-        given(contractRepository.findById(contractId))
+        given(contractRepository.findByIdWithUser(contractId))
                 .willReturn(Optional.of(contract));
 
         // When
         contractUpdateUseCase.execute(contractorId, contractId, updateRequest);
 
         // Then
-        verify(contractRepository).findById(contractId);
+        verify(contractRepository).findByIdWithUser(contractId);
 
         // 계약 내용이 업데이트되었는지 확인
         assertThat(contract.getTitle()).isEqualTo("수정된 운동하기");
@@ -130,9 +130,9 @@ class UpdateContractUseCaseTest {
 
     @Test
     @DisplayName("계약을 찾을 수 없는 경우 예외 발생")
-    void updateContract_ContractNotFound() {
+    void updateContract_NotFound() {
         // Given
-        given(contractRepository.findById(contractId))
+        given(contractRepository.findByIdWithUser(contractId))
                 .willReturn(Optional.empty());
 
         // When & Then
@@ -140,15 +140,15 @@ class UpdateContractUseCaseTest {
                 .isInstanceOf(AppException.class)
                 .hasMessage("존재하지 않는 계약입니다.");
 
-        verify(contractRepository).findById(contractId);
+        verify(contractRepository).findByIdWithUser(contractId);
     }
 
     @Test
     @DisplayName("접근 권한이 없는 경우 예외 발생")
-    void updateContract_AccessDenied() {
+    void update_AccessDenied() {
         // Given
         Long otherUserId = 999L;
-        given(contractRepository.findById(contractId))
+        given(contractRepository.findByIdWithUser(contractId))
                 .willReturn(Optional.of(contract));
 
         // When & Then
@@ -156,12 +156,12 @@ class UpdateContractUseCaseTest {
                 .isInstanceOf(AppException.class)
                 .hasMessage("계약에 대한 접근 권한이 없습니다.");
 
-        verify(contractRepository).findById(contractId);
+        verify(contractRepository).findByIdWithUser(contractId);
     }
 
     @Test
     @DisplayName("감독자가 서명한 계약 수정 시 예외 발생")
-    void updateContract_SupervisorAlreadySigned() {
+    void update_SupervisorAlreadySigned() {
         // Given
         // 감독자 참여 정보 추가
         Participation supervisorParticipation = Participation.builder()
@@ -174,7 +174,7 @@ class UpdateContractUseCaseTest {
 
         contract.addParticipation(supervisorParticipation);
 
-        given(contractRepository.findById(contractId))
+        given(contractRepository.findByIdWithUser(contractId))
                 .willReturn(Optional.of(contract));
 
         // When & Then
@@ -182,14 +182,14 @@ class UpdateContractUseCaseTest {
                 .isInstanceOf(AppException.class)
                 .hasMessage("감독자가 서명한 계약은 수정할 수 없습니다.");
 
-        verify(contractRepository).findById(contractId);
+        verify(contractRepository).findByIdWithUser(contractId);
     }
 
     @Test
     @DisplayName("계약 수정 후 totalProof가 재계산됨")
-    void updateContract_RecalculatesTotalProof() {
+    void update_RecalculatesTotalProof() {
         // Given
-        given(contractRepository.findById(contractId))
+        given(contractRepository.findByIdWithUser(contractId))
                 .willReturn(Optional.of(contract));
 
         int originalTotalProof = contract.getTotalProof();
@@ -212,7 +212,7 @@ class UpdateContractUseCaseTest {
         contractUpdateUseCase.execute(contractorId, contractId, longerRequest);
 
         // Then
-        verify(contractRepository).findById(contractId);
+        verify(contractRepository).findByIdWithUser(contractId);
 
         // totalProof가 재계산되어 달라졌는지 확인
         assertThat(contract.getTotalProof()).isNotEqualTo(originalTotalProof);
@@ -223,14 +223,14 @@ class UpdateContractUseCaseTest {
     @DisplayName("계약자만 본인의 계약을 수정할 수 있음")
     void updateContract_OnlyContractorCanUpdate() {
         // Given
-        given(contractRepository.findById(contractId))
+        given(contractRepository.findByIdWithUser(contractId))
                 .willReturn(Optional.of(contract));
 
         // When - 계약자가 본인 계약 수정
         contractUpdateUseCase.execute(contractorId, contractId, updateRequest);
 
         // Then
-        verify(contractRepository).findById(contractId);
+        verify(contractRepository).findByIdWithUser(contractId);
         assertThat(contract.getTitle()).isEqualTo("수정된 운동하기");
 
         // When & Then - 다른 사용자가 수정 시도하면 예외 발생
