@@ -32,6 +32,8 @@ public enum ErrorCode {
     CONTRACT_ALREADY_START(HttpStatus.CONFLICT, "이미 시작된 계약은 수정할 수 없습니다."),
     CONTRACT_ALREADY_SIGNED(HttpStatus.CONFLICT, "감독자가 서명한 계약은 수정할 수 없습니다."),
     CONTRACT_STATUS_CONFLICT(HttpStatus.CONFLICT, "계약 상태 변경 중 충돌이 발생했습니다."),
+    CONTRACT_NOT_IN_PROGRESS(HttpStatus.CONFLICT,"진행 중인 계약만 포기할 수 있습니다."),
+    CONTRACT_NOT_PENDING(HttpStatus.CONFLICT,"시작 전인 계약만 포기할 수 있습니다."),
     CANNOT_ABANDON_STARTED_CONTRACT(HttpStatus.CONFLICT, "이미 시작된 계약은 포기할 수 없습니다."),
     CANNOT_WITHDRAW_PARTICIPATION_AFTER_START(HttpStatus.CONFLICT, "계약이 시작히기 전에만 계약 감독을 철회할 수 있습니다."),
     CANNOT_ABANDON_PARTICIPATION_UNLESS_IN_PROGRESS(HttpStatus.CONFLICT, "계약 진행중에만 감독을 중도 포기할 수 있습니다."),
