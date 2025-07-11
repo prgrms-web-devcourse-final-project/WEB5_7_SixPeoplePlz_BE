@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractRequest;
 import me.jinjjahalgae.domain.contract.usecase.get.preview.GetContractPreviewUseCase;
 import me.jinjjahalgae.domain.contract.usecase.get.preview.dto.ContractPreviewResponse;
+import me.jinjjahalgae.domain.contract.usecase.get.titleInfo.GetContractTitleInfoUseCase;
+import me.jinjjahalgae.domain.contract.usecase.get.titleInfo.dto.TitleInfoResponse;
 import me.jinjjahalgae.domain.contract.usecase.update.dto.ContractUpdateRequest;
 import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractResponse;
 import me.jinjjahalgae.domain.contract.usecase.get.detail.dto.ContractDetailResponse;
@@ -35,6 +37,7 @@ public class ContractController {
     private final GetContractDetailUseCase getContractDetailUseCase;
     private final UpdateContractUseCase updateContractUseCase;
     private final GetContractPreviewUseCase getContractPreviewUseCase;
+    private final GetContractTitleInfoUseCase getContractTitleInfoUseCase;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -74,6 +77,14 @@ public class ContractController {
         return CommonResponse.success(response);
     }
 
+    @GetMapping("/{contractId}/titleInfo")
+    public CommonResponse<TitleInfoResponse> getTitleInfo(
+            @AuthenticationPrincipal CustomJwtPrincipal user,
+            @PathVariable Long contractId
+    ) {
+        TitleInfoResponse response = getContractTitleInfoUseCase.execute(user.getUserId(), contractId);
+        return CommonResponse.success(response);
+    }
 
     @PutMapping("/{contractId}")
     public CommonResponse<Void> updateContract(
