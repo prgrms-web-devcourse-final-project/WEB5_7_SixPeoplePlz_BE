@@ -32,14 +32,6 @@ public record CreateFeedbackRequest(
         )
         @NotBlank(message = "status는 필수입니다.")
         @EnumValue(enumClass = FeedbackStatus.class, message = "status는 APPROVED, REJECTED 중 하나여야 합니다.")
-        String status,
-
-        @Schema(
-                description = "피드백을 작성할 인증 id",
-                requiredMode = Schema.RequiredMode.NOT_REQUIRED,
-                example = "1"
-        )
-        @NotNull(message = "proofId는 필수입니다.")
-        Long proofId
+        String status
 ) {
 }

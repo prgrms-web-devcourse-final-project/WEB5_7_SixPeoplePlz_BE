@@ -78,22 +78,22 @@ public interface FeedbackControllerDocs {
                                     """
                                 ),
                                 @ExampleObject(
-                                    name = "proofId 누락",
-                                    value = """
-                                    {
-                                      "success": false,
-                                      "code": "BAD_REQUEST",
-                                      "message": "proofId는 필수입니다."
-                                    }
-                                    """
-                                ),
-                                @ExampleObject(
                                     name = "comment 길이 초과",
                                     value = """
                                     {
                                       "success": false,
                                       "code": "BAD_REQUEST",
                                       "message": "comment는 100자 이하여야 합니다."
+                                    }
+                                    """
+                                ),
+                                @ExampleObject(
+                                    name = "이미 피드백 존재",
+                                    value = """
+                                    {
+                                      "success": false,
+                                      "code": "FEEDBACK_ALREADY_EXISTS",
+                                      "message": "해당 인증에 이미 피드백이 존재합니다."
                                     }
                                     """
                                 )
@@ -163,9 +163,9 @@ public interface FeedbackControllerDocs {
                     )
             )
     })
-//    @SecurityRequirement(name = "bearerAuth")
     CommonResponse<Void> createFeedback(
         @Parameter(hidden = true) CustomJwtPrincipal user,
+        @Parameter(description = "인증 id", required = true, example = "1") Long proofId,
         @Parameter(description = "피드백 생성 요청", required = true) CreateFeedbackRequest request
     );
 } 

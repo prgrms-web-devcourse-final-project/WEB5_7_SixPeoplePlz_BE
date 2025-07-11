@@ -29,10 +29,10 @@ public class CreateFeedbackUseCaseImpl implements CreateFeedbackUseCase {
      */
     @Override
     @Transactional
-    public Void execute(Long userId, CreateFeedbackRequest req) {
+    public Void execute(Long userId, Long proofId, CreateFeedbackRequest req) {
         // 인증 유효성 검사 (존재하지 않는 인증이면 예외)
-        Proof proof = proofRepository.findById(req.proofId())
-                .orElseThrow(() -> ErrorCode.PROOF_NOT_FOUND.domainException("존재하지 않는 인증입니다.proofId=" + req.proofId()));
+        Proof proof = proofRepository.findById(proofId)
+                .orElseThrow(() -> ErrorCode.PROOF_NOT_FOUND.domainException("존재하지 않는 인증입니다.proofId=" + proofId));
 
         // '포기않고' 해당 계약에 참가중인 '감독자'가 아니면 예외
         if (!hasSupervisorAuthority(userId, proof.getContractId())) {
@@ -40,9 +40,9 @@ public class CreateFeedbackUseCaseImpl implements CreateFeedbackUseCase {
         }
 
         // 이미 피드백을 준 인증이면 예외
-        boolean isduplicated = feedbackRepository.existsByProofIdAndUserId(proof.getId(), userId);
+        boolean isDuplicated = feedbackRepository.existsByProofIdAndUserId(proof.getId(), userId);
 
-        if (isduplicated) {
+        if (isDuplicated) {
             throw ErrorCode.FEEDBACK_ALREADY_EXISTS.domainException("이미 해당 인증에 피드백을 남겼습니다.");
         }
 

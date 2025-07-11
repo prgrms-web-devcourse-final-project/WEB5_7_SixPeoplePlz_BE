@@ -13,20 +13,20 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/feedbacks")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class FeedbackController implements FeedbackControllerDocs {
     private final CreateFeedbackUseCase createFeedbackUseCase;
 
     @Override
-    @PostMapping
+    @PostMapping("/proofs/{proofId}/feedback")
     @ResponseStatus(HttpStatus.CREATED)
     public CommonResponse<Void> createFeedback(
         @AuthenticationPrincipal CustomJwtPrincipal user,
+        @PathVariable Long proofId,
         @Valid @RequestBody CreateFeedbackRequest request
     ) {
-        createFeedbackUseCase.execute(user.getUserId(), request);
-
+        createFeedbackUseCase.execute(user.getUserId(), proofId, request);
         return CommonResponse.success();
     }
 } 
