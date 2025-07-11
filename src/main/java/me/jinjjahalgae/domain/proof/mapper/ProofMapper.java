@@ -1,6 +1,7 @@
 package me.jinjjahalgae.domain.proof.mapper;
 
 import me.jinjjahalgae.domain.feedback.usecase.common.dto.FeedbackResponse;
+import me.jinjjahalgae.domain.feedback.entity.Feedback;
 import me.jinjjahalgae.domain.feedback.enums.FeedbackStatus;
 import me.jinjjahalgae.domain.feedback.mapper.FeedbackMapper;
 import me.jinjjahalgae.domain.proof.entities.Proof;
@@ -61,8 +62,8 @@ public class ProofMapper {
      * @param images    인증에 들어있는 이미지 key 리스트
      * @return  {@link ProofDetailResponse}
      */
-    public static ProofDetailResponse toDetailResponse(Proof proof, List<String> images) {
-        List<FeedbackResponse> feedbacks = proof.getFeedbacks().stream()
+    public static ProofDetailResponse toDetailResponse(Proof proof, List<String> images, List<Feedback> feedbacks) {
+        List<FeedbackResponse> feedbackResponses = feedbacks.stream()
                 .map(FeedbackMapper::toResponse)
                 .toList();
 
@@ -72,7 +73,7 @@ public class ProofMapper {
                 proof.getStatus(),
                 proof.getCreatedAt(),
                 proof.getProofId() != null,
-                feedbacks,
+                feedbackResponses,
                 proof.getId()
                 );
     }
@@ -105,14 +106,21 @@ public class ProofMapper {
      * @return {@link ProofAwaitResponse}
      */
     public static ProofAwaitResponse toAwaitResponse(Proof proof) {
-        String imageKey = proof.getProofImages().stream()
-                .filter(img -> img.getIndex() == 1)
-                .findFirst()
-                .map(ProofImage::getImageKey)
-                .orElse(null);
+        String firstImageKey = null;
+        String secondImageKey = null;
+        String thirdImageKey = null;
 
+        for (ProofImage proofImage : proof.getProofImages()) {
+            switch (proofImage.getIndex()) {
+                case 1 -> firstImageKey = proofImage.getImageKey();
+                case 2 -> secondImageKey = proofImage.getImageKey();
+                case 3 -> thirdImageKey = proofImage.getImageKey();
+            }
+        }
         return new ProofAwaitResponse(
-                imageKey,
+                firstImageKey,
+                secondImageKey,
+                thirdImageKey,
                 proof.getComment(),
                 proof.getCreatedAt(),
                 proof.getStatus(),

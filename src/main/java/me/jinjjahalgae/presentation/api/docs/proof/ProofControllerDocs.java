@@ -72,6 +72,16 @@ public interface ProofControllerDocs {
                                               "message": "최소 1장 이상의 이미지가 필요합니다."
                                             }
                                             """
+                                    ),
+                                    @ExampleObject(
+                                            name = "시작 전 계약에 인증을 생성하려는 경우",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "CONTRACT_NOT_STARTED",
+                                              "message": "계약 시작 전에는 인증을 생성할 수 없습니다."
+                                            }
+                                            """
                                     )
                             }
                     )
@@ -204,9 +214,18 @@ public interface ProofControllerDocs {
                                               "message": "최소 1장 이상의 이미지가 필요합니다."
                                             }
                                             """
+                                    ),
+                                    @ExampleObject(
+                                            name = "시작 전 계약에 인증을 생성하려는 경우",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "CONTRACT_NOT_STARTED",
+                                              "message": "계약 시작 전에는 인증을 생성할 수 없습니다."
+                                            }
+                                            """
                                     )
                             }
-
                     )
             ),
             @ApiResponse(
@@ -317,7 +336,9 @@ public interface ProofControllerDocs {
                                       "success": true,
                                       "result": [
                                         {
-                                          "titleImageKey": "1234abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
+                                          "firstImageKey": "1234abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
+                                          "secondImageKey": null,
+                                          "thirdImageKey": null,
                                           "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
                                           "createdAt": "2025-07-09T19:30:00+09:00",
                                           "status": "APPROVE_PENDING",
@@ -325,7 +346,9 @@ public interface ProofControllerDocs {
                                           "proofId": 11
                                         },
                                         {
-                                          "titleImageKey": "3453abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
+                                          "firstImageKey": "3453abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
+                                          "secondImageKey": "1134abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
+                                          "thirdImageKey": "4567abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                           "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
                                           "createdAt": "2025-07-08T19:30:00+09:00",
                                           "status": "APPROVE_PENDING",

@@ -67,8 +67,8 @@ AND p.proofId IS NOT NULL
     @Query("SELECT p FROM Proof p JOIN FETCH p.proofImages WHERE p.id = :id")
     Optional<Proof> findByIdWithProofImages(@Param("id") Long id);
 
-    @Query("SELECT p FROM Proof p JOIN FETCH p.proofImages JOIN FETCH p.feedbacks WHERE p.id = :id")
-    Optional<Proof> findByIdWithProofImagesAndFeedbacks(@Param("proofId") Long id);
+    @Query("SELECT p FROM Proof p LEFT JOIN FETCH p.feedbacks WHERE p.id = :id")
+    Optional<Proof> findByIdWithFeedbacks(@Param("id") Long id);
 
     /**
      * 최근 인증을 가져오기 위해 최근 인증의 아이디만 먼저 가져오는 쿼리
@@ -82,7 +82,7 @@ AND p.proofId IS NOT NULL
     List<Long> findProofIdsByContractId(@Param("contractId") Long contractId, Pageable pageable);
 
     /**
-     * 찾아온 3개의 인증 id로 인증 이미지와 fetch join
+     * 찾아온 인증 id로 인증 이미지와 fetch join
      * @param ids 인증 id들
      * @return {@link Proof}
      */
@@ -91,14 +91,14 @@ AND p.proofId IS NOT NULL
 
 
     @Query("""
-SELECT p.id 
-FROM Proof p 
-WHERE p.contractId = :contractId 
-AND p.status = 'APPROVE_PENDING' 
+SELECT p.id
+FROM Proof p
+WHERE p.contractId = :contractId
+AND p.status = 'APPROVE_PENDING'
 AND NOT EXISTS (
-SELECT 1 
-FROM Feedback f 
-WHERE f.proof = p 
+SELECT 1
+FROM Feedback f
+WHERE f.proof = p
 AND f.userId = :userId)""")
     List<Long> findPendingProofIdsWithoutUserFeedback(@Param("contractId") Long contractId, @Param("userId") Long userId);
 
@@ -114,7 +114,7 @@ SELECT p.id
 FROM Proof p
 WHERE p.contractId = :contractId
 AND p.createdAt >= :startDate
-AND p.createdAt <= :endDat
+AND p.createdAt <= :endDate
 AND p.proofId IS NULL
 ORDER BY p.createdAt ASC
 """)
@@ -132,7 +132,7 @@ SELECT p.id
 FROM Proof p
 WHERE p.contractId = :contractId
 AND p.createdAt >= :startDate
-AND p.createdAt <= :endDat
+AND p.createdAt <= :endDate
 AND p.proofId IS NOT NULL
 """)
     List<Long> findReProofIdsByMonth(@Param("contractId")Long contractId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
@@ -149,7 +149,7 @@ SELECT p.id
 FROM Proof p
 WHERE p.contractId = :contractId
 AND p.createdAt >= :startDate
-AND p.createdAt <= :endDat
+AND p.createdAt <= :endDate
 AND p.proofId IS NULL
 AND EXISTS (
 SELECT 1
@@ -176,7 +176,7 @@ SELECT p.id
 FROM Proof p
 WHERE p.contractId = :contractId
 AND p.createdAt >= :startDate
-AND p.createdAt <= :endDat
+AND p.createdAt <= :endDate
 AND p.proofId IS NOT NULL
 AND EXISTS (
 SELECT 1
