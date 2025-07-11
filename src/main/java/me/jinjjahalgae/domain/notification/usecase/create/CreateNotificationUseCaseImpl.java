@@ -57,7 +57,7 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
         List<ParticipantInfoResponse> participantInfoList = getParticipantInfoByContractId.execute(request.contractId());
 
         // 알림 타입에 따라 알림 보낼 대상 리스트, 메세지를 다르게 설정
-        switch (NotificationType.valueOf(request.type())) {
+        switch (request.type()) {
             // 감독자 추가됨 (to 계약자)
             case SUPERVISOR_ADDED -> {
                 targetUserList = getContractorInfoList(participantInfoList);
@@ -130,7 +130,7 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
                     .userId(target.userId()) // 메세지를 보낼 대상
                     .contractId(request.contractId())
                     .content(message)
-                    .type(NotificationType.valueOf(request.type()))
+                    .type(request.type())
                     .build();
 
             notificationList.add(notification);
