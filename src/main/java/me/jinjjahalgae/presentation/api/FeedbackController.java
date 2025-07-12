@@ -27,6 +27,7 @@ public class FeedbackController implements FeedbackControllerDocs {
         @Valid @RequestBody CreateFeedbackRequest request
     ) {
         createFeedbackUseCase.execute(user.getUserId(), proofId, request);
+
         return CommonResponse.success();
     }
 } 

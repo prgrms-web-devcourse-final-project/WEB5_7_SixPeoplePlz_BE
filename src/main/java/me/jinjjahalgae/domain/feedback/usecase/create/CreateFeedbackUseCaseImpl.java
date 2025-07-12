@@ -29,7 +29,7 @@ public class CreateFeedbackUseCaseImpl implements CreateFeedbackUseCase {
      */
     @Override
     @Transactional
-    public Void execute(Long userId, Long proofId, CreateFeedbackRequest req) {
+    public void execute(Long userId, Long proofId, CreateFeedbackRequest req) {
         // 인증 유효성 검사 (존재하지 않는 인증이면 예외)
         Proof proof = proofRepository.findById(proofId)
                 .orElseThrow(() -> ErrorCode.PROOF_NOT_FOUND.domainException("존재하지 않는 인증입니다.proofId=" + proofId));
@@ -60,8 +60,6 @@ public class CreateFeedbackUseCaseImpl implements CreateFeedbackUseCase {
         if (isAllSupervisorsChecked) {
             eventPublisher.publishEvent(new HandleProofEvent(proof.getId()));
         }
-
-        return null;
     }
 
     // 유효한 감독자 권한이 존재하는지 검사
