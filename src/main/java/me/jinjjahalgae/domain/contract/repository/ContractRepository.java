@@ -44,4 +44,10 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
             @Param("statuses") List<ContractStatus> statuses,
             Pageable pageable
     );
+
+    //해당 계약에서 유효한 참가자인가??
+    @Query("SELECT c FROM Contract c " +
+            "JOIN c.participations p " +
+            "WHERE c.id = :contractId AND p.user.id = :userId AND p.valid = true")
+    Optional<Contract> findValidParticipantByIdAndUserId(Long contractId, Long userId);
 }
