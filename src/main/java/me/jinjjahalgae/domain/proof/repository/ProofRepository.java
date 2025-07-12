@@ -1,8 +1,11 @@
 package me.jinjjahalgae.domain.proof.repository;
 
 import me.jinjjahalgae.domain.proof.entities.Proof;
+import me.jinjjahalgae.domain.proof.enums.ProofStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -190,4 +193,13 @@ AND f.userId = :userId
                                                   @Param("endDate") LocalDateTime endDate,
                                                   @Param("userId") Long userId);
 
+    @Query("SELECT p FROM Proof p WHERE p.createdAt <= :deadline AND p.status = 'APPROVE_PENDING'")
+    Page<Proof> findProofsPendingOver24Hours(
+            @Param("deadline") LocalDateTime deadline,
+            Pageable pageable
+    );
+
+    @Modifying
+    @Query("UPDATE Proof p SET p.status = :status WHERE p.id IN :proofIds")
+    void updateProofStatus(@Param("proofIds") List<Long> proofIds, @Param("status") ProofStatus status);
 }
