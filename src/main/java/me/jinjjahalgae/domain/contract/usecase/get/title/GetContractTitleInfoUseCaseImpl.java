@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class ContractTitleInfoUseCaseImpl implements ContractTitleInfoUseCase {
+public class GetContractTitleInfoUseCaseImpl implements GetContractTitleInfoUseCase {
 
     private final ContractRepository contractRepository;
     private final ContractMapper contractMapper;
