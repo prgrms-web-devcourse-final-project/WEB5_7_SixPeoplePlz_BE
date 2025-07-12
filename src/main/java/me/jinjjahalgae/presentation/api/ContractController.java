@@ -71,6 +71,7 @@ public class ContractController implements ContractControllerDocs {
         return CommonResponse.success(response);
     }
 
+    @Override
     @GetMapping("/{contractId}/titleInfo")
     public CommonResponse<ContractTitleInfoResponse> getContractTitleInfo(
             @AuthenticationPrincipal CustomJwtPrincipal user,
