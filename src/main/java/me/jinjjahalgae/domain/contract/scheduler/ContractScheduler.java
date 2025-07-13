@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
+import me.jinjjahalgae.domain.notification.enums.NotificationType;
 import me.jinjjahalgae.domain.notification.usecase.create.CreateNotificationUseCase;
 import me.jinjjahalgae.domain.notification.usecase.create.dto.NotificationCreateRequest;
 import me.jinjjahalgae.global.storage.redis.usecase.invite.delete.DeleteInviteInfoUseCase;
@@ -42,10 +43,10 @@ public class ContractScheduler {
 
             if (joinedSupervisors > 0) {
                 contract.start(joinedSupervisors);
-                createNotificationUseCase.execute(new NotificationCreateRequest("CONTRACT_STARTED", contract.getId(), contract.getUser().getId()));
+                createNotificationUseCase.execute(new NotificationCreateRequest(NotificationType.CONTRACT_STARTED, contract.getId(), contract.getUser().getId()));
             } else {
                 contractRepository.delete(contract);
-                createNotificationUseCase.execute(new NotificationCreateRequest("CONTRACT_AUTO_DELETED", contract.getId(), contract.getUser().getId()));
+                createNotificationUseCase.execute(new NotificationCreateRequest(NotificationType.CONTRACT_AUTO_DELETED, contract.getId(), contract.getUser().getId()));
             }
 
             deleteInviteInfoUseCase.execute(contract.getId());
@@ -66,10 +67,10 @@ public class ContractScheduler {
         for (Contract contract : progressingContracts) {
             if (contract.getLife() < contract.getCurrentFail()){
                 contract.fail();
-                createNotificationUseCase.execute(new NotificationCreateRequest("CONTRACT_ENDED_FAIL", contract.getId(), contract.getUser().getId()));
+                createNotificationUseCase.execute(new NotificationCreateRequest(NotificationType.CONTRACT_ENDED_FAIL, contract.getId(), contract.getUser().getId()));
             } else {
                 contract.complete();
-                createNotificationUseCase.execute(new NotificationCreateRequest("CONTRACT_ENDED_SUCCESS", contract.getId(), contract.getUser().getId()));
+                createNotificationUseCase.execute(new NotificationCreateRequest(NotificationType.CONTRACT_ENDED_SUCCESS, contract.getId(), contract.getUser().getId()));
             }
         }
     }
