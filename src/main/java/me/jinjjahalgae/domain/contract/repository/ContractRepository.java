@@ -5,6 +5,7 @@ import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -36,7 +37,13 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     // 종료일로 진행중 계약 조회
     @Query("SELECT c FROM Contract c WHERE c.status = :status AND FUNCTION('DATE', c.endDate) = :date")
     List<Contract> findByStatusAndEndDateOn(@Param("status") ContractStatus status, @Param("date") LocalDate date);
+
     // 계약 조회 시 관련한 유저 정보도 한번에
     @Query("SELECT c FROM Contract c JOIN FETCH c.user WHERE c.id = :contractId")
     Optional<Contract> findByIdWithUser(@Param("contractId") Long contractId);
+
+    // 여러 계약의 상태를 한 번에 업데이트하는 벌크 쿼리
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Contract c SET c.status = :status WHERE c.id IN :ids")
+    void bulkUpdateStatus(@Param("ids") List<Long> ids, @Param("status") ContractStatus status);
 }
