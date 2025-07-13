@@ -72,6 +72,16 @@ public interface ProofControllerDocs {
                                               "message": "최소 1장 이상의 이미지가 필요합니다."
                                             }
                                             """
+                                    ),
+                                    @ExampleObject(
+                                            name = "시작 전 계약에 인증을 생성하려는 경우",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "CONTRACT_NOT_STARTED",
+                                              "message": "계약 시작 전에는 인증을 생성할 수 없습니다."
+                                            }
+                                            """
                                     )
                             }
                     )
@@ -204,9 +214,18 @@ public interface ProofControllerDocs {
                                               "message": "최소 1장 이상의 이미지가 필요합니다."
                                             }
                                             """
+                                    ),
+                                    @ExampleObject(
+                                            name = "시작 전 계약에 인증을 생성하려는 경우",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "CONTRACT_NOT_STARTED",
+                                              "message": "계약 시작 전에는 인증을 생성할 수 없습니다."
+                                            }
+                                            """
                                     )
                             }
-
                     )
             ),
             @ApiResponse(

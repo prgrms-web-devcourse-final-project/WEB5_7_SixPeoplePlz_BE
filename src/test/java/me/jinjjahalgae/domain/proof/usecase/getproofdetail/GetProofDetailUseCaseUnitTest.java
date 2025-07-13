@@ -50,7 +50,7 @@ class GetProofDetailUseCaseUnitTest {
         // given
         Proof proof = ProofTestUtil.createProof(proofId, "테스트 인증", ProofStatus.APPROVED, contractId, null, LocalDateTime.now());
 
-        when(proofRepository.findByIdWithProofImagesAndFeedbacks(proofId)).thenReturn(Optional.of(proof));
+        when(proofRepository.findByIdWithProofImages(proofId)).thenReturn(Optional.of(proof));
         when(participationRepository.existsByContractIdAndUserId(contractId, userId)).thenReturn(true);
 
         // when
@@ -64,7 +64,7 @@ class GetProofDetailUseCaseUnitTest {
     @DisplayName("인증이 존재하지 않으면 예외 발생")
     void execute_ThrowsException_WhenProofNotFound() {
         // given
-        when(proofRepository.findByIdWithProofImagesAndFeedbacks(proofId)).thenReturn(Optional.empty());
+        when(proofRepository.findByIdWithProofImages(proofId)).thenReturn(Optional.empty());
 
         // when & then
         assertThatThrownBy(() -> getProofDetailUseCase.execute(proofId, userId))
@@ -78,7 +78,7 @@ class GetProofDetailUseCaseUnitTest {
         // given
         Proof proof = ProofTestUtil.createProof(proofId, "테스트 인증", ProofStatus.APPROVED, contractId, null, LocalDateTime.now());
 
-        when(proofRepository.findByIdWithProofImagesAndFeedbacks(proofId)).thenReturn(Optional.of(proof));
+        when(proofRepository.findByIdWithProofImages(proofId)).thenReturn(Optional.of(proof));
         when(participationRepository.existsByContractIdAndUserId(contractId, userId)).thenReturn(false);
 
         // when & then
