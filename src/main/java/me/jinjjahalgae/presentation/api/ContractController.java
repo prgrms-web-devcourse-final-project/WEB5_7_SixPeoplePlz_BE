@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractRequest;
 import me.jinjjahalgae.domain.contract.usecase.get.preview.GetContractPreviewUseCase;
 import me.jinjjahalgae.domain.contract.usecase.get.preview.dto.ContractPreviewResponse;
-import me.jinjjahalgae.domain.contract.usecase.get.titleInfo.GetContractTitleInfoUseCase;
-import me.jinjjahalgae.domain.contract.usecase.get.titleInfo.dto.TitleInfoResponse;
 import me.jinjjahalgae.domain.contract.usecase.delete.CancelContractUseCase;
 import me.jinjjahalgae.domain.contract.usecase.delete.WithdrawContractUseCase;
 import me.jinjjahalgae.domain.contract.usecase.update.dto.ContractUpdateRequest;
@@ -42,7 +40,6 @@ public class ContractController implements ContractControllerDocs {
     private final WithdrawContractUseCase withdrawContractUseCase;
     private final CancelContractUseCase cancelContractUseCase;
     private final GetContractPreviewUseCase getContractPreviewUseCase;
-    private final GetContractTitleInfoUseCase getContractTitleInfoUseCase;
 
     @Override
     @PostMapping
@@ -76,21 +73,13 @@ public class ContractController implements ContractControllerDocs {
         return CommonResponse.success(response);
     }
 
+    @Override
     @GetMapping("/{contractId}/preview")
     public CommonResponse<ContractPreviewResponse> getContractPreview(
             @AuthenticationPrincipal CustomJwtPrincipal user,
             @PathVariable Long contractId
     ) {
         ContractPreviewResponse response = getContractPreviewUseCase.execute(user.getUserId(), contractId);
-        return CommonResponse.success(response);
-    }
-
-    @GetMapping("/{contractId}/titleInfo")
-    public CommonResponse<TitleInfoResponse> getTitleInfo(
-            @AuthenticationPrincipal CustomJwtPrincipal user,
-            @PathVariable Long contractId
-    ) {
-        TitleInfoResponse response = getContractTitleInfoUseCase.execute(user.getUserId(), contractId);
         return CommonResponse.success(response);
     }
 

@@ -21,6 +21,8 @@ import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
 import me.jinjjahalgae.presentation.api.docs.NoContentSwaggerResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import me.jinjjahalgae.domain.contract.usecase.get.preview.dto.ContractPreviewResponse;
+import me.jinjjahalgae.presentation.api.docs.GetContractPreviewSwaggerResponse;
 
 import java.util.List;
 
@@ -765,5 +767,137 @@ public interface ContractControllerDocs {
     CommonResponse<Void> cancelContract(
             @Parameter(hidden = true) CustomJwtPrincipal user,
             @Parameter(description = "취소할 계약 ID", required = true, example = "1") Long contractId
+    );
+
+    @Operation(
+            summary = "계약 미리보기",
+            description = "계약서 미리보기 화면을 위한 정보를 조회합니다. 계약에 참여한 사용자만 조회할 수 있습니다.",
+            security = { @SecurityRequirement(name = "bearerAuth") }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "계약 미리보기 조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = GetContractPreviewSwaggerResponse.class),
+                            examples = @ExampleObject(
+                                    name = "성공 응답",
+                                    value = """
+                    {
+                      "success": true,
+                      "result": {
+                        "contractId": 1,
+                        "contractUuid": "123e4567-e89b-12d3-a456-426614174000",
+                        "title": "매일 운동하기",
+                        "goal": "매일 1시간 이상 운동하여 건강한 몸 만들기",
+                        "penalty": "치킨 못 먹기",
+                        "reward": "치킨 2번 먹기",
+                        "type": "BASIC",
+                        "startDate": "2024-01-01T09:00:00",
+                        "endDate": "2024-01-31T23:59:59",
+                        "contractStatus": "IN_PROGRESS",
+                        "proofPerWeek": 7,
+                        "totalProof": 31,
+                        "currentProof": 20,
+                        "remainingLife": 2,
+                        "achievementPercent": 64.5,
+                        "periodPercent": 45.2,
+                        "participants": [
+                          {
+                            "userId": 1,
+                            "name": "김계약",
+                            "role": "CONTRACTOR",
+                            "signatureImageKey": "contractor-signature-123.jpg"
+                          },
+                          {
+                            "userId": 2,
+                            "name": "박감독",
+                            "role": "SUPERVISOR",
+                            "signatureImageKey": "supervisor-signature-456.jpg"
+                          },
+                          {
+                            "userId": 3,
+                            "name": "이감독",
+                            "role": "SUPERVISOR",
+                            "signatureImageKey": "supervisor-signature-789.jpg"
+                          }
+                        ]
+                      }
+                    }
+                    """
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "인증 실패",
+                                            value = """
+                        {
+                          "success": false,
+                          "code": "INVALID_TOKEN",
+                          "message": "유효하지 않은 토큰입니다."
+                        }
+                        """
+                                    ),
+                                    @ExampleObject(
+                                            name = "만료된 토큰",
+                                            value = """
+                        {
+                          "success": false,
+                          "code": "EXPIRED_TOKEN",
+                          "message": "토큰이 만료되었습니다."
+                        }
+                        """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "접근 권한 없음 (계약 참여자가 아닌 사용자)",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "접근 권한 없음",
+                                    value = """
+                    {
+                      "success": false,
+                      "code": "ACCESS_DENIED",
+                      "message": "참여자로 등록되어있지 않은 계약서를 열람 시도함"
+                    }
+                    """
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "계약을 찾을 수 없음",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "계약 없음",
+                                    value = """
+                    {
+                      "success": false,
+                      "code": "CONTRACT_NOT_FOUND",
+                      "message": "존재하지 않는 계약id: 1"
+                    }
+                    """
+                            )
+                    )
+            )
+    })
+    CommonResponse<ContractPreviewResponse> getContractPreview(
+            @Parameter(hidden = true) CustomJwtPrincipal user,
+            @Parameter(description = "미리보기할 계약 ID", required = true, example = "1") Long contractId
     );
 }
