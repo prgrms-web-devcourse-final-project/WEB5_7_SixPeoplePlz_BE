@@ -42,6 +42,11 @@ public record ContractListResponse(
         @Schema(description = "벌칙", example = "치킨 못 먹기")
         String penalty,
 
+        @Schema(description = "현재 인증 횟수 / 총 인증 횟수", example = "5/10")
+        String achievementRatio,
+
+        @Schema(description = "경과 기간 / 총 기간 (일)", example = "15/30")
+        String periodRatio,
         @Schema(description = "횟수 달성률", example = "50.0")
         double achievementPercent, // 계산해서 제공
 

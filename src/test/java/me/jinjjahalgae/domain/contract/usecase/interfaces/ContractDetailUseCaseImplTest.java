@@ -1,6 +1,8 @@
 package me.jinjjahalgae.domain.contract.usecase.interfaces;
 
 import me.jinjjahalgae.domain.contract.usecase.get.detail.dto.ContractDetailResponse;
+import me.jinjjahalgae.domain.contract.usecase.get.common.ContractBasicResponse;
+import me.jinjjahalgae.domain.participation.usecase.common.ParticipantSimpleResponse;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
@@ -99,36 +101,44 @@ class GetContractDetailUseCaseTest {
             throw new RuntimeException(e);
         }
 
-        // 참여자 정보 (계약자 1명 + 감독자 3명)
-        expectedResponse = new ContractDetailResponse(
+        // ContractBasicResponse 생성
+        ContractBasicResponse contractBasicResponse = new ContractBasicResponse(
                 contractId,
                 "uuid-123",
                 "운동하기",
                 "매일 30분 운동",
+                3,
                 "치킨 못 먹기",
                 "치킨 먹기",
-                ContractType.BASIC,
-                LocalDateTime.now(),
-                LocalDateTime.now().plusDays(30),
-                ContractStatus.PENDING,
-                3,
                 12,
+                3,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusDays(30)
+        );
+
+        // 참여자 정보 (계약자 1명 + 감독자 3명)
+        expectedResponse = new ContractDetailResponse(
+                contractBasicResponse,
+                ContractStatus.PENDING,
+                0,
                 0,
                 3,
+                "0/12",
+                "1/31",
                 0.0,
-                0.0,
+                3.2,
                 List.of(
-                        new ContractDetailResponse.ParticipantSimpleResponse(
-                                userId, "계약자", Role.CONTRACTOR, "contractor-signature-key"
+                        new ParticipantSimpleResponse(
+                                userId, "계약자", Role.CONTRACTOR, true
                         ),
-                        new ContractDetailResponse.ParticipantSimpleResponse(
-                                2L, "감독자1", Role.SUPERVISOR, "supervisor1-signature-key"
+                        new ParticipantSimpleResponse(
+                                2L, "감독자1", Role.SUPERVISOR, true
                         ),
-                        new ContractDetailResponse.ParticipantSimpleResponse(
-                                3L, "감독자2", Role.SUPERVISOR, "supervisor2-signature-key"
+                        new ParticipantSimpleResponse(
+                                3L, "감독자2", Role.SUPERVISOR, true
                         ),
-                        new ContractDetailResponse.ParticipantSimpleResponse(
-                                4L, "감독자3", Role.SUPERVISOR, "supervisor3-signature-key"
+                        new ParticipantSimpleResponse(
+                                4L, "감독자3", Role.SUPERVISOR, true
                         )
                 )
         );
@@ -148,41 +158,108 @@ class GetContractDetailUseCaseTest {
 
         // Then
         assertThat(result).isNotNull();
-        assertThat(result.contractId()).isEqualTo(contractId);
-        assertThat(result.title()).isEqualTo("운동하기");
-        assertThat(result.goal()).isEqualTo("매일 30분 운동");
-        assertThat(result.penalty()).isEqualTo("치킨 못 먹기");
-        assertThat(result.reward()).isEqualTo("치킨 먹기");
-        assertThat(result.type()).isEqualTo(ContractType.BASIC);
+        assertThat(result.contractBasicResponse().contractId()).isEqualTo(contractId);
+        assertThat(result.contractBasicResponse().title()).isEqualTo("운동하기");
+        assertThat(result.contractBasicResponse().goal()).isEqualTo("매일 30분 운동");
+        assertThat(result.contractBasicResponse().penalty()).isEqualTo("치킨 못 먹기");
+        assertThat(result.contractBasicResponse().reward()).isEqualTo("치킨 먹기");
+        assertThat(result.contractStatus()).isEqualTo(ContractStatus.PENDING);
 
         // 참여자 정보 검증
         assertThat(result.participants()).hasSize(4);
 
         // 계약자 검증
-        ContractDetailResponse.ParticipantSimpleResponse contractor = result.participants().get(0);
+        ParticipantSimpleResponse contractor = result.participants().get(0);
         assertThat(contractor.userId()).isEqualTo(userId);
-        assertThat(contractor.name()).isEqualTo("계약자");
+        assertThat(contractor.userName()).isEqualTo("계약자");
         assertThat(contractor.role()).isEqualTo(Role.CONTRACTOR);
-        assertThat(contractor.signatureImageKey()).isEqualTo("contractor-signature-key");
+        assertThat(contractor.valid()).isTrue();
 
         // 감독자들 검증
-        ContractDetailResponse.ParticipantSimpleResponse supervisor1 = result.participants().get(1);
+        ParticipantSimpleResponse supervisor1 = result.participants().get(1);
         assertThat(supervisor1.userId()).isEqualTo(2L);
-        assertThat(supervisor1.name()).isEqualTo("감독자1");
+        assertThat(supervisor1.userName()).isEqualTo("감독자1");
         assertThat(supervisor1.role()).isEqualTo(Role.SUPERVISOR);
-        assertThat(supervisor1.signatureImageKey()).isEqualTo("supervisor1-signature-key");
+        assertThat(supervisor1.valid()).isTrue();
 
-        ContractDetailResponse.ParticipantSimpleResponse supervisor2 = result.participants().get(2);
+        ParticipantSimpleResponse supervisor2 = result.participants().get(2);
         assertThat(supervisor2.userId()).isEqualTo(3L);
-        assertThat(supervisor2.name()).isEqualTo("감독자2");
+        assertThat(supervisor2.userName()).isEqualTo("감독자2");
         assertThat(supervisor2.role()).isEqualTo(Role.SUPERVISOR);
-        assertThat(supervisor2.signatureImageKey()).isEqualTo("supervisor2-signature-key");
+        assertThat(supervisor2.valid()).isTrue();
 
-        ContractDetailResponse.ParticipantSimpleResponse supervisor3 = result.participants().get(3);
+        ParticipantSimpleResponse supervisor3 = result.participants().get(3);
         assertThat(supervisor3.userId()).isEqualTo(4L);
-        assertThat(supervisor3.name()).isEqualTo("감독자3");
+        assertThat(supervisor3.userName()).isEqualTo("감독자3");
         assertThat(supervisor3.role()).isEqualTo(Role.SUPERVISOR);
-        assertThat(supervisor3.signatureImageKey()).isEqualTo("supervisor3-signature-key");
+        assertThat(supervisor3.valid()).isTrue();
+
+        verify(contractRepository).findDetailsByIdAndUserId(contractId, userId);
+        verify(contractMapper).toDetailResponse(contractWithParticipants);
+    }
+
+    @Test
+    @DisplayName("중도포기한 감독자는 참여자 목록에서 제외됨")
+    void getContractDetail_FilterInvalidSupervisor() {
+        // Given
+        User invalidSupervisor = User.builder()
+                .id(5L)
+                .name("중도포기 감독자")
+                .build();
+
+        // ContractBasicResponse 생성
+        ContractBasicResponse contractBasicResponse = new ContractBasicResponse(
+                contractId,
+                "uuid-123",
+                "운동하기",
+                "매일 30분 운동",
+                3,
+                "치킨 못 먹기",
+                "치킨 먹기",
+                12,
+                3,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusDays(30)
+        );
+
+        // valid=false인 감독자가 포함되지 않은 응답 (필터링된 결과)
+        ContractDetailResponse responseWithValidParticipantsOnly = new ContractDetailResponse(
+                contractBasicResponse,
+                ContractStatus.PENDING,
+                0,
+                0,
+                3,
+                "0/12",
+                "1/31",
+                0.0,
+                3.2,
+                List.of(
+                        new ParticipantSimpleResponse(
+                                userId, "계약자", Role.CONTRACTOR, true
+                        ),
+                        new ParticipantSimpleResponse(
+                                2L, "감독자1", Role.SUPERVISOR, true
+                        ),
+                        new ParticipantSimpleResponse(
+                                3L, "감독자2", Role.SUPERVISOR, true
+                        )
+                )
+        );
+
+        given(contractRepository.findDetailsByIdAndUserId(contractId, userId))
+                .willReturn(Optional.of(contractWithParticipants));
+        given(contractMapper.toDetailResponse(contractWithParticipants))
+                .willReturn(responseWithValidParticipantsOnly);
+
+        // When
+        ContractDetailResponse result = contractDetailUseCase.execute(userId, contractId);
+
+        // Then
+        assertThat(result.participants()).hasSize(3);
+        assertThat(result.participants())
+                .extracting(ParticipantSimpleResponse::userName)
+                .containsExactly("계약자", "감독자1", "감독자2")
+                .doesNotContain("중도포기 감독자");
 
         verify(contractRepository).findDetailsByIdAndUserId(contractId, userId);
         verify(contractMapper).toDetailResponse(contractWithParticipants);
@@ -193,6 +270,7 @@ class GetContractDetailUseCaseTest {
     void getContractDetail_Success_AsSupervisor() {
         // Given
         Long supervisorId = 2L;
+
         given(contractRepository.findDetailsByIdAndUserId(contractId, supervisorId))
                 .willReturn(Optional.of(contractWithParticipants));
         given(contractMapper.toDetailResponse(contractWithParticipants))
@@ -204,17 +282,6 @@ class GetContractDetailUseCaseTest {
         // Then
         assertThat(result).isNotNull();
         assertThat(result.participants()).hasSize(4);
-
-        // 감독자도 모든 참여자 정보를 볼 수 있어야 함
-        long contractorCount = result.participants().stream()
-                .filter(p -> p.role() == Role.CONTRACTOR)
-                .count();
-        long supervisorCount = result.participants().stream()
-                .filter(p -> p.role() == Role.SUPERVISOR)
-                .count();
-
-        assertThat(contractorCount).isEqualTo(1);
-        assertThat(supervisorCount).isEqualTo(3);
 
         verify(contractRepository).findDetailsByIdAndUserId(contractId, supervisorId);
         verify(contractMapper).toDetailResponse(contractWithParticipants);
@@ -239,16 +306,17 @@ class GetContractDetailUseCaseTest {
     @DisplayName("다른 사용자의 계약 조회 시 예외 발생")
     void getContractDetail_Unauthorized() {
         // Given
-        Long otherUserId = 999L;
-        given(contractRepository.findDetailsByIdAndUserId(contractId, otherUserId))
+        Long unauthorizedUserId = 999L;
+
+        given(contractRepository.findDetailsByIdAndUserId(contractId, unauthorizedUserId))
                 .willReturn(Optional.empty());
 
         // When & Then
-        assertThatThrownBy(() -> contractDetailUseCase.execute(otherUserId, contractId))
+        assertThatThrownBy(() -> contractDetailUseCase.execute(unauthorizedUserId, contractId))
                 .isInstanceOf(AppException.class)
                 .hasMessage("존재하지 않는 계약입니다.");
 
-        verify(contractRepository).findDetailsByIdAndUserId(contractId, otherUserId);
+        verify(contractRepository).findDetailsByIdAndUserId(contractId, unauthorizedUserId);
     }
 
     @Test
@@ -256,6 +324,7 @@ class GetContractDetailUseCaseTest {
     void getContractDetail_InvalidContractId() {
         // Given
         Long invalidContractId = 999L;
+
         given(contractRepository.findDetailsByIdAndUserId(invalidContractId, userId))
                 .willReturn(Optional.empty());
 

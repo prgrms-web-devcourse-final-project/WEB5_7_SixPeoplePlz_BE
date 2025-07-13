@@ -1,7 +1,7 @@
 package me.jinjjahalgae.domain.participation.mapper;
 
 import me.jinjjahalgae.domain.contract.entity.Contract;
-import me.jinjjahalgae.domain.participation.usecase.common.dto.ParticipationResponse;
+import me.jinjjahalgae.domain.participation.usecase.create.contractor.dto.CreateContractorParticipationResponse;
 import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.user.User;
@@ -19,8 +19,8 @@ public class ParticipationMapper {
                 .build();
     }
 
-    public ParticipationResponse from(Participation participation) {
-        return new ParticipationResponse(
+    public CreateContractorParticipationResponse from(Participation participation) {
+        return new CreateContractorParticipationResponse(
                 participation.getId(),
                 participation.getContract().getId(),
                 participation.getUser().getId(),

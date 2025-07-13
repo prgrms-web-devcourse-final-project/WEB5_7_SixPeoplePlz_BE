@@ -3,7 +3,7 @@ package me.jinjjahalgae.domain.participation.usecase;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.invite.util.InviteTestUtil;
-import me.jinjjahalgae.domain.participation.usecase.common.dto.ParticipationCreateRequest;
+import me.jinjjahalgae.domain.participation.usecase.create.contractor.dto.CreateContractorParticipationRequest;
 import me.jinjjahalgae.domain.participation.usecase.create.supervisor.CreateSupervisorParticipationUseCaseImpl;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.global.exception.AppException;
@@ -54,7 +54,7 @@ class CreateSupervisorParticipationUseCaseImplTest {
     @DisplayName("감독자 참여에 성공한다")
     void createSupervisorParticipation_Success() {
         // given
-        ParticipationCreateRequest request = new ParticipationCreateRequest("image-key");
+        CreateContractorParticipationRequest request = new CreateContractorParticipationRequest("image-key");
         when(contractRepository.findById(contract.getId())).thenReturn(Optional.of(contract));
         when(valueOperations.get(supervisorCountKey)).thenReturn(5); // 자리가 남아있음
 
@@ -71,7 +71,7 @@ class CreateSupervisorParticipationUseCaseImplTest {
     @DisplayName("감독자 자리가 없어 참여에 실패한다")
     void createSupervisorParticipation_Fail_WhenFull() {
         // given
-        ParticipationCreateRequest request = new ParticipationCreateRequest("image-key");
+        CreateContractorParticipationRequest request = new CreateContractorParticipationRequest("image-key");
         when(contractRepository.findById(contract.getId())).thenReturn(Optional.of(contract));
         when(valueOperations.get(supervisorCountKey)).thenReturn(0); // 자리가 없음
 
@@ -84,7 +84,7 @@ class CreateSupervisorParticipationUseCaseImplTest {
     @DisplayName("이미 참여한 계약이라 참여에 실패한다")
     void createSupervisorParticipation_Fail_WhenAlreadyParticipated() {
         // given
-        ParticipationCreateRequest request = new ParticipationCreateRequest("image-key");
+        CreateContractorParticipationRequest request = new CreateContractorParticipationRequest("image-key");
         // 이미 참여한 상태로 설정
         contract.addParticipation(InviteTestUtil.createParticipation(1L, contract, user, null));
 

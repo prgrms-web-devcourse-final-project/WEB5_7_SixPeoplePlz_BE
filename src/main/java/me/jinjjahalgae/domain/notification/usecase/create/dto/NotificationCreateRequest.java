@@ -23,7 +23,7 @@ public record NotificationCreateRequest(
         requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "알림 타입은 필수입니다.")
     @EnumValue(enumClass = NotificationType.class, message = "type은 SUPERVISOR_ADDED, SUPERVISOR_WITHDRAWN, CONTRACT_STARTED, CONTRACT_ENDED_FAIL, CONTRACT_ENDED_SUCCESS, PROOF_ADDED, PROOF_ACCEPTED, PROOF_REJECTED, FEEDBACK_ADDED, REPROOF_ADDED 중 하나여야 합니다.")
-    String type,
+    NotificationType type,
     
     @Schema(description = "관련 계약 ID",
         example = "1",

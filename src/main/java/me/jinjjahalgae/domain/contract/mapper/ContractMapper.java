@@ -1,13 +1,11 @@
 package me.jinjjahalgae.domain.contract.mapper;
 
 import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractRequest;
+import me.jinjjahalgae.domain.contract.usecase.get.common.ContractBasicResponse;
 import me.jinjjahalgae.domain.contract.usecase.get.detail.dto.ContractDetailResponse;
 import me.jinjjahalgae.domain.contract.usecase.get.list.dto.ContractListResponse;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
-import me.jinjjahalgae.domain.contract.usecase.get.preview.dto.ContractPreviewResponse;
-import me.jinjjahalgae.domain.contract.usecase.get.preview.dto.SignatureInfoResponse;
-import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.user.User;
 import org.springframework.stereotype.Component;
 
@@ -46,40 +44,49 @@ public class ContractMapper {
                 contract.getEndDate(),
                 contract.getReward(),
                 contract.getPenalty(),
+                contract.calculateAchievementRatio(), // 5/10 형태
+                contract.calculatePeriodRatio(), // 15/30 형태
                 contract.calculateAchievementPercent(), //횟수 달성률
                 contract.calculatePeriodPercent() //기간 달성률
         );
     }
 
     public ContractDetailResponse toDetailResponse(Contract contract) {
-        return new ContractDetailResponse(
+        ContractBasicResponse basicResponse = new ContractBasicResponse(
                 contract.getId(),
                 contract.getUuid(),
                 contract.getTitle(),
                 contract.getGoal(),
+                contract.getProofPerWeek(),
                 contract.getPenalty(),
                 contract.getReward(),
-                contract.getType(),
-                contract.getStartDate(),
-                contract.getEndDate(),
-                contract.getStatus(),
-                contract.getProofPerWeek(),
                 contract.getTotalProof(),
+                contract.getLife(),
+                contract.getStartDate(),
+                contract.getEndDate()
+        );
+
+        return new ContractDetailResponse(
+                basicResponse,
+                contract.getStatus(),
                 contract.getCurrentProof(),
-                contract.getLife(), // remainingLife
+                contract.getCurrentFail(),
+                contract.getRemainingLife(),
+                contract.calculateAchievementRatio(),
+                contract.calculatePeriodRatio(),
                 contract.calculateAchievementPercent(),
                 contract.calculatePeriodPercent(),
-                mapToParticipantInfos(contract) // 참여자 정보
+                mapToParticipantSimpleResponse(contract)
         );
     }
-
-    private List<ContractDetailResponse.ParticipantSimpleResponse> mapToParticipantInfos(Contract contract) {
+    private List<ParticipantSimpleResponse> mapToParticipantSimpleResponse(Contract contract) {
         return contract.getParticipations().stream()
-                .map(participation -> new ContractDetailResponse.ParticipantSimpleResponse(
+                .filter(Participation::getValid)
+                .map(participation -> new ParticipantSimpleResponse(
                         participation.getUser().getId(),
                         participation.getUser().getName(),
                         participation.getRole(),
-                        participation.getImageKey()
+                        participation.getValid()
                 ))
                 .toList();
     }

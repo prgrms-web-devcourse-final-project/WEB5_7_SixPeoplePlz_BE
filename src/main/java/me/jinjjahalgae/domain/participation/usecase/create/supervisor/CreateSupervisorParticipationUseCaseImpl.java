@@ -3,7 +3,7 @@ package me.jinjjahalgae.domain.participation.usecase.create.supervisor;
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
-import me.jinjjahalgae.domain.participation.usecase.common.dto.ParticipationCreateRequest;
+import me.jinjjahalgae.domain.participation.usecase.create.contractor.dto.CreateContractorParticipationRequest;
 import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.user.User;
@@ -25,7 +25,7 @@ public class CreateSupervisorParticipationUseCaseImpl implements CreateSuperviso
 
     @Override
     @Transactional
-    public void execute(Long contractId, ParticipationCreateRequest request, User user) {
+    public void execute(Long contractId, CreateContractorParticipationRequest request, User user) {
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.serviceException("존재하지 않는 계약 입니다. id =" + contractId));
 

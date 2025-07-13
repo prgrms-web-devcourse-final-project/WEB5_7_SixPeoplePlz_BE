@@ -52,7 +52,9 @@ public class Contract extends BaseEntity {
 
     private String reward; //보상
 
-    private int life; //실패 가능 횟수
+    private int life; //실패 가능 횟수 (계약서용 - 불변)
+
+    private int currentFail; //현재까지 실패한 횟수
 
     private int proofPerWeek; //주간 인증 횟수
 
@@ -92,6 +94,7 @@ public class Contract extends BaseEntity {
     public void initialize() {
         this.uuid = UUID.randomUUID().toString();
         this.totalProof = calculateTotalProof(this.startDate, this.endDate, this.proofPerWeek);
+        this.currentFail = 0;
         this.currentProof = 0;
         this.totalSupervisor = 0;
         this.status = ContractStatus.PENDING;
@@ -112,8 +115,18 @@ public class Contract extends BaseEntity {
         return (int) (totalWeeks * proofPerWeek);
     }
 
+    public String calculateAchievementRatio() {
+        return currentProof + "/" + totalProof;
+    }
+
     public double calculateAchievementPercent() {
         return ( (double) currentProof / totalProof * 100);
+    }
+
+    public String calculatePeriodRatio() {
+        long totalDays = getTotalDays();
+        long passedDays = getPassedDays();
+        return passedDays + "/" + totalDays;
     }
 
     public double calculatePeriodPercent() {
@@ -127,10 +140,21 @@ public class Contract extends BaseEntity {
             return 100.0; // 종료 후면 100%
         }
 
-        long totalDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1;
-        long passedDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, now) +1;
+        long totalDays = getTotalDays();
+        long passedDays = getPassedDays();
 
         return ( (double) passedDays / totalDays * 100);
+    }
+
+    private long getTotalDays() {
+        return java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1;
+    }
+
+    private long getPassedDays() {
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isBefore(startDate)) return 0;
+        if (now.isAfter(endDate)) return getTotalDays();
+        return java.time.temporal.ChronoUnit.DAYS.between(startDate, now) + 1;
     }
 
     // 참여 정보를 제거하는 메서드
@@ -155,9 +179,9 @@ public class Contract extends BaseEntity {
     }
 
     //계약 수정
-    public void updateContract(String title, String goal, String penalty, String reward,
-                               int life, int proofPerWeek, boolean oneOff,
-                               LocalDateTime startDate, LocalDateTime endDate, ContractType type) {
+    public void update(String title, String goal, String penalty, String reward,
+                       int life, int proofPerWeek, boolean oneOff,
+                       LocalDateTime startDate, LocalDateTime endDate, ContractType type) {
         this.title = title;
         this.goal = goal;
         this.penalty = penalty;
@@ -171,5 +195,48 @@ public class Contract extends BaseEntity {
 
         // 수정 시 총 인증 횟수도 다시 계산
         this.totalProof = calculateTotalProof(startDate, endDate, proofPerWeek);
+    }
+
+    // 총 감독자 수를 받아 계약을 시작
+    public void start(int finalSupervisorCount) {
+        this.totalSupervisor = finalSupervisorCount;
+        this.status = ContractStatus.IN_PROGRESS;
+    }
+
+    // 계약 성공 처리
+    public void complete() {
+        this.status = ContractStatus.COMPLETED;
+    }
+
+    // 계약 실패 처리
+    public void fail() {
+        this.status = ContractStatus.FAILED;
+    }
+  
+    //권한 검증 (계약자인가?)
+    public void validateContractor(Long userId) {
+        if (!this.user.getId().equals(userId)) {
+            throw ErrorCode.ACCESS_DENIED.domainException("계약에 대한 접근 권한이 없습니다.");
+        }
+    }
+
+    //계약 상태 변경 (중도 포기)
+    public void withdraw() {
+        if (this.status != ContractStatus.IN_PROGRESS) {
+            throw ErrorCode.CONTRACT_NOT_IN_PROGRESS.domainException("진행 중인 계약만 포기할 수 있습니다.");
+        }
+        this.status = ContractStatus.ABANDONED;
+    }
+
+    //계약 삭제 (시작 전 포기)
+    public void cancel() {
+        if (this.status != ContractStatus.PENDING) {
+            throw ErrorCode.CONTRACT_NOT_PENDING.domainException("시작 전인 계약만 포기할 수 있습니다.");
+        }
+    }
+
+    // 남은 실패 가능 횟수 계산
+    public int getRemainingLife() {
+        return Math.max(0, this.life - this.currentFail);
     }
 }

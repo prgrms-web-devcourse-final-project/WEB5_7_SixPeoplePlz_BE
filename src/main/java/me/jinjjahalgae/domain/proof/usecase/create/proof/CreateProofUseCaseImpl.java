@@ -2,6 +2,7 @@ package me.jinjjahalgae.domain.proof.usecase.create.proof;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
+import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.entities.ProofImage;
@@ -33,6 +34,14 @@ public class CreateProofUseCaseImpl implements CreateProofUseCase {
         // 유저의 계약이 아닐 경우 예외
         if (!isUserContract) {
             throw ErrorCode.ACCESS_DENIED.domainException("계약에 대한 접근 권한이 없습니다.");
+        }
+
+        // 계약이 시작전인지 확인
+        boolean isPendingContract = contractRepository.existsByIdAndStatus(contractId, ContractStatus.PENDING);
+
+        // 시작 전이라면 예외
+        if (isPendingContract) {
+            throw ErrorCode.CONTRACT_NOT_STARTED.domainException("시작 전인 계약에 인증 생성을 요청하였습니다");
         }
 
         // 이미지가 1장도 없는 경우 예외 발생

@@ -5,6 +5,7 @@ public enum NotificationType {
     SUPERVISOR_WITHDRAWN, // 감독자 포기(탈퇴)
 
     CONTRACT_STARTED, // 계약 시작
+    CONTRACT_AUTO_DELETED, // 계약 자동 삭제 (감독자 부족)
     CONTRACT_ENDED_FAIL, // 계약 성공 종료
     CONTRACT_ENDED_SUCCESS, // 계약 실패 종료
 
