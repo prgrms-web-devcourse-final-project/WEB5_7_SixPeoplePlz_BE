@@ -21,6 +21,7 @@ public class Feedback extends BaseEntity {
 
     private String comment;     // 코멘트
 
+    @Enumerated(EnumType.STRING)
     private FeedbackStatus status;  // 피드백 상태
 
     @ManyToOne(fetch = FetchType.LAZY)
