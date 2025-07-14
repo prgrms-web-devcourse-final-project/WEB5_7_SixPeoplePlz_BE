@@ -46,11 +46,11 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     // TODO: 나중에 mroonga로 리팩토링 고려해보기
     // 계약 히스토리 검색 (role, keyword, endDate, status 조건)
     @Query("""
-        SELECT DISTINCT c 
-        FROM Contract c 
-        JOIN c.participations p 
-        WHERE p.user.id = :userId 
-        AND p.role = :role 
+        SELECT DISTINCT c
+        FROM Contract c
+        JOIN c.participations p
+        WHERE p.user.id = :userId
+        AND p.role = :role
         AND p.valid = true
         AND (:keyword IS NULL OR LOWER(c.title) LIKE LOWER(CONCAT('%', :keyword, '%')))
         AND (:endDate IS NULL OR c.endDate <= :endDate)
