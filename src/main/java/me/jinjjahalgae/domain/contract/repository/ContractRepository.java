@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import me.jinjjahalgae.domain.participation.enums.Role;
 
 public interface ContractRepository extends JpaRepository<Contract, Long> {
     Optional<Contract> findByUuid(String uuid);
@@ -43,4 +44,26 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     // 계약 조회 시 관련한 유저 정보도 한번에
     @Query("SELECT c FROM Contract c JOIN FETCH c.user WHERE c.id = :contractId")
     Optional<Contract> findByIdWithUser(@Param("contractId") Long contractId);
+
+    // 계약 히스토리 검색 (role, keyword, endDate, status 조건)
+    @Query("""
+        SELECT DISTINCT c 
+        FROM Contract c 
+        JOIN c.participations p 
+        WHERE p.user.id = :userId 
+        AND p.role = :role 
+        AND p.valid = true
+        AND (:keyword IS NULL OR LOWER(c.title) LIKE LOWER(CONCAT('%', :keyword, '%')))
+        AND (:endDate IS NULL OR c.endDate <= :endDate)
+        AND (:status IS NULL OR c.status = :status)
+        ORDER BY c.endDate DESC
+        """)
+    Page<Contract> findContractHistoryByConditions(
+        @Param("userId") Long userId,
+        @Param("role") Role role,
+        @Param("keyword") String keyword,
+        @Param("endDate") LocalDateTime endDate,
+        @Param("status") ContractStatus status,
+        Pageable pageable
+    );
 }
