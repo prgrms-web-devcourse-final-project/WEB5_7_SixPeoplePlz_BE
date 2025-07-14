@@ -66,6 +66,9 @@ public class Contract extends BaseEntity {
 
     private boolean oneOff; //단발성 여부
 
+    @Version
+    private Long version;
+
     @Enumerated(EnumType.STRING)
     private ContractStatus status; //계약 상태
 
@@ -182,6 +185,7 @@ public class Contract extends BaseEntity {
     public void update(String title, String goal, String penalty, String reward,
                        int life, int proofPerWeek, boolean oneOff,
                        LocalDateTime startDate, LocalDateTime endDate, ContractType type) {
+
         this.title = title;
         this.goal = goal;
         this.penalty = penalty;
