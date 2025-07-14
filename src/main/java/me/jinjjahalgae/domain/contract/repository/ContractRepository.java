@@ -9,13 +9,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import me.jinjjahalgae.domain.participation.enums.Role;
 
 public interface ContractRepository extends JpaRepository<Contract, Long> {
     Optional<Contract> findByUuid(String uuid);
@@ -103,4 +102,26 @@ AND EXISTS (
             "WHERE c.id = :contractId AND p.user.id = :userId AND p.valid = true")
     Optional<Contract> findValidParticipantByIdAndUserId(Long contractId, Long userId);
 
+    // TODO: 나중에 mroonga로 리팩토링 고려해보기
+    // 계약 히스토리 검색 (role, keyword, endDate, status 조건)
+    @Query("""
+        SELECT DISTINCT c
+        FROM Contract c
+        JOIN c.participations p
+        WHERE p.user.id = :userId
+        AND p.role = :role
+        AND p.valid = true
+        AND (:keyword IS NULL OR LOWER(c.title) LIKE LOWER(CONCAT('%', :keyword, '%')))
+        AND (:endDate IS NULL OR c.endDate <= :endDate)
+        AND (:status IS NULL OR c.status = :status)
+        ORDER BY c.endDate DESC
+        """)
+    Page<Contract> findContractHistoryByConditions(
+        @Param("userId") Long userId,
+        @Param("role") Role role,
+        @Param("keyword") String keyword,
+        @Param("endDate") LocalDateTime endDate,
+        @Param("status") ContractStatus status,
+        Pageable pageable
+    );
 }

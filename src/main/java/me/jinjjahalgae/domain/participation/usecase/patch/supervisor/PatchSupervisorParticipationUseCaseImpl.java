@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
+import me.jinjjahalgae.domain.notification.enums.NotificationType;
+import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
 import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.global.exception.ErrorCode;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PatchSupervisorParticipationUseCaseImpl implements PatchSupervisorParticipationUseCase {
 
     private final ContractRepository contractRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -41,6 +45,13 @@ public class PatchSupervisorParticipationUseCaseImpl implements PatchSupervisorP
 
         // 총 감독자 수 1 감소
         contract.decrementTotalSupervisor();
+
+        // 감독자 포기 알림 전송
+        eventPublisher.publishEvent(new NotificationEvent(
+                NotificationType.SUPERVISOR_WITHDRAWN,
+                contractId,
+                user.getId()
+        ));
     }
 
 }

@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
+import me.jinjjahalgae.domain.notification.enums.NotificationType;
+import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
 import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +22,7 @@ public class DeleteSupervisorParticipationUseCaseImpl implements DeleteSuperviso
 
     private final ContractRepository contractRepository;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Value("${spring.data.redis.contract-supervisors}")
     private String SUPERVISOR_COUNT_PREFIX;
@@ -44,6 +48,13 @@ public class DeleteSupervisorParticipationUseCaseImpl implements DeleteSuperviso
 
         // 감독자의 참여 정보 제거
         contract.removeParticipation(supervisorParticipation);
+
+        // 감독자 포기 알림 전송
+        eventPublisher.publishEvent(new NotificationEvent(
+                NotificationType.SUPERVISOR_WITHDRAWN,
+                contractId,
+                user.getId()
+        ));
 
         // redis의 해당 계약 감독자 자리 증가
         String supervisorCountKey = SUPERVISOR_COUNT_PREFIX + contract.getId();

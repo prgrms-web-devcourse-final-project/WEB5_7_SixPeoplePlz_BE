@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.contract.usecase.get.preview;
+package me.jinjjahalgae.domain.contract.usecase.get.preview.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import me.jinjjahalgae.domain.contract.enums.ContractType;

@@ -10,7 +10,9 @@ public interface ParticipationRepository extends JpaRepository<Participation, Lo
     // contract id가 일치하는 모든 participation 객체를 리스트로 조회
     List<Participation> findByContractId(Long contractId);
 
-    // 해당 유저가 계약의 참여자인지
+    // 해당 유저가 계약의 valid한 참여자로 존재하는지 여부
+    boolean existsByContractIdAndUserIdAndValidIsTrue(Long contractId, Long userId);
+
     boolean existsByContractIdAndUserId(Long contractId, Long userId);
 
     // 해당 유저가 계약의 참여자고 해당 role을 가지고 있는지

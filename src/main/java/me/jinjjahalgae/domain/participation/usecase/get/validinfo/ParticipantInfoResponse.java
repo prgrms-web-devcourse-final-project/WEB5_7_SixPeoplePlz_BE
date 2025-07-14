@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.participation.usecase.get.participations;
+package me.jinjjahalgae.domain.participation.usecase.get.validinfo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import me.jinjjahalgae.domain.participation.entity.Participation;

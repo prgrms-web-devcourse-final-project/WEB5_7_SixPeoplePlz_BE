@@ -3,8 +3,10 @@ package me.jinjjahalgae.presentation.api;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractRequest;
+import me.jinjjahalgae.domain.contract.usecase.get.preview.GetContractPreviewUseCase;
 import me.jinjjahalgae.domain.contract.usecase.delete.CancelContractUseCase;
 import me.jinjjahalgae.domain.contract.usecase.delete.WithdrawContractUseCase;
+import me.jinjjahalgae.domain.contract.usecase.get.preview.dto.ContractPreviewResponse;
 import me.jinjjahalgae.domain.contract.usecase.get.title.GetContractTitleInfoUseCase;
 import me.jinjjahalgae.domain.contract.usecase.get.title.dto.ContractTitleInfoResponse;
 import me.jinjjahalgae.domain.contract.usecase.update.dto.ContractUpdateRequest;
@@ -26,6 +28,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import org.springframework.data.domain.Sort;
+import me.jinjjahalgae.domain.contract.usecase.get.historylist.GetContractHistoryListUseCase;
+import me.jinjjahalgae.domain.contract.usecase.get.historylist.dto.ContractHistoryRequest;
+
 @RestController
 @RequestMapping("/api/contracts")
 @RequiredArgsConstructor
@@ -37,6 +44,8 @@ public class ContractController implements ContractControllerDocs {
     private final UpdateContractUseCase updateContractUseCase;
     private final WithdrawContractUseCase withdrawContractUseCase;
     private final CancelContractUseCase cancelContractUseCase;
+    private final GetContractPreviewUseCase getContractPreviewUseCase;
+    private final GetContractHistoryListUseCase getContractHistoryListUseCase;
     private final GetContractTitleInfoUseCase getContractTitleInfoUseCase;
 
     @Override
@@ -80,6 +89,30 @@ public class ContractController implements ContractControllerDocs {
         ContractTitleInfoResponse response = getContractTitleInfoUseCase.execute(user.getUserId(), contractId);
         return CommonResponse.success(response);
     }
+
+    @Override
+    @GetMapping("/{contractId}/preview")
+    public CommonResponse<ContractPreviewResponse> getContractPreview(
+            @AuthenticationPrincipal CustomJwtPrincipal user,
+            @PathVariable Long contractId
+    ) {
+        ContractPreviewResponse response = getContractPreviewUseCase.execute(user.getUserId(), contractId);
+        return CommonResponse.success(response);
+    }
+
+    ///  /users/contracts/history?role=supervisor
+    /// /users/contracts/history?role={role}&keyword={keyword}&status={status}
+    @GetMapping("/history")
+    @Override
+    public CommonResponse<Page<ContractListResponse>> getContractHistory(
+            @AuthenticationPrincipal CustomJwtPrincipal user,
+            @ModelAttribute ContractHistoryRequest request,
+            @PageableDefault(size = 10, sort = "endDate", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        Page<ContractListResponse> response = getContractHistoryListUseCase.execute(user.getUserId(), request, pageable);
+        return CommonResponse.success(response);
+    }
+
 
     @Override
     @PutMapping("/{contractId}")
