@@ -1,13 +1,16 @@
 package me.jinjjahalgae.domain.contract.mapper;
 
+import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractRequest;
 import me.jinjjahalgae.domain.contract.usecase.get.common.ContractBasicResponse;
 import me.jinjjahalgae.domain.contract.usecase.get.detail.dto.ContractDetailResponse;
 import me.jinjjahalgae.domain.contract.usecase.get.list.dto.ContractListResponse;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
+import me.jinjjahalgae.domain.contract.usecase.get.preview.dto.ContractPreviewResponse;
 import me.jinjjahalgae.domain.contract.usecase.get.title.dto.ContractTitleInfoResponse;
 import me.jinjjahalgae.domain.participation.entity.Participation;
+import me.jinjjahalgae.domain.participation.mapper.ParticipationMapper;
 import me.jinjjahalgae.domain.participation.usecase.common.ParticipantSimpleResponse;
 import me.jinjjahalgae.domain.user.User;
 import org.springframework.stereotype.Component;
@@ -15,7 +18,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class ContractMapper {
+
+    private final ParticipationMapper participationMapper;
+
     public Contract toEntity(User user, CreateContractRequest request) {
         Contract contract = Contract.builder()
                 .user(user)
@@ -54,8 +61,8 @@ public class ContractMapper {
         );
     }
 
-    public ContractDetailResponse toDetailResponse(Contract contract) {
-        ContractBasicResponse basicResponse = new ContractBasicResponse(
+    public ContractBasicResponse toBasicResponse(Contract contract) {
+        return new ContractBasicResponse(
                 contract.getId(),
                 contract.getUuid(),
                 contract.getTitle(),
@@ -68,7 +75,11 @@ public class ContractMapper {
                 contract.getStartDate(),
                 contract.getEndDate()
         );
+    }
 
+    public ContractDetailResponse toDetailResponse(Contract contract) {
+
+        ContractBasicResponse basicResponse = toBasicResponse(contract);
         return new ContractDetailResponse(
                 basicResponse,
                 contract.getStatus(),
@@ -98,6 +109,16 @@ public class ContractMapper {
         return new ContractTitleInfoResponse(
                 contract.getTitle(),
                 contract.getGoal()
+        );
+    }
+
+    public ContractPreviewResponse mapToContractPreviewResponse(Contract contract, List<Participation> participationList) {
+        return new ContractPreviewResponse(
+            toBasicResponse(contract),
+            contract.getType(),
+            participationList.stream()
+                    .map(participationMapper::mapToFullResponse)
+                    .toList()
         );
     }
 }
