@@ -20,6 +20,8 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     Optional<Contract> findByUuid(String uuid);
     Optional<Contract> findContractById(Long contractId);
 
+    List<Contract> findByStatus(ContractStatus status);
+
     //해당 유저의 계약 상태로 내림차순 조회
     Page<Contract> findByUserIdAndStatusInOrderByIdDesc(Long userId, List<ContractStatus> status, Pageable pageable);
 

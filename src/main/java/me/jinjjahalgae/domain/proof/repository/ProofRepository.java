@@ -1,6 +1,7 @@
 package me.jinjjahalgae.domain.proof.repository;
 
 import me.jinjjahalgae.domain.proof.entities.Proof;
+import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -189,5 +190,27 @@ AND f.userId = :userId
                                                   @Param("startDate") LocalDateTime startDate,
                                                   @Param("endDate") LocalDateTime endDate,
                                                   @Param("userId") Long userId);
+
+    /**
+     * 주어진 기간 동안의 특정 상태를 가진 인증의 수를 가져오는 쿼리
+     * @param contractId 계약 ID
+     * @param status 조회할 인증 상태
+     * @param startDate 기간 시작일
+     * @param endDate 기간 종료일
+     * @return int
+     */
+    @Query("""
+SELECT COUNT(p)
+FROM Proof p
+WHERE p.contractId = :contractId
+AND p.status = :status
+AND p.createdAt BETWEEN :startDate AND :endDate
+""")
+    int countByContractIdAndStatusAndCreatedAtBetween(
+            @Param("contractId") Long contractId,
+            @Param("status") ProofStatus status,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
 
 }

@@ -1,10 +1,14 @@
 package me.jinjjahalgae.domain.contract.scheduler;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
+import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
+import me.jinjjahalgae.domain.proof.enums.ProofStatus;
+import me.jinjjahalgae.domain.proof.repository.ProofRepository;
 import me.jinjjahalgae.global.storage.redis.usecase.invite.bulk.BulkDeleteInviteInfoUseCase;
 import me.jinjjahalgae.global.storage.redis.usecase.invite.get.GetJoinedSupervisorsUseCase;
 import org.springframework.context.ApplicationEventPublisher;
@@ -13,6 +17,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,10 +28,12 @@ import java.util.stream.Collectors;
 public class ContractScheduler {
 
     private final ContractRepository contractRepository;
+    private final ProofRepository proofRepository;
     private final BulkDeleteInviteInfoUseCase bulkdeleteInviteInfoUseCase;
     private final GetJoinedSupervisorsUseCase getJoinedSupervisorsUseCase;
     private final ApplicationEventPublisher eventPublisher;
 
+    // 계약 시작 스케줄러
     @Scheduled(cron = "0 1 0 * * *")
     @Transactional
     public void startContracts() {
@@ -74,6 +82,7 @@ public class ContractScheduler {
         bulkdeleteInviteInfoUseCase.execute(allProcessedIds);
     }
 
+    // 계약 종료 스케줄러
     @Scheduled(cron = "0 59 23 * * *")
     @Transactional
     public void endContracts() {
@@ -82,13 +91,13 @@ public class ContractScheduler {
 
         if (progressingContracts.isEmpty()) return;
 
-        Map<Boolean, List<Contract>> partitionedContractsByProof = progressingContracts.stream()
+        Map<Boolean, List<Contract>> partitionedContractsByResult = progressingContracts.stream()
                 .collect(Collectors.partitioningBy(
-                        contract -> contract.getCurrentProof() >= contract.getTotalProof()
+                        contract -> contract.getLife() >= contract.getCurrentFail()
                 ));
 
-        List<Contract> successContracts = partitionedContractsByProof.get(true);
-        List<Contract> failContracts = partitionedContractsByProof.get(false);
+        List<Contract> successContracts = partitionedContractsByResult.get(true);
+        List<Contract> failContracts = partitionedContractsByResult.get(false);
 
         // 성공 계약 벌크 업데이트
         if (!successContracts.isEmpty()) {
@@ -116,6 +125,42 @@ public class ContractScheduler {
                             contract.getUser().getId()
                     ))
             );
+        }
+    }
+
+    // 주간 인증상황 점검 스케줄러
+    @Scheduled(cron = "0 50 23 * * *")
+    @Transactional
+    public void checkProgressingContracts() {
+        LocalDate today = LocalDate.now();
+        List<Contract> progressingContracts = contractRepository.findByStatus(ContractStatus.IN_PROGRESS);
+
+        //재인증 어카지?
+        //일주일로 하면 재인증이 있거나 인증이 종료가 안됐거나 나중에 재인증으로 인증이 되면?
+        //와 이거 큰일이네
+        //계산을 일주일 + 72시간 지나고 계산?
+        //계약 종료에도 같은 문제가 있어요...
+
+        if (progressingContracts.isEmpty()) return;
+
+        for (Contract contract : progressingContracts) {
+            // 계약 시작일로부터 오늘까지 몇 일이 지났는지 계산
+            long daysPassed = ChronoUnit.DAYS.between(contract.getStartDate().toLocalDate(), today);
+
+            // 7일째 되는 날마다 (7, 14, 21 등) 주간 점검 수행
+            if (daysPassed > 0 && (daysPassed + 1) % 7 == 0) {
+                LocalDateTime endOfWeek = today.atTime(23, 59, 59);
+                LocalDateTime startOfWeek = endOfWeek.minusDays(6).withHour(0).withMinute(0).withSecond(0);
+
+                // 지난 한 주간의 성공한 인증 횟수 조회
+                int weeklySuccessCount = proofRepository.countByContractIdAndStatusAndCreatedAtBetween(
+                        contract.getId(), ProofStatus.APPROVED, startOfWeek, endOfWeek);
+
+                // 주간 필수 인증 횟수보다 적으면 실패 처리
+                if (weeklySuccessCount < contract.getProofPerWeek()) {
+                    contract.recordWeeklyFailure(contract.getProofPerWeek() - weeklySuccessCount);
+                }
+            }
         }
     }
 }
