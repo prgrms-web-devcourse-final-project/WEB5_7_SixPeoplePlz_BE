@@ -23,7 +23,7 @@ public class GetContractDetailUseCaseImpl implements GetContractDetailUseCase {
     @Override
     public ContractDetailResponse execute(Long userId, Long contractId) {
         Contract contract = contractRepository.findById(contractId)
-                .orElseThrow(ErrorCode.CONTRACT_NOT_FOUND::serviceException);
+                .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException("존재하지 않는 계약 id: " + contractId));
 
         // 계약 id, userid가 일치하고 valid인 참여가 있는지 확인
         boolean isParticipated = participationRepository.existsByContractIdAndUserIdAndValidIsTrue(contractId, userId);

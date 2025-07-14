@@ -28,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import me.jinjjahalgae.domain.participation.repository.ParticipationRepository;
 
 @ExtendWith(MockitoExtension.class)
 class GetContractDetailUseCaseTest {
@@ -37,6 +38,9 @@ class GetContractDetailUseCaseTest {
 
     @Mock
     private ContractMapper contractMapper;
+
+    @Mock
+    private ParticipationRepository participationRepository;
 
     @InjectMocks
     private GetContractDetailUseCaseImpl contractDetailUseCase;
@@ -148,8 +152,10 @@ class GetContractDetailUseCaseTest {
     @DisplayName("계약 상세 조회 성공 - 참여자 4명 (계약자 1명 + 감독자 3명)")
     void getContractDetail_Success_WithMultipleParticipants() {
         // Given
-        given(contractRepository.findDetailsByIdAndUserId(contractId, userId))
+        given(contractRepository.findById(contractId))
                 .willReturn(Optional.of(contractWithParticipants));
+        given(participationRepository.existsByContractIdAndUserIdAndValidIsTrue(contractId, userId))
+                .willReturn(true);
         given(contractMapper.toDetailResponse(contractWithParticipants))
                 .willReturn(expectedResponse);
 
@@ -164,11 +170,9 @@ class GetContractDetailUseCaseTest {
         assertThat(result.contractBasicResponse().penalty()).isEqualTo("치킨 못 먹기");
         assertThat(result.contractBasicResponse().reward()).isEqualTo("치킨 먹기");
         assertThat(result.contractStatus()).isEqualTo(ContractStatus.PENDING);
-
-        // 참여자 정보 검증
         assertThat(result.participants()).hasSize(4);
 
-        // 계약자 검증
+        // 참여자 정보 검증
         ParticipantSimpleResponse contractor = result.participants().get(0);
         assertThat(contractor.userId()).isEqualTo(userId);
         assertThat(contractor.userName()).isEqualTo("계약자");
@@ -194,7 +198,8 @@ class GetContractDetailUseCaseTest {
         assertThat(supervisor3.role()).isEqualTo(Role.SUPERVISOR);
         assertThat(supervisor3.valid()).isTrue();
 
-        verify(contractRepository).findDetailsByIdAndUserId(contractId, userId);
+        verify(contractRepository).findById(contractId);
+        verify(participationRepository).existsByContractIdAndUserIdAndValidIsTrue(contractId, userId);
         verify(contractMapper).toDetailResponse(contractWithParticipants);
     }
 
@@ -246,8 +251,10 @@ class GetContractDetailUseCaseTest {
                 )
         );
 
-        given(contractRepository.findDetailsByIdAndUserId(contractId, userId))
+        given(contractRepository.findById(contractId))
                 .willReturn(Optional.of(contractWithParticipants));
+        given(participationRepository.existsByContractIdAndUserIdAndValidIsTrue(contractId, userId))
+                .willReturn(true);
         given(contractMapper.toDetailResponse(contractWithParticipants))
                 .willReturn(responseWithValidParticipantsOnly);
 
@@ -261,7 +268,8 @@ class GetContractDetailUseCaseTest {
                 .containsExactly("계약자", "감독자1", "감독자2")
                 .doesNotContain("중도포기 감독자");
 
-        verify(contractRepository).findDetailsByIdAndUserId(contractId, userId);
+        verify(contractRepository).findById(contractId);
+        verify(participationRepository).existsByContractIdAndUserIdAndValidIsTrue(contractId, userId);
         verify(contractMapper).toDetailResponse(contractWithParticipants);
     }
 
@@ -270,9 +278,10 @@ class GetContractDetailUseCaseTest {
     void getContractDetail_Success_AsSupervisor() {
         // Given
         Long supervisorId = 2L;
-
-        given(contractRepository.findDetailsByIdAndUserId(contractId, supervisorId))
+        given(contractRepository.findById(contractId))
                 .willReturn(Optional.of(contractWithParticipants));
+        given(participationRepository.existsByContractIdAndUserIdAndValidIsTrue(contractId, supervisorId))
+                .willReturn(true);
         given(contractMapper.toDetailResponse(contractWithParticipants))
                 .willReturn(expectedResponse);
 
@@ -283,7 +292,8 @@ class GetContractDetailUseCaseTest {
         assertThat(result).isNotNull();
         assertThat(result.participants()).hasSize(4);
 
-        verify(contractRepository).findDetailsByIdAndUserId(contractId, supervisorId);
+        verify(contractRepository).findById(contractId);
+        verify(participationRepository).existsByContractIdAndUserIdAndValidIsTrue(contractId, supervisorId);
         verify(contractMapper).toDetailResponse(contractWithParticipants);
     }
 
@@ -291,32 +301,35 @@ class GetContractDetailUseCaseTest {
     @DisplayName("계약을 찾을 수 없을 때 예외 발생")
     void getContractDetail_NotFound() {
         // Given
-        given(contractRepository.findDetailsByIdAndUserId(contractId, userId))
+        given(contractRepository.findById(contractId))
                 .willReturn(Optional.empty());
 
         // When & Then
         assertThatThrownBy(() -> contractDetailUseCase.execute(userId, contractId))
                 .isInstanceOf(AppException.class)
-                .hasMessage("존재하지 않는 계약입니다.");
+                .hasMessageContaining("존재하지 않는 계약");
 
-        verify(contractRepository).findDetailsByIdAndUserId(contractId, userId);
+        verify(contractRepository).findById(contractId);
     }
 
     @Test
-    @DisplayName("다른 사용자의 계약 조회 시 예외 발생")
+    @DisplayName("참여자가 아닌 사용자가 계약 조회 시 예외 발생")
     void getContractDetail_Unauthorized() {
         // Given
         Long unauthorizedUserId = 999L;
 
-        given(contractRepository.findDetailsByIdAndUserId(contractId, unauthorizedUserId))
-                .willReturn(Optional.empty());
+        given(contractRepository.findById(contractId))
+                .willReturn(Optional.of(contractWithParticipants));
+        given(participationRepository.existsByContractIdAndUserIdAndValidIsTrue(contractId, unauthorizedUserId))
+                .willReturn(false);
 
         // When & Then
         assertThatThrownBy(() -> contractDetailUseCase.execute(unauthorizedUserId, contractId))
                 .isInstanceOf(AppException.class)
-                .hasMessage("존재하지 않는 계약입니다.");
+                .hasMessageContaining("계약에 대한 접근 권한이 없습니다.");
 
-        verify(contractRepository).findDetailsByIdAndUserId(contractId, unauthorizedUserId);
+        verify(contractRepository).findById(contractId);
+        verify(participationRepository).existsByContractIdAndUserIdAndValidIsTrue(contractId, unauthorizedUserId);
     }
 
     @Test
@@ -325,14 +338,14 @@ class GetContractDetailUseCaseTest {
         // Given
         Long invalidContractId = 999L;
 
-        given(contractRepository.findDetailsByIdAndUserId(invalidContractId, userId))
+        given(contractRepository.findById(invalidContractId))
                 .willReturn(Optional.empty());
 
         // When & Then
         assertThatThrownBy(() -> contractDetailUseCase.execute(userId, invalidContractId))
                 .isInstanceOf(AppException.class)
-                .hasMessage("존재하지 않는 계약입니다.");
+                .hasMessageContaining("존재하지 않는 계약");
 
-        verify(contractRepository).findDetailsByIdAndUserId(invalidContractId, userId);
+        verify(contractRepository).findById(invalidContractId);
     }
 }
