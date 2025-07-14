@@ -1,30 +1,66 @@
 package me.jinjjahalgae.domain.contract.usecase.get.historylist;
 
 import lombok.RequiredArgsConstructor;
+import me.jinjjahalgae.domain.contract.entity.Contract;
+import me.jinjjahalgae.domain.contract.mapper.ContractMapper;
+import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.contract.usecase.get.list.dto.ContractListResponse;
 import me.jinjjahalgae.domain.contract.usecase.get.historylist.dto.ContractHistoryRequest;
+import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.participation.enums.Role;
+import me.jinjjahalgae.global.exception.ErrorCode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class GetContractHistoryListUseCaseImpl implements GetContractHistoryListUseCase{
 
-    @Override
-    public ContractListResponse getContractHistoryList(Long userId, Role role, ContractHistoryRequest request) {
-        // 파라미터들은 프론트 -> 컨트롤러 -> usecase로 넘어옴
+    private final ContractRepository contractRepository;
+    private final ContractMapper contractMapper;
 
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ContractListResponse> execute(Long userId, ContractHistoryRequest request, Pageable pageable) {
 
         // status에는 null, COMPLETED(이행 성공), FAILED(이행 실패), ABANDONED(중간 포기)가능
-        // 이게 아닌 status 들어왔으면
-//        ErrorCode.INVALID_REQUEST
+        // 이게 아닌 status 들어왔으면 ErrorCode.INVALID_REQUEST
+        // null이면 COMPLETED | FAILED | ABANDONED를 모두 검색
+        ContractStatus status = null;
+        if (request.status() != null) {
+            try {
+                status = ContractStatus.valueOf(request.status());
+                if (!List.of(ContractStatus.COMPLETED, ContractStatus.FAILED, ContractStatus.ABANDONED).contains(status)) {
+                    throw ErrorCode.INVALID_REQUEST.domainException("status는 COMPLETED, FAILED, ABANDONED 중 하나여야 합니다.");
+                }
+            } catch (IllegalArgumentException e) {
+                throw ErrorCode.INVALID_REQUEST.domainException("유효하지 않은 status입니다: " + request.status());
+            }
+        }
 
-        // 키워드 검색
-        // 계약종료일 < 입력된 날짜인 계약들
+        // Role enum 변환
+        Role role = Role.valueOf(request.role());
+
+        // 키워드 검색 (null이면 검색 조건에서 제외)
+        String keyword = request.keyword();
+        if (keyword != null && keyword.trim().isEmpty()) {
+            keyword = null;
+        }
+
+        // 계약종료일 < 입력된 날짜인 계약들 (null이면 검색 조건에서 제외)
+        LocalDateTime endDate = request.endDate();
 
         // repository에서 조건에 맞는 Contract 검색하기
+        Page<Contract> contracts = contractRepository.findContractHistoryByConditions(
+            userId, role, keyword, endDate, status, pageable
+        );
 
-
-        return null;
+        // mapper에서 mapping해서 리턴
+        return contracts.map(contractMapper::toListResponse);
     }
 }
