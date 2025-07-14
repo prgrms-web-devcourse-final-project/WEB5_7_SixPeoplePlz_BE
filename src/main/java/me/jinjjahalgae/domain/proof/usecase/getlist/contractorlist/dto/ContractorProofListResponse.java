@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
         example = """
         {
           "date": "2025-07-09",
+          "endDate": "2025-07-31T15:00:00+09:00"
           "originalProof": {
             "imageKey": "1234abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
             "status": "APPROVED",
