@@ -37,6 +37,14 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     // PENDING 상태 계약 확인용
     boolean existsByIdAndStatus(Long id, ContractStatus status);
 
+    // 시작일로 대기중 계약 조회
+    @Query("SELECT c FROM Contract c WHERE c.status = :status AND FUNCTION('DATE', c.startDate) = :date AND c.oneOff = :oneOff")
+    List<Contract> findByStatusAndStartDateOnAndOneOff(@Param("status") ContractStatus status, @Param("date") LocalDate date, @Param("oneOff") boolean oneOff);
+
+    // 종료일로 진행중 계약 조회
+    @Query("SELECT c FROM Contract c WHERE c.status = :status AND FUNCTION('DATE', c.endDate) = :date AND c.oneOff = :oneOff")
+    List<Contract> findByStatusAndEndDateOnAndOneOff(@Param("status") ContractStatus status, @Param("date") LocalDate date, @Param("oneOff") boolean oneOff);
+
     // 시작일로 대기중인 일반(단발이 아닌) 계약 조회
     @Query("SELECT c FROM Contract c WHERE c.status = :status AND FUNCTION('DATE', c.startDate) = :date AND c.oneOff = false")
     List<Contract> findByStatusAndStartDateOn(@Param("status") ContractStatus status, @Param("date") LocalDate date);
@@ -45,6 +53,55 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     @Query("SELECT c FROM Contract c JOIN FETCH c.user WHERE c.id = :contractId")
     Optional<Contract> findByIdWithUser(@Param("contractId") Long contractId);
 
+    // 생성된 지 24시간이 지났고 서명한 감독자가 한 명도 없고 PENDING 상태의 단건 계약 목록 조회
+    @Query("""
+        select c
+        from Contract c
+        join fetch c.user
+        where c.oneOff = true
+            and c.status = 'PENDING'
+            and c.createdAt <= :date
+            and not exists
+                (select p
+                from Participation p
+                where p.contract = c and p.role = 'SUPERVISOR')
+    """)
+    List<Contract> findExpiredOneOffContractsWithNoSupervisors(@Param("date") LocalDateTime date);
+
+    // 시작된 지 24시간이 지났고 인증이 하나 이상 존재하고 피드백이 하나라도 없는 진행중인 단건 계약 목록 조회
+    @Query("""
+        select c from Contract c
+        join fetch c.user
+        where c.oneOff = true
+          and c.status = 'IN_PROGRESS'
+          and c.startDate <= :date
+          and exists
+              (select 1
+              from Proof p
+              where p.contractId = c.id)
+          and not exists
+              (select 1
+                from Feedback f
+                where f.proof.id in (
+                    select p.id
+                    from Proof p
+                    where p.contractId = c.id))
+    """)
+    List<Contract> findCompletableOneOffContracts(@Param("date") LocalDateTime date);
+
+    // 시작된 지 24시간이 지났고 인증이 하나도 없고 진행중인 단건 계약 목록 조회
+    @Query("""
+        select c from Contract c
+        join fetch c.user
+        where c.oneOff = true
+          and c.status = 'IN_PROGRESS'
+          and c.startDate <= :date
+          and not exists
+              (select 1
+              from Proof p
+              where p.contractId = c.id)
+    """)
+    List<Contract> findFailableOneOffContracts(@Param("date") LocalDateTime date);
     // 여러 계약의 상태를 한 번에 업데이트하는 벌크 쿼리
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Contract c SET c.status = :status WHERE c.id IN :ids")

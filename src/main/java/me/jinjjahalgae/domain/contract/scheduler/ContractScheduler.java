@@ -12,6 +12,7 @@ import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
 import me.jinjjahalgae.global.storage.redis.usecase.invite.bulk.BulkDeleteInviteInfoUseCase;
 import me.jinjjahalgae.global.storage.redis.usecase.invite.get.GetJoinedSupervisorsUseCase;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -40,7 +41,7 @@ public class ContractScheduler {
     @Transactional
     public void startContracts() {
         LocalDate today = LocalDate.now();
-        List<Contract> pendingContracts = contractRepository.findByStatusAndStartDateOn(ContractStatus.PENDING, today);
+        List<Contract> pendingContracts = contractRepository.findByStatusAndStartDateOnAndOneOff(ContractStatus.PENDING, today, false);
 
         if (pendingContracts.isEmpty()) return;
 
@@ -83,6 +84,7 @@ public class ContractScheduler {
         List<Long> allProcessedIds = pendingContracts.stream().map(Contract::getId).toList();
         bulkdeleteInviteInfoUseCase.execute(allProcessedIds);
     }
+
 
     // 주간 인증 상황을 점검하는 스케줄러
     @Scheduled(cron = "0 50 23 * * *")
