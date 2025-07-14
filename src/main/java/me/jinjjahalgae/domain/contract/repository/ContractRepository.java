@@ -38,13 +38,9 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     // PENDING 상태 계약 확인용
     boolean existsByIdAndStatus(Long id, ContractStatus status);
 
-    // 시작일로 대기중 계약 조회
-    @Query("SELECT c FROM Contract c WHERE c.status = :status AND FUNCTION('DATE', c.startDate) = :date")
+    // 시작일로 대기중인 일반(단발이 아닌) 계약 조회
+    @Query("SELECT c FROM Contract c WHERE c.status = :status AND FUNCTION('DATE', c.startDate) = :date AND c.oneOff = false")
     List<Contract> findByStatusAndStartDateOn(@Param("status") ContractStatus status, @Param("date") LocalDate date);
-
-    // 종료일로 진행중 계약 조회
-    @Query("SELECT c FROM Contract c WHERE c.status = :status AND FUNCTION('DATE', c.endDate) = :date")
-    List<Contract> findByStatusAndEndDateOn(@Param("status") ContractStatus status, @Param("date") LocalDate date);
 
     // 계약 조회 시 관련한 유저 정보도 한번에
     @Query("SELECT c FROM Contract c JOIN FETCH c.user WHERE c.id = :contractId")
@@ -56,7 +52,7 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     void bulkUpdateStatus(@Param("ids") List<Long> ids, @Param("status") ContractStatus status);
 
     /**
-     * 종료일이 오늘이고 처리할 인증이 "없는" 계약을 WAIT_RESULT(결과 대기)로 변경
+     * 종료일이 오늘이고 처리할 인증이 "없는" 일반(단발이 아닌) 계약을 WAIT_RESULT(결과 대기)로 변경
      * @param today 날짜
      */
     @Modifying(clearAutomatically = true)
@@ -64,6 +60,7 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
 UPDATE Contract c
 SET c.status = 'WAIT_RESULT'
 WHERE c.status = 'IN_PROGRESS' AND FUNCTION('DATE', c.endDate) = :today
+AND c.oneOff = false
 AND NOT EXISTS (
     SELECT p FROM Proof p
     WHERE p.contractId = c.id AND p.status = 'APPROVE_PENDING'
@@ -72,7 +69,7 @@ AND NOT EXISTS (
     void bulkUpdateCompletedContractsToWait(@Param("today") LocalDate today);
 
     /**
-     * 종료일이 오늘이고 처리할 인증이 "있는" 계약을 WAIT_RESULT(결과 대기)로 변경
+     * 종료일이 오늘이고 처리할 인증이 "있는" 일반(단발이 아닌) 계약을 WAIT_RESULT(결과 대기)로 변경
      * @param today 날짜
      */
     @Modifying(clearAutomatically = true)
@@ -80,6 +77,7 @@ AND NOT EXISTS (
 UPDATE Contract c
 SET c.status = 'WAIT_RESULT'
 WHERE c.status = 'IN_PROGRESS' AND FUNCTION('DATE', c.endDate) = :today
+AND c.oneOff = false
 AND EXISTS (
     SELECT p FROM Proof p
     WHERE p.contractId = c.id AND p.status = 'APPROVE_PENDING'

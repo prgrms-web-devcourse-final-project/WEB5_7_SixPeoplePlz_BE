@@ -150,7 +150,7 @@ public class ContractScheduler {
     @Scheduled(cron = "0 59 23 * * *")
     @Transactional
     public void endContracts() {
-        // 대기중인 인증이 "없는" 계약을 결과 대기중 상태로 변환
+        // 대기중인 인증이 "없는" 단발이 아닌 계약을 결과 대기중 상태로 변환
         LocalDate today = LocalDate.now();
         contractRepository.bulkUpdateCompletedContractsToWait(today);
 
@@ -212,7 +212,7 @@ public class ContractScheduler {
             );
         }
 
-        // 대기중인 인증이 "있는" 계약을 결과 대기중 상태로 변환
+        // 대기중인 인증이 "있는" 단발이 아닌 계약을 결과 대기중 상태로 변환
         contractRepository.bulkUpdateApprovePendingContractsToWait(today);
     }
 }
