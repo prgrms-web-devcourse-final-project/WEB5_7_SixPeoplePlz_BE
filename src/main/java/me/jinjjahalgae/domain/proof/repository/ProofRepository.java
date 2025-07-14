@@ -2,8 +2,10 @@ package me.jinjjahalgae.domain.proof.repository;
 
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -124,19 +126,16 @@ ORDER BY p.createdAt ASC
     /**
      * 계약자용 해당 달의 모든 재인증 id를 가져오는 쿼리
      * @param contractId 계약 id
-     * @param startDate 시작일 (월 기준 첫날 00:00:00)
-     * @param endDate 종료일 (월 기준 마지막 날 23:59:59:999999999)
+     * @param proofIds 원본 인증 id들
      * @return Long
      */
     @Query("""
 SELECT p.id
 FROM Proof p
 WHERE p.contractId = :contractId
-AND p.createdAt >= :startDate
-AND p.createdAt <= :endDate
-AND p.proofId IS NOT NULL
+AND p.proofId IN :proofIds
 """)
-    List<Long> findReProofIdsByMonth(@Param("contractId")Long contractId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    List<Long> findReProofIdsByMonth(@Param("contractId")Long contractId, List<Long> proofIds);
 
     /**
      * 감독자용 해당 달의 모든 원본 인증 id를 가져오는 쿼리
@@ -168,17 +167,14 @@ ORDER BY p.createdAt ASC
     /**
      * 감독자용 해당 달의 모든 재인증 id를 가져오는 쿼리
      * @param contractId 계약 id
-     * @param startDate 시작일 (월 기준 첫날 00:00:00)
-     * @param endDate 종료일 (월 기준 마지막 날 23:59:59:999999999)
+     * @param proofIds 원본 인증 id들
      * @return Long
      */
     @Query("""
 SELECT p.id
 FROM Proof p
 WHERE p.contractId = :contractId
-AND p.createdAt >= :startDate
-AND p.createdAt <= :endDate
-AND p.proofId IS NOT NULL
+AND p.proofId IN :proofIds
 AND EXISTS (
 SELECT 1
 FROM Feedback f
@@ -187,8 +183,7 @@ AND f.userId = :userId
 )
 """)
     List<Long> findReProofIdsByMonthForSupervisor(@Param("contractId")Long contractId,
-                                                  @Param("startDate") LocalDateTime startDate,
-                                                  @Param("endDate") LocalDateTime endDate,
+                                                  @Param("proofIds") List<Long> proofIds,
                                                   @Param("userId") Long userId);
 
     /**
@@ -238,5 +233,15 @@ AND p.createdAt BETWEEN :startDate AND :endDate
      */
     @Query("SELECT p FROM Proof p WHERE p.proofId IN :proofIds")
     List<Proof> findReProofsByOriginalProofIds(@Param("proofIds") List<Long> proofIds);
+
+    @Query("SELECT p FROM Proof p WHERE p.createdAt <= :deadline AND p.status = 'APPROVE_PENDING'")
+    Page<Proof> findProofsPendingOver24Hours(
+            @Param("deadline") LocalDateTime deadline,
+            Pageable pageable
+    );
+
+    @Modifying
+    @Query("UPDATE Proof p SET p.status = :status WHERE p.id IN :proofIds")
+    void updateProofStatus(@Param("proofIds") List<Long> proofIds, @Param("status") ProofStatus status);
 
 }

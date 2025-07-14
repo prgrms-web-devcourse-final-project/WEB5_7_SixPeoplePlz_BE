@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -40,6 +41,9 @@ class CreateProofUseCaseUnitTest {
 
     @InjectMocks
     private CreateProofUseCaseImpl createProofUseCase;
+
+    @Mock
+    ApplicationEventPublisher eventPublisher;
 
     private ProofCreateRequest validRequest;
     private Contract contract;

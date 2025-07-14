@@ -1,11 +1,13 @@
 package me.jinjjahalgae.domain.contract.usecase.update;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.contract.usecase.update.dto.ContractUpdateRequest;
 import me.jinjjahalgae.global.exception.ErrorCode;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,30 +17,40 @@ import org.springframework.transaction.annotation.Transactional;
 public class UpdateContractUseCaseImpl implements UpdateContractUseCase {
 
     private final ContractRepository contractRepository;
+    private final EntityManager entityManager;
 
     @Override
     public void execute(Long userId, Long contractId, ContractUpdateRequest request) {
-        // 계약 조회
-        Contract contract = contractRepository.findByIdWithUser(contractId)
-                .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException("존재하지 않는 계약입니다."));
+        try {
+            // 계약 조회
+            Contract contract = contractRepository.findByIdWithUser(contractId)
+                    .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException("존재하지 않는 계약입니다."));
 
-        // 계약자 권한 검증
-        contract.validateContractor(userId);
+            // 계약자 권한 검증
+            contract.validateContractor(userId);
 
-        //감독자 서명이 있는가? (시작 전에만 수정이 가능)
-        contract.validateUpdatable();
-        //계약 수정 진행
-        contract.update(
-                request.title(),
-                request.goal(),
-                request.penalty(),
-                request.reward(),
-                request.life(),
-                request.proofPerWeek(),
-                request.oneOff(),
-                request.startDate(),
-                request.endDate(),
-                ContractType.valueOf(request.type())
-        );
+            //감독자 서명이 있는가?
+            contract.validateUpdatable();
+
+            //계약 수정 진행
+            contract.update(
+                    request.title(),
+                    request.goal(),
+                    request.penalty(),
+                    request.reward(),
+                    request.life(),
+                    request.proofPerWeek(),
+                    request.oneOff(),
+                    request.startDate(),
+                    request.endDate(),
+                    ContractType.valueOf(request.type())
+            );
+
+            entityManager.flush();
+
+        } catch (OptimisticLockingFailureException e) {
+            throw ErrorCode.CONTRACT_STATUS_CONFLICT.serviceException(
+                    "계약 상태 변경 중 충돌이 발생했습니다. 다시 시도해주세요.");
+        }
     }
 }

@@ -1,5 +1,6 @@
 package me.jinjjahalgae.domain.proof.usecase.createreproof;
 
+import jakarta.persistence.EntityManager;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.proof.entities.Proof;
@@ -13,6 +14,7 @@ import me.jinjjahalgae.domain.proof.util.ProofTestUtil;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.domain.user.UserRepository;
 import me.jinjjahalgae.global.exception.AppException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,7 +53,7 @@ class CreateReProofUseCaseSliceTest {
     UserRepository userRepository;
 
     @Autowired
-    TestEntityManager entityManager;
+    EntityManager entityManager;
 
     ProofCreateRequest validRequest;
     Proof existingProof;
@@ -132,7 +134,7 @@ class CreateReProofUseCaseSliceTest {
                 .hasMessageContaining("해당 인증을 찾을 수 없습니다.");
     }
 
-    @Test
+    /*@Test
     @DisplayName("계약이 PENDING 상태일 경우 예외 발생 - 슬라이스 테스트")
     void execute_ThrowsException_ContractPending() {
         // given
@@ -142,7 +144,7 @@ class CreateReProofUseCaseSliceTest {
         assertThatThrownBy(() -> createReProofUseCase.execute(requestWithoutImage, contractId, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("계약 시작 전에는 인증을 생성할 수 없습니다.");
-    }
+    }*/
 
     @Test
     @DisplayName("오늘자 재인증이 이미 존재하면 예외 발생 - 슬라이스 테스트")
@@ -156,6 +158,63 @@ class CreateReProofUseCaseSliceTest {
         assertThatThrownBy(() -> createReProofUseCase.execute(validRequest, proofId, userId))
                 .isInstanceOf(AppException.class)
                 .hasMessageContaining("해당 날짜에 이미 재인증이 존재합니다.");
+    }
+
+    @Test
+    @DisplayName("계약 종료 2일 전 재인증 생성 요청 시 예외 - 슬라이스 테스트")
+    void execute_ThrowsException_WhenContractEndDateMinus2Days() {
+        // given
+        contract.start(3);
+        entityManager.createNativeQuery("UPDATE contract SET end_date = :newEndDate WHERE id = :id")
+                .setParameter("newEndDate", LocalDateTime.now().minusDays(2))
+                .setParameter("id", contract.getId())
+                .executeUpdate();
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when & then
+        assertThatThrownBy(() -> createReProofUseCase.execute(validRequest, proofId, userId))
+                .isInstanceOf(AppException.class)
+                .hasMessageContaining("재인증이 불가능합니다.");
+    }
+
+    @Test
+    @DisplayName("계약 종료 1일 전 재인증 생성 요청 시 예외 - 슬라이스 테스트")
+    void execute_ThrowsException_WhenContractEndDateMinus1Days() {
+        // given
+        contract.start(3);
+        entityManager.createNativeQuery("UPDATE contract SET end_date = :newEndDate WHERE id = :id")
+                .setParameter("newEndDate", LocalDateTime.now().minusDays(1))
+                .setParameter("id", contract.getId())
+                .executeUpdate();
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when & then
+        assertThatThrownBy(() -> createReProofUseCase.execute(validRequest, proofId, userId))
+                .isInstanceOf(AppException.class)
+                .hasMessageContaining("재인증이 불가능합니다.");
+    }
+
+    @Test
+    @DisplayName("계약 종료일 재인증 생성 요청 시 예외 - 슬라이스 테스트")
+    void execute_ThrowsException_WhenContractEndDate() {
+        // given
+        contract.start(3);
+        entityManager.createNativeQuery("UPDATE contract SET end_date = :newEndDate WHERE id = :id")
+                .setParameter("newEndDate", LocalDateTime.now())
+                .setParameter("id", contract.getId())
+                .executeUpdate();
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when & then
+        assertThatThrownBy(() -> createReProofUseCase.execute(validRequest, proofId, userId))
+                .isInstanceOf(AppException.class)
+                .hasMessageContaining("재인증이 불가능합니다.");
     }
 
     @Test

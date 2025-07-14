@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -41,6 +42,9 @@ class CreateReProofUseCaseUnitTest {
     @InjectMocks
     private CreateReProofUseCaseImpl createReProofUseCase;
 
+    @Mock
+    ApplicationEventPublisher eventPublisher;
+
     private ProofCreateRequest validRequest;
     private Proof existingProof;
     private Contract contract;
@@ -61,6 +65,7 @@ class CreateReProofUseCaseUnitTest {
     @DisplayName("재인증 생성 성공")
     void execute_Success() {
         // given
+        contract.start(3);
         when(proofRepository.findById(proofId)).thenReturn(Optional.of(existingProof));
         when(contractRepository.findById(contractId)).thenReturn(Optional.of(contract));
         when(contractRepository.existsByIdAndUserId(contractId, userId)).thenReturn(true);
@@ -131,6 +136,7 @@ class CreateReProofUseCaseUnitTest {
     @DisplayName("오늘자 재인증이 이미 존재하면 예외 발생")
     void execute_ThrowsException_WhenReProofAlreadyExists() {
         // given
+        contract.start(3);
         when(proofRepository.findById(proofId)).thenReturn(Optional.of(existingProof));
         when(contractRepository.findById(contractId)).thenReturn(Optional.of(contract));
         when(contractRepository.existsByIdAndUserId(contractId, userId)).thenReturn(true);
@@ -146,6 +152,7 @@ class CreateReProofUseCaseUnitTest {
     @DisplayName("세 번째 이미지까지 포함한 재인증 생성 성공")
     void execute_Success_WithThirdImage() {
         // given
+        contract.start(3);
         ProofCreateRequest requestWithThirdImage = new ProofCreateRequest("image1.jpg", "image2.jpg", "image3.jpg", "테스트 코멘트");
         when(proofRepository.findById(proofId)).thenReturn(Optional.of(existingProof));
         when(contractRepository.findById(contractId)).thenReturn(Optional.of(contract));
