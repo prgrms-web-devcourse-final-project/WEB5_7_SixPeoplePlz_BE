@@ -8,6 +8,7 @@ import me.jinjjahalgae.domain.contract.usecase.get.list.dto.ContractListResponse
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.contract.usecase.get.preview.dto.ContractPreviewResponse;
+import me.jinjjahalgae.domain.contract.usecase.get.title.dto.ContractTitleInfoResponse;
 import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.mapper.ParticipationMapper;
 import me.jinjjahalgae.domain.participation.usecase.common.ParticipantSimpleResponse;
@@ -102,6 +103,13 @@ public class ContractMapper {
                         participation.getValid()
                 ))
                 .toList();
+    }
+
+    public ContractTitleInfoResponse toTitleInfoResponse(Contract contract) {
+        return new ContractTitleInfoResponse(
+                contract.getTitle(),
+                contract.getGoal()
+        );
     }
 
     public ContractPreviewResponse mapToContractPreviewResponse(Contract contract, List<Participation> participationList) {

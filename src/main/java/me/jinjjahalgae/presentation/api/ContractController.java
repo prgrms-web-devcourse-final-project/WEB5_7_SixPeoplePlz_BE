@@ -7,15 +7,17 @@ import me.jinjjahalgae.domain.contract.usecase.get.preview.GetContractPreviewUse
 import me.jinjjahalgae.domain.contract.usecase.delete.CancelContractUseCase;
 import me.jinjjahalgae.domain.contract.usecase.delete.WithdrawContractUseCase;
 import me.jinjjahalgae.domain.contract.usecase.get.preview.dto.ContractPreviewResponse;
+import me.jinjjahalgae.domain.contract.usecase.get.title.GetContractTitleInfoUseCase;
+import me.jinjjahalgae.domain.contract.usecase.get.title.dto.ContractTitleInfoResponse;
 import me.jinjjahalgae.domain.contract.usecase.update.dto.ContractUpdateRequest;
 import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractResponse;
 import me.jinjjahalgae.domain.contract.usecase.get.detail.dto.ContractDetailResponse;
 import me.jinjjahalgae.domain.contract.usecase.get.list.dto.ContractListResponse;
-import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.usecase.create.CreateContractUseCase;
 import me.jinjjahalgae.domain.contract.usecase.get.detail.GetContractDetailUseCase;
 import me.jinjjahalgae.domain.contract.usecase.get.list.GetContractListUseCase;
 import me.jinjjahalgae.domain.contract.usecase.update.UpdateContractUseCase;
+import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
 import me.jinjjahalgae.presentation.api.docs.contract.ContractControllerDocs;
@@ -44,6 +46,7 @@ public class ContractController implements ContractControllerDocs {
     private final CancelContractUseCase cancelContractUseCase;
     private final GetContractPreviewUseCase getContractPreviewUseCase;
     private final GetContractHistoryListUseCase getContractHistoryListUseCase;
+    private final GetContractTitleInfoUseCase getContractTitleInfoUseCase;
 
     @Override
     @PostMapping
@@ -60,10 +63,10 @@ public class ContractController implements ContractControllerDocs {
     @GetMapping
     public CommonResponse<Page<ContractListResponse>> getContracts(
             @AuthenticationPrincipal CustomJwtPrincipal user,
-            @RequestParam List<ContractStatus> statuses,
+            @RequestParam Role role,
             @PageableDefault(size = 10) Pageable pageable
     ){
-        Page<ContractListResponse> response = getContractListUseCase.execute(user.getUserId(), statuses, pageable);
+        Page<ContractListResponse> response = getContractListUseCase.execute(user.getUserId(), role, pageable);
         return CommonResponse.success(response);
     }
 
@@ -74,6 +77,16 @@ public class ContractController implements ContractControllerDocs {
             @PathVariable Long contractId
     ) {
         ContractDetailResponse response = getContractDetailUseCase.execute(user.getUserId(), contractId);
+        return CommonResponse.success(response);
+    }
+
+    @Override
+    @GetMapping("/{contractId}/titleInfo")
+    public CommonResponse<ContractTitleInfoResponse> getContractTitleInfo(
+            @AuthenticationPrincipal CustomJwtPrincipal user,
+            @PathVariable Long contractId
+    ) {
+        ContractTitleInfoResponse response = getContractTitleInfoUseCase.execute(user.getUserId(), contractId);
         return CommonResponse.success(response);
     }
 
