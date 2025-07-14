@@ -1,6 +1,7 @@
 package me.jinjjahalgae.domain.proof.usecase.getlist.contractorlist;
 
 import lombok.RequiredArgsConstructor;
+import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.mapper.ProofMapper;
@@ -27,13 +28,12 @@ public class GetContractorProofListUseCaseImpl implements GetContractorProofList
     @Override
     @Transactional(readOnly = true)
     public List<ContractorProofListResponse> execute(Long contractId, int year, int month, Long userId) {
-        // 유저의 계약인지 확인
-        boolean isUserContract = contractRepository.existsByIdAndUserId(contractId, userId);
+        // 종료일을 위해 계약을 가져옴
+        Contract contract = contractRepository.findByIdWithUser(contractId)
+                .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException(contractId + "에 대한 계약이 존재하지 않습니다."));
 
-        // 유저의 계약이 아닐 경우 예외
-        if (!isUserContract) {
-            throw ErrorCode.ACCESS_DENIED.domainException("계약에 대한 접근 권한이 없습니다.");
-        }
+        // 계약자인지 확인
+        contract.validateContractor(userId);
 
         // 달의 시작일 00:00:00
         LocalDateTime startDate = LocalDateTime.of(year, month, 1, 0, 0);
@@ -48,7 +48,7 @@ public class GetContractorProofListUseCaseImpl implements GetContractorProofList
         List<Proof> proofs = proofRepository.findProofsWithProofImagesByIds(proofIds);
 
         // 입력 받은 달에 해당하는 모든 재인증 id들
-        List<Long> reProofIds = proofRepository.findReProofIdsByMonth(contractId, startDate, endDate);
+        List<Long> reProofIds = proofRepository.findReProofIdsByMonth(contractId, proofIds);
 
         // 모든 재인증 객체들
         List<Proof> reProofs = proofRepository.findProofsWithProofImagesByIds(reProofIds);
@@ -61,7 +61,7 @@ public class GetContractorProofListUseCaseImpl implements GetContractorProofList
         return proofs.stream()
                 .map(org -> {
                     Proof reProof = reProofMap.get(org.getId());
-                    return ProofMapper.toContractorListResponse(org, reProof);
+                    return ProofMapper.toContractorListResponse(org, reProof, contract.getEndDate());
                 })
                 .toList();
     }

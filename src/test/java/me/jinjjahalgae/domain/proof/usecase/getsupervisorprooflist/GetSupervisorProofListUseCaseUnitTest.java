@@ -78,7 +78,7 @@ class GetSupervisorProofListUseCaseUnitTest {
         when(participationRepository.existsByContractIdAndUserId(contractId, userId)).thenReturn(true);
         when(proofRepository.findOriginalProofIdsByMonthForSupervisor(eq(contractId), any(), any(), eq(userId))).thenReturn(proofIds);
         when(proofRepository.findProofsWithProofImagesByIds(proofIds)).thenReturn(proofs);
-        when(proofRepository.findReProofIdsByMonthForSupervisor(eq(contractId), any(), any(), eq(userId))).thenReturn(reProofIds);
+        when(proofRepository.findReProofIdsByMonthForSupervisor(eq(contractId), proofIds, eq(userId))).thenReturn(reProofIds);
         when(proofRepository.findProofsWithProofImagesByIds(reProofIds)).thenReturn(reProofs);
         when(feedbackRepository.findByContractIdAndUserId(contractId, userId)).thenReturn(feedbacks);
 
@@ -108,7 +108,7 @@ class GetSupervisorProofListUseCaseUnitTest {
         when(participationRepository.existsByContractIdAndUserId(contractId, userId)).thenReturn(true);
         when(proofRepository.findOriginalProofIdsByMonthForSupervisor(eq(contractId), any(), any(), eq(userId))).thenReturn(List.of());
         when(proofRepository.findProofsWithProofImagesByIds(any())).thenReturn(List.of());
-        when(proofRepository.findReProofIdsByMonthForSupervisor(eq(contractId), any(), any(), eq(userId))).thenReturn(List.of());
+        when(proofRepository.findReProofIdsByMonthForSupervisor(eq(contractId), List.of(), eq(userId))).thenReturn(List.of());
         when(feedbackRepository.findByContractIdAndUserId(contractId, userId)).thenReturn(List.of());
 
         // when
@@ -138,7 +138,7 @@ class GetSupervisorProofListUseCaseUnitTest {
         when(participationRepository.existsByContractIdAndUserId(contractId, userId)).thenReturn(true);
         when(proofRepository.findOriginalProofIdsByMonthForSupervisor(eq(contractId), any(), any(), eq(userId))).thenReturn(proofIds);
         when(proofRepository.findProofsWithProofImagesByIds(proofIds)).thenReturn(proofs);
-        when(proofRepository.findReProofIdsByMonthForSupervisor(eq(contractId), any(), any(), eq(userId))).thenReturn(List.of());
+        when(proofRepository.findReProofIdsByMonthForSupervisor(eq(contractId), proofIds, eq(userId))).thenReturn(List.of());
         when(proofRepository.findProofsWithProofImagesByIds(List.of())).thenReturn(List.of());
         when(feedbackRepository.findByContractIdAndUserId(contractId, userId)).thenReturn(feedbacks);
 
@@ -163,7 +163,7 @@ class GetSupervisorProofListUseCaseUnitTest {
         when(participationRepository.existsByContractIdAndUserId(contractId, userId)).thenReturn(true);
         when(proofRepository.findOriginalProofIdsByMonthForSupervisor(eq(contractId), any(), any(), eq(userId))).thenReturn(proofIds);
         when(proofRepository.findProofsWithProofImagesByIds(proofIds)).thenReturn(proofs);
-        when(proofRepository.findReProofIdsByMonthForSupervisor(eq(contractId), any(), any(), eq(userId))).thenReturn(List.of());
+        when(proofRepository.findReProofIdsByMonthForSupervisor(eq(contractId), proofIds, eq(userId))).thenReturn(List.of());
         when(proofRepository.findProofsWithProofImagesByIds(List.of())).thenReturn(List.of());
         when(feedbackRepository.findByContractIdAndUserId(contractId, userId)).thenReturn(List.of());
 

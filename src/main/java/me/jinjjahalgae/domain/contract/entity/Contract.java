@@ -66,6 +66,9 @@ public class Contract extends BaseEntity {
 
     private boolean oneOff; //단발성 여부
 
+    @Version
+    private Long version;
+
     @Enumerated(EnumType.STRING)
     private ContractStatus status; //계약 상태
 
@@ -182,6 +185,7 @@ public class Contract extends BaseEntity {
     public void update(String title, String goal, String penalty, String reward,
                        int life, int proofPerWeek, boolean oneOff,
                        LocalDateTime startDate, LocalDateTime endDate, ContractType type) {
+
         this.title = title;
         this.goal = goal;
         this.penalty = penalty;
@@ -238,5 +242,10 @@ public class Contract extends BaseEntity {
     // 남은 실패 가능 횟수 계산
     public int getRemainingLife() {
         return Math.max(0, this.life - this.currentFail);
+    }
+
+    // 인증 실패 횟수 증가
+    public void recordWeeklyFailure(int failCounts) {
+        this.currentFail += failCounts;
     }
 }

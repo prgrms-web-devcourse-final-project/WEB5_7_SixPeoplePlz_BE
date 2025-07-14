@@ -135,7 +135,7 @@ public class ProofMapper {
      * @param reProof 재인증 (없으면 null)
      * @return {@link ContractorProofListResponse}
      */
-    public static ContractorProofListResponse toContractorListResponse(Proof proof, Proof reProof) {
+    public static ContractorProofListResponse toContractorListResponse(Proof proof, Proof reProof, LocalDateTime endDate) {
         ProofSimpleResponse orgResponse = toSimpleResponse(proof);
         ProofSimpleResponse reProofResponse = null;
 
@@ -153,6 +153,7 @@ public class ProofMapper {
 
         return new ContractorProofListResponse(
                 date,
+                endDate,
                 orgResponse,
                 rejectedAt,
                 reProofResponse

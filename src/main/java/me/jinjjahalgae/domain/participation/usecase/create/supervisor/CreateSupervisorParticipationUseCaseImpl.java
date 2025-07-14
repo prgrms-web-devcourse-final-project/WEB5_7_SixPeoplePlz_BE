@@ -4,16 +4,16 @@ import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
-import me.jinjjahalgae.domain.notification.usecase.create.CreateNotificationUseCase;
-import me.jinjjahalgae.domain.notification.usecase.create.dto.NotificationCreateRequest;
+import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
 import me.jinjjahalgae.domain.participation.repository.ParticipationRepository;
-import me.jinjjahalgae.domain.participation.usecase.common.dto.ParticipationCreateRequest;
+import me.jinjjahalgae.domain.participation.usecase.create.contractor.dto.CreateContractorParticipationRequest;
 import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import me.jinjjahalgae.global.storage.redis.usecase.invite.delete.DeleteInviteInfoUseCase;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +21,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class CreateSupervisorParticipationUseCaseImpl implements CreateSupervisorParticipationUseCase {
-    private final ParticipationRepository participationRepository;
-    private final ContractRepository contractRepository;
+
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ContractRepository contractRepository;
+    private final ParticipationRepository participationRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     private final CreateNotificationUseCase createNotificationUseCase;
     private final DeleteInviteInfoUseCase deleteInviteInfoUseCase;
@@ -33,7 +35,7 @@ public class CreateSupervisorParticipationUseCaseImpl implements CreateSuperviso
 
     @Override
     @Transactional
-    public void execute(Long contractId, ParticipationCreateRequest request, User user) {
+    public void execute(Long contractId, CreateContractorParticipationRequest request, User user) {
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.serviceException("존재하지 않는 계약 입니다. id =" + contractId));
 
@@ -70,6 +72,13 @@ public class CreateSupervisorParticipationUseCaseImpl implements CreateSuperviso
         // 계약에 참여 정보 추가 및 감독자 수 증가
         contract.addParticipation(newParticipation);
 
+        // 감독자 참여 알림 전송
+        eventPublisher.publishEvent(new NotificationEvent(
+                NotificationType.SUPERVISOR_ADDED,
+                contractId,
+                user.getId()
+        ));
+
         // redis의 해당 계약 감독자 자리 감소
         redisTemplate.opsForValue().decrement(supervisorCountKey); // decr 연산으로 원자성 보장
 
@@ -79,9 +88,11 @@ public class CreateSupervisorParticipationUseCaseImpl implements CreateSuperviso
             contract.start(1);
 
             // 계약 시작 알림 발송
-            createNotificationUseCase.execute(
-                    new NotificationCreateRequest(NotificationType.CONTRACT_STARTED, contract.getId(), contract.getUser().getId())
-            );
+            eventPublisher.publishEvent(new NotificationEvent(
+                    NotificationType.CONTRACT_STARTED,
+                    contract.getId(),
+                    contract.getUser().getId()
+            ));
 
             // 초대 정보 삭제
             deleteInviteInfoUseCase.execute(contract.getId());

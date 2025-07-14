@@ -168,7 +168,7 @@ public interface ProofControllerDocs {
 
     @Operation(
             summary = "재인증 생성",
-            description = "요청한 데이터로 재인증 객체를 생성하여 저장"
+            description = "요청한 데이터로 재인증 객체를 생성하여 저장 (계약 종료 2일 전부터는 재인증 요청이 불가능)"
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -222,6 +222,16 @@ public interface ProofControllerDocs {
                                               "success": false,
                                               "code": "CONTRACT_NOT_STARTED",
                                               "message": "계약 시작 전에는 인증을 생성할 수 없습니다."
+                                            }
+                                            """
+                                    ),
+                                    @ExampleObject(
+                                            name = "계약 종료 2일 전 재인증 생성 요청을 하는 경우",
+                                            value = """
+                                            {
+                                              "success": false,
+                                              "code": "REPROOF_NOT_ALLOWED",
+                                              "message": "재인증이 불가능합니다."
                                             }
                                             """
                                     )

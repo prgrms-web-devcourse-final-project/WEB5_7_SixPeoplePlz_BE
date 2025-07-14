@@ -19,6 +19,7 @@ public class GetCountUnreadNotificationUseCaseImpl implements GetCountUnreadNoti
     @Override
     @Transactional(readOnly = true)
     public Long execute(Long userId) {
+        // TODO: 레디스캐싱으로 추후에 리팩토링
         return notificationRepository.countUnreadNotificationByUserId(userId);
     }
 }

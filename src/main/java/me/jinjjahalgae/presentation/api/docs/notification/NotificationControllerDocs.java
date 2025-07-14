@@ -116,10 +116,7 @@ public interface NotificationControllerDocs {
     @PageableAsQueryParam
     CommonResponse<Page<NotificationGetResponse>> getAllNotifications(
         @Parameter(hidden = true) CustomJwtPrincipal principal,
-        @Parameter(
-            description = "페이지네이션 정보 (기본값: page=0, size=10, sort=createdAt,desc)",
-            example = "page=0&size=10&sort=createdAt,desc"
-        ) @ParameterObject Pageable pageable
+        @ParameterObject Pageable pageable
     );
 
     @Operation(

@@ -8,9 +8,9 @@ import me.jinjjahalgae.domain.notification.entities.Notification;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
 import me.jinjjahalgae.domain.notification.repository.NotificationRepository;
 import me.jinjjahalgae.domain.notification.usecase.create.dto.NotificationCreateRequest;
-import me.jinjjahalgae.domain.participation.usecase.get.participations.ParticipantInfoResponse;
+import me.jinjjahalgae.domain.participation.usecase.get.validinfo.ParticipantInfoResponse;
 import me.jinjjahalgae.domain.participation.enums.Role;
-import me.jinjjahalgae.domain.participation.usecase.get.participations.GetParticipantInfoByContractIdUseCase;
+import me.jinjjahalgae.domain.participation.usecase.get.validinfo.GetValidParticipantInfoByContractIdUseCase;
 import me.jinjjahalgae.domain.user.usecase.get.myinfo.GetMyInfoUseCase;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
     private final ContractRepository contractRepository;
 
     // Impl이 아닌 인터페이스를 타입으로 가져옴
-    private final GetParticipantInfoByContractIdUseCase getParticipantInfoByContractId;
+    private final GetValidParticipantInfoByContractIdUseCase getValidParticipantInfo;
     private final GetMyInfoUseCase getMyInfo;
 
     @Transactional // 트랜잭션 생성
@@ -53,8 +53,8 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.serviceException("계약 ID에 맞는 계약을 찾지 못했습니다 : " + request.contractId()));
         String contractName = contract.getTitle();
 
-        // 계약id와 관련 있는 유저들의 정보 모음 (이름, id, role)
-        List<ParticipantInfoResponse> participantInfoList = getParticipantInfoByContractId.execute(request.contractId());
+        // 계약id와 관련 있는 valid 유저들의 정보 모음 (이름, id, role)
+        List<ParticipantInfoResponse> participantInfoList = getValidParticipantInfo.execute(request.contractId());
 
         // 알림 타입에 따라 알림 보낼 대상 리스트, 메세지를 다르게 설정
         switch (request.type()) {
@@ -153,7 +153,6 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
     private static List<ParticipantInfoResponse> getSupervisorInfoList(List<ParticipantInfoResponse> participantInfoList) {
         return participantInfoList.stream()
                 .filter(info -> info.role() == Role.SUPERVISOR)
-                .filter(ParticipantInfoResponse::valid)
                 .toList();
     }
 
@@ -161,7 +160,6 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
     private static List<ParticipantInfoResponse> getContractorInfoList(List<ParticipantInfoResponse> participantInfoList) {
         return participantInfoList.stream()
                 .filter(info -> info.role() == Role.CONTRACTOR)
-                .filter(ParticipantInfoResponse::valid)
                 .toList();
     }
 }

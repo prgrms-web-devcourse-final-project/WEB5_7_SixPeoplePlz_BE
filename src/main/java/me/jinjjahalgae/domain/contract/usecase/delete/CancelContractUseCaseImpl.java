@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.global.exception.ErrorCode;
+import me.jinjjahalgae.global.storage.redis.usecase.invite.delete.DeleteInviteInfoUseCaseImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CancelContractUseCaseImpl implements CancelContractUseCase {
 
     private final ContractRepository contractRepository;
+    private final DeleteInviteInfoUseCaseImpl deleteInviteInfoUseCase;
 
     @Override
     @Transactional
@@ -27,5 +29,8 @@ public class CancelContractUseCaseImpl implements CancelContractUseCase {
         //계약이 시작했는가 (계약 취소는 대기 상태에서만 가능) + 그렇다면 취소 및 삭제
         contract.cancel();
         contractRepository.delete(contract);
+
+        //남아있는 초대 정보 삭제
+        deleteInviteInfoUseCase.execute(contractId);
     }
 }
