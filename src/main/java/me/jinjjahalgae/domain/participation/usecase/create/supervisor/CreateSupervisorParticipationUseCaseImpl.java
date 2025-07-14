@@ -27,7 +27,6 @@ public class CreateSupervisorParticipationUseCaseImpl implements CreateSuperviso
     private final ParticipationRepository participationRepository;
     private final ApplicationEventPublisher eventPublisher;
 
-    private final CreateNotificationUseCase createNotificationUseCase;
     private final DeleteInviteInfoUseCase deleteInviteInfoUseCase;
 
     @Value("${spring.data.redis.contract-supervisors}")
