@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
+import me.jinjjahalgae.domain.notification.enums.NotificationType;
+import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
 import me.jinjjahalgae.domain.proof.usecase.create.common.ProofCreateRequest;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.entities.ProofImage;
@@ -12,6 +14,7 @@ import me.jinjjahalgae.domain.proof.mapper.ProofMapper;
 import me.jinjjahalgae.domain.proof.repository.ProofImageRepository;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
 import me.jinjjahalgae.global.exception.ErrorCode;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +27,7 @@ public class CreateReProofUseCaseImpl implements CreateReProofUseCase {
     private final ProofRepository proofRepository;
     private final ProofImageRepository proofImageRepository;
     private final ContractRepository contractRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -88,6 +92,12 @@ public class CreateReProofUseCaseImpl implements CreateReProofUseCase {
             ProofImage savedThirdImage = proofImageRepository.save(thirdImage);
             savedReproof.addProofImage(savedThirdImage);
         }
+
+        eventPublisher.publishEvent(new NotificationEvent(
+                NotificationType.REPROOF_ADDED,
+                contractId,
+                userId
+        ));
     }
 
     private boolean isPendingContract(Contract contract) {
