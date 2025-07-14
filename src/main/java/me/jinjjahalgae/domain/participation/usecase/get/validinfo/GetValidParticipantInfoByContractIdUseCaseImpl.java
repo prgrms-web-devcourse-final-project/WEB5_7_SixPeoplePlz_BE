@@ -20,7 +20,7 @@ public class GetValidParticipantInfoByContractIdUseCaseImpl implements GetValidP
     @Transactional(readOnly = true)
     public List<ParticipantInfoResponse> execute(long contractId) {
 
-        return repository.findByContract_Id(contractId).stream()
+        return repository.findByContractId(contractId).stream()
                 .filter(Participation::getValid)
                 .map(ParticipantInfoResponse::from)
                 .toList();

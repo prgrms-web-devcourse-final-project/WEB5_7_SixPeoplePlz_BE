@@ -43,7 +43,7 @@ public class GetContractPreviewUseCaseImpl implements GetContractPreviewUseCase 
         }
 
         // 모든 참여자들 리스트를 계약id로 조회 (감독포기한 감독자들 포함)
-        List<Participation> participationList = participationRepository.findByContract_Id(contractId);
+        List<Participation> participationList = participationRepository.findByContractId(contractId);
 
         // previewResponse로 매핑하여 반환
         return contractMapper.mapToContractPreviewResponse(contract, participationList);
