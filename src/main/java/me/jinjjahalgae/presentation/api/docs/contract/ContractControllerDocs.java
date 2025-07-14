@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractRequest;
 import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractResponse;
 import me.jinjjahalgae.domain.contract.usecase.get.detail.dto.ContractDetailResponse;
+import me.jinjjahalgae.domain.contract.usecase.get.historylist.dto.ContractHistoryRequest;
 import me.jinjjahalgae.domain.contract.usecase.get.list.dto.ContractListResponse;
 import me.jinjjahalgae.domain.contract.usecase.get.preview.dto.ContractPreviewResponse;
 import me.jinjjahalgae.domain.contract.usecase.update.dto.ContractUpdateRequest;
@@ -20,6 +21,7 @@ import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.exception.ErrorResponse;
 import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
 import me.jinjjahalgae.presentation.api.docs.NoContentSwaggerResponse;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -414,6 +416,8 @@ public interface ContractControllerDocs {
             @Parameter(hidden = true) CustomJwtPrincipal user,
             @Parameter(description = "조회할 계약 ID", required = true, example = "1") Long contractId
     );
+
+
 
     @Operation(
             summary = "계약 수정",
@@ -898,5 +902,203 @@ public interface ContractControllerDocs {
     CommonResponse<ContractPreviewResponse> getContractPreview(
             @Parameter(hidden = true) CustomJwtPrincipal user,
             @Parameter(description = "미리보기할 계약 ID", required = true, example = "1") Long contractId
+    );
+
+    @Operation(
+            summary = "계약 히스토리 조회",
+            description = "사용자의 완료된 계약 히스토리를 조회합니다. 계약자/감독자 역할별로 필터링하고, 키워드 검색과 상태별 필터링이 가능합니다." +
+                    "<br> role은 CONTRACTOR, SUPERVISOR 중 하나여야 합니다." +
+                    "<br> status는 COMPLETED, FAILED, ABANDONED 중 하나여야 합니다.",
+            security = { @SecurityRequirement(name = "bearerAuth") }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "계약 히스토리 조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = GetContractListSwaggerResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "계약자 히스토리 응답",
+                                            value = """
+                    {
+                      "success": true,
+                      "result": {
+                        "content": [
+                          {
+                            "contractId": 1,
+                            "contractUuid": "123e4567-e89b-12d3-a456-426614174000",
+                            "title": "매일 운동하기",
+                            "contractStatus": "COMPLETED",
+                            "proofPerWeek": 7,
+                            "startDate": "2024-01-01T09:00:00",
+                            "endDate": "2024-01-31T23:59:59",
+                            "reward": "치킨 먹기",
+                            "penalty": "치킨 못 먹기",
+                            "achievementPercent": 100.0,
+                            "periodPercent": 100.0
+                          },
+                          {
+                            "contractId": 2,
+                            "contractUuid": "456e7890-e89b-12d3-a456-426614174001",
+                            "title": "독서하기",
+                            "contractStatus": "FAILED",
+                            "proofPerWeek": 3,
+                            "startDate": "2024-02-01T09:00:00",
+                            "endDate": "2024-02-29T23:59:59",
+                            "reward": "새 책 사기",
+                            "penalty": "핸드폰 시간 줄이기",
+                            "achievementPercent": 45.0,
+                            "periodPercent": 100.0
+                          }
+                        ],
+                        "pageable": {
+                          "sort": {
+                            "empty": false,
+                            "sorted": true,
+                            "unsorted": false
+                          },
+                          "pageNumber": 0,
+                          "pageSize": 10,
+                          "offset": 0,
+                          "paged": true,
+                          "unpaged": false
+                        },
+                        "totalElements": 2,
+                        "totalPages": 1,
+                        "last": true,
+                        "size": 10,
+                        "number": 0,
+                        "sort": {
+                          "empty": false,
+                          "sorted": true,
+                          "unsorted": false
+                        },
+                        "numberOfElements": 2,
+                        "first": true,
+                        "empty": false
+                      }
+                    }
+                    """
+                                    ),
+                                    @ExampleObject(
+                                            name = "감독자 히스토리 응답",
+                                            value = """
+                    {
+                      "success": true,
+                      "result": {
+                        "content": [
+                          {
+                            "contractId": 3,
+                            "contractUuid": "789e0123-e89b-12d3-a456-426614174002",
+                            "title": "금연하기",
+                            "contractStatus": "ABANDONED",
+                            "proofPerWeek": 7,
+                            "startDate": "2024-03-01T09:00:00",
+                            "endDate": "2024-03-31T23:59:59",
+                            "reward": "맛있는 음식 먹기",
+                            "penalty": "용돈 줄이기",
+                            "achievementPercent": 30.0,
+                            "periodPercent": 60.0
+                          }
+                        ],
+                        "pageable": {
+                          "sort": {
+                            "empty": false,
+                            "sorted": true,
+                            "unsorted": false
+                          },
+                          "pageNumber": 0,
+                          "pageSize": 10,
+                          "offset": 0,
+                          "paged": true,
+                          "unpaged": false
+                        },
+                        "totalElements": 1,
+                        "totalPages": 1,
+                        "last": true,
+                        "size": 10,
+                        "number": 0,
+                        "sort": {
+                          "empty": false,
+                          "sorted": true,
+                          "unsorted": false
+                        },
+                        "numberOfElements": 1,
+                        "first": true,
+                        "empty": false
+                      }
+                    }
+                    """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "잘못된 요청 (유효하지 않은 role 또는 status)",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "유효하지 않은 role",
+                                            value = """
+                    {
+                      "success": false,
+                      "code": "BAD_REQUEST",
+                      "message": "role은 CONTRACTOR, SUPERVISOR 중 하나여야 합니다."
+                    }
+                    """
+                                    ),
+                                    @ExampleObject(
+                                            name = "유효하지 않은 status",
+                                            value = """
+                    {
+                      "success": false,
+                      "code": "BAD_REQUEST",
+                      "message": "status는 COMPLETED, FAILED, ABANDONED 중 하나여야 합니다."
+                    }
+                    """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "인증 실패",
+                                            value = """
+                    {
+                      "success": false,
+                      "code": "INVALID_TOKEN",
+                      "message": "유효하지 않은 토큰입니다."
+                    }
+                    """
+                                    ),
+                                    @ExampleObject(
+                                            name = "만료된 토큰",
+                                            value = """
+                    {
+                      "success": false,
+                      "code": "EXPIRED_TOKEN",
+                      "message": "토큰이 만료되었습니다."
+                    }
+                    """
+                                    )
+                            }
+                    )
+            )
+    })
+    CommonResponse<Page<ContractListResponse>> getContractHistory(
+            @Parameter(hidden = true) CustomJwtPrincipal user,
+            @ParameterObject ContractHistoryRequest request,
+            @ParameterObject Pageable pageable
     );
 }
