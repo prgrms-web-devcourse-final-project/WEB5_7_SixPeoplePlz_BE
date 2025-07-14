@@ -42,11 +42,11 @@ public class GetContractPreviewUseCaseImpl implements GetContractPreviewUseCase 
             throw ErrorCode.ACCESS_DENIED.serviceException("참여자로 등록되어있지 않은 계약서를 열람 시도함");
         }
 
-        // 모든 참여자들 리스트를 계약id로 조회
+        // 모든 참여자들 리스트를 계약id로 조회 (감독포기한 감독자들 포함)
         List<Participation> participationList = participationRepository.findByContract_Id(contractId);
 
-        // detailResponse로 매핑하여 반환
-        return contractMapper.toPreviewResponse(contract, participationList);
+        // previewResponse로 매핑하여 반환
+        return contractMapper.mapToContractPreviewResponse(contract, participationList);
     }
 
 }
