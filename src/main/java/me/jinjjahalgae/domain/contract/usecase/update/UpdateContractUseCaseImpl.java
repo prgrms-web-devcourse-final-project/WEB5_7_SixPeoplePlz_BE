@@ -25,8 +25,11 @@ public class UpdateContractUseCaseImpl implements UpdateContractUseCase {
         // 계약자 권한 검증
         contract.validateContractor(userId);
 
-        //감독자 서명이 있는가? (시작 전에만 수정이 가능)
+        //감독자 서명이 있는가?
         contract.validateUpdatable();
+
+        //이미 시작된 계약인가?
+
         //계약 수정 진행
         contract.update(
                 request.title(),

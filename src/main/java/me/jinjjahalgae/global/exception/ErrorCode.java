@@ -28,13 +28,10 @@ public enum ErrorCode {
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "계약에 대한 접근 권한이 없습니다."),
     CONTRACT_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 계약입니다."),
-    CONTRACT_ALREADY_ACTIVE(HttpStatus.BAD_REQUEST, "이미 활성화된 계약입니다."),
-    CONTRACT_ALREADY_START(HttpStatus.CONFLICT, "이미 시작된 계약은 수정할 수 없습니다."),
     CONTRACT_ALREADY_SIGNED(HttpStatus.CONFLICT, "감독자가 서명한 계약은 수정할 수 없습니다."),
     CONTRACT_STATUS_CONFLICT(HttpStatus.CONFLICT, "계약 상태 변경 중 충돌이 발생했습니다."),
     CONTRACT_NOT_IN_PROGRESS(HttpStatus.CONFLICT,"진행 중인 계약만 포기할 수 있습니다."),
     CONTRACT_NOT_PENDING(HttpStatus.CONFLICT,"시작 전인 계약만 포기할 수 있습니다."),
-    CANNOT_ABANDON_STARTED_CONTRACT(HttpStatus.CONFLICT, "이미 시작된 계약은 포기할 수 없습니다."),
     CANNOT_WITHDRAW_PARTICIPATION_AFTER_START(HttpStatus.CONFLICT, "계약이 시작히기 전에만 계약 감독을 철회할 수 있습니다."),
     CANNOT_ABANDON_PARTICIPATION_UNLESS_IN_PROGRESS(HttpStatus.CONFLICT, "계약 진행중에만 감독을 중도 포기할 수 있습니다."),
 
