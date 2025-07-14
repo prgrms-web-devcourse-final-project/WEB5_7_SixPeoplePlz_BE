@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
-import me.jinjjahalgae.domain.notification.usecase.create.CreateNotificationUseCase;
-import me.jinjjahalgae.domain.notification.usecase.create.dto.NotificationCreateRequest;
+import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
 import me.jinjjahalgae.global.storage.redis.usecase.invite.delete.DeleteInviteInfoUseCase;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +20,7 @@ public class VerifyOneOffContractSignatureUseCaseImpl implements VerifyOneOffCon
 
     private final ContractRepository contractRepository;
     private final DeleteInviteInfoUseCase deleteInviteInfoUseCase;
-    private final CreateNotificationUseCase createNotificationUseCase;
+    private final ApplicationEventPublisher eventPublisher;
 
     /**
      * 단건 계약(oneOff=true)의 서명을 검증합니다
@@ -38,9 +38,9 @@ public class VerifyOneOffContractSignatureUseCaseImpl implements VerifyOneOffCon
             // 조회된 모든 감독자 서명안된 단건 계약을 삭제
             contractRepository.delete(contract);
 
-            // 자동 삭제 알림 전송
-            createNotificationUseCase.execute(
-                    new NotificationCreateRequest(NotificationType.CONTRACT_AUTO_DELETED, contract.getId(), contract.getUser().getId())
+            // 자동 삭제 알림 이벤트 발행
+            eventPublisher.publishEvent(
+                new NotificationEvent(NotificationType.CONTRACT_AUTO_DELETED, contract.getId(), contract.getUser().getId())
             );
 
             // 초대 정보 삭제

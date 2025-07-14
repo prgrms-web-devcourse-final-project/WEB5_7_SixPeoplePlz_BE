@@ -14,6 +14,8 @@ import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import me.jinjjahalgae.domain.notification.enums.NotificationType;
+import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
 
 @Service
 @RequiredArgsConstructor
@@ -60,6 +62,13 @@ public class CreateFeedbackUseCaseImpl implements CreateFeedbackUseCase {
         if (isAllSupervisorsChecked) {
             eventPublisher.publishEvent(new HandleProofEvent(proof.getId()));
         }
+
+        // 피드백 추가 알림 이벤트 발행
+        eventPublisher.publishEvent(new NotificationEvent(
+            NotificationType.FEEDBACK_ADDED,
+            proof.getContractId(),
+            userId
+        ));
     }
 
     // 유효한 감독자 권한이 존재하는지 검사

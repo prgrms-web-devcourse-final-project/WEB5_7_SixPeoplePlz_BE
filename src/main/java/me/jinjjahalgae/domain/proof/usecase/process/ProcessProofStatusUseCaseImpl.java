@@ -8,11 +8,11 @@ import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.feedback.entity.Feedback;
 import me.jinjjahalgae.domain.feedback.repository.FeedbackRepository;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
-import me.jinjjahalgae.domain.notification.usecase.create.CreateNotificationUseCase;
-import me.jinjjahalgae.domain.notification.usecase.create.dto.NotificationCreateRequest;
+import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
 import me.jinjjahalgae.global.exception.ErrorCode;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +26,7 @@ public class ProcessProofStatusUseCaseImpl implements ProcessProofStatusUseCase 
     private final FeedbackRepository feedbackRepository;
     private final ContractRepository contractRepository;
 
-    private final CreateNotificationUseCase createNotificationUseCase;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -50,9 +50,9 @@ public class ProcessProofStatusUseCaseImpl implements ProcessProofStatusUseCase 
 
             // 인증 계산 결과에 따른 알림 전송
             if(proof.isApproved()) {
-                createNotificationUseCase.execute(new NotificationCreateRequest(NotificationType.PROOF_ACCEPTED, contract.getId(), contract.getUser().getId()));
+                eventPublisher.publishEvent(new NotificationEvent(NotificationType.PROOF_ACCEPTED, contract.getId(), contract.getUser().getId()));
             }else{
-                createNotificationUseCase.execute(new NotificationCreateRequest(NotificationType.PROOF_REJECTED, contract.getId(), contract.getUser().getId()));
+                eventPublisher.publishEvent(new NotificationEvent(NotificationType.PROOF_REJECTED, contract.getId(), contract.getUser().getId()));
             }
 
             // "단건 계약일 때" 인증 결과에 따라 즉시 계약 상태 처리 + 알림 전송
@@ -60,11 +60,11 @@ public class ProcessProofStatusUseCaseImpl implements ProcessProofStatusUseCase 
                 if(proof.isApproved()) {
                     contract.complete();
 
-                    createNotificationUseCase.execute(new NotificationCreateRequest(NotificationType.CONTRACT_ENDED_SUCCESS, contract.getId(), contract.getUser().getId()));
+                    eventPublisher.publishEvent(new NotificationEvent(NotificationType.CONTRACT_ENDED_SUCCESS, contract.getId(), contract.getUser().getId()));
                 } else {
                     contract.fail();
-
-                    createNotificationUseCase.execute(new NotificationCreateRequest(NotificationType.CONTRACT_ENDED_FAIL, contract.getId(), contract.getUser().getId()));
+                    
+                    eventPublisher.publishEvent(new NotificationEvent(NotificationType.CONTRACT_ENDED_FAIL, contract.getId(), contract.getUser().getId()));
                 }
             }
         } catch (Exception e) {

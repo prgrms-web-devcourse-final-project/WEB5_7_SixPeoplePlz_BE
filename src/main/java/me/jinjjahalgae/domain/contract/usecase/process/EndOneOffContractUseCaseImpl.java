@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
-import me.jinjjahalgae.domain.notification.usecase.create.CreateNotificationUseCase;
-import me.jinjjahalgae.domain.notification.usecase.create.dto.NotificationCreateRequest;
+import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +18,7 @@ import java.util.List;
 public class EndOneOffContractUseCaseImpl implements EndOneOffContractUseCase {
 
     private final ContractRepository contractRepository;
-    private final CreateNotificationUseCase createNotificationUseCase;
+    private final ApplicationEventPublisher eventPublisher;
 
     /**
      * 단건 계약(oneOff=true)이 시작되고 24시간이 지났는지 확인하고 계약 상태를 결정합니다.
@@ -35,9 +35,9 @@ public class EndOneOffContractUseCaseImpl implements EndOneOffContractUseCase {
         for (Contract contract : completableContracts) {
             contract.complete();
 
-            // 계약 성공 알림 발송
-            createNotificationUseCase.execute(
-                    new NotificationCreateRequest(NotificationType.CONTRACT_ENDED_SUCCESS, contract.getId(), contract.getUser().getId())
+            // 계약 성공 알림 이벤트 발행
+            eventPublisher.publishEvent(
+                new NotificationEvent(NotificationType.CONTRACT_ENDED_SUCCESS, contract.getId(), contract.getUser().getId())
             );
         }
 
@@ -47,9 +47,9 @@ public class EndOneOffContractUseCaseImpl implements EndOneOffContractUseCase {
         for (Contract contract : failableContracts) {
             contract.fail();
 
-            // 계약 실패 알림 발송
-            createNotificationUseCase.execute(
-                    new NotificationCreateRequest(NotificationType.CONTRACT_ENDED_FAIL, contract.getId(), contract.getUser().getId())
+            // 계약 실패 알림 이벤트 발행
+            eventPublisher.publishEvent(
+                new NotificationEvent(NotificationType.CONTRACT_ENDED_FAIL, contract.getId(), contract.getUser().getId())
             );
         }
     }
