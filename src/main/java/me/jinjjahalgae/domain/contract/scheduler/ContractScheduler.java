@@ -158,7 +158,7 @@ public class ContractScheduler {
 
         if (waitingContracts.isEmpty()) return;
 
-        // 마지막 주 주간 실패 업데이트
+        // 마지막 주차 실패 횟수 업데이트
         for (Contract contract : waitingContracts) {
             long totalDays = ChronoUnit.DAYS.between(contract.getStartDate().toLocalDate(), contract.getEndDate().toLocalDate()) + 1;
 
