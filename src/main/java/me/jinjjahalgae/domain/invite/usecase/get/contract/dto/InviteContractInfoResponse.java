@@ -5,7 +5,7 @@ import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.invite.model.SupervisorResponse;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -71,10 +71,10 @@ public record InviteContractInfoResponse(
         String uuid,
 
         @Schema(description = "계약 시작일")
-        LocalDateTime startDate,
+        Instant startDate,
 
         @Schema(description = "계약 종료일")
-        LocalDateTime endDate,
+        Instant endDate,
 
         @Schema(description = "목표 제목")
         String title,
