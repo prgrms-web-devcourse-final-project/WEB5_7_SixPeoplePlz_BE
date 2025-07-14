@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -135,7 +134,7 @@ FROM Proof p
 WHERE p.contractId = :contractId
 AND p.proofId IN :proofIds
 """)
-    List<Long> findReProofIdsByMonth(@Param("contractId")Long contractId, List<Long> proofIds);
+    List<Long> findReProofIdsByMonth(@Param("contractId")Long contractId, @Param("proofIds")List<Long> proofIds);
 
     /**
      * 감독자용 해당 달의 모든 원본 인증 id를 가져오는 쿼리
