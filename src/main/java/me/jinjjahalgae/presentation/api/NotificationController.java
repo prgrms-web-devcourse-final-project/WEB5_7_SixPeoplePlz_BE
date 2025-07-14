@@ -39,7 +39,7 @@ public class NotificationController implements NotificationControllerDocs {
     @GetMapping
     public CommonResponse<Page<NotificationGetResponse>> getAllNotifications(
             @AuthenticationPrincipal CustomJwtPrincipal principal,
-            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         return CommonResponse.success(getAllNotification.execute(principal.getUserId(), pageable));
     }
