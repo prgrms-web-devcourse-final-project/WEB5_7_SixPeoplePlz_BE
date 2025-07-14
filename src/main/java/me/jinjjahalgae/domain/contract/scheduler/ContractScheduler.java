@@ -84,52 +84,6 @@ public class ContractScheduler {
         bulkdeleteInviteInfoUseCase.execute(allProcessedIds);
     }
 
-    // 계약 종료 스케줄러
-    @Scheduled(cron = "0 59 23 * * *")
-    @Transactional
-    public void endContracts() {
-        LocalDate today = LocalDate.now();
-        List<Contract> progressingContracts = contractRepository.findByStatusAndEndDateOn(ContractStatus.IN_PROGRESS, today);
-
-        if (progressingContracts.isEmpty()) return;
-
-        Map<Boolean, List<Contract>> partitionedContractsByResult = progressingContracts.stream()
-                .collect(Collectors.partitioningBy(
-                        contract -> contract.getLife() >= contract.getCurrentFail()
-                ));
-
-        List<Contract> successContracts = partitionedContractsByResult.get(true);
-        List<Contract> failContracts = partitionedContractsByResult.get(false);
-
-        // 성공 계약 벌크 업데이트
-        if (!successContracts.isEmpty()) {
-            List<Long> successIds = successContracts.stream().map(Contract::getId).toList();
-            contractRepository.bulkUpdateStatus(successIds, ContractStatus.COMPLETED);
-
-            successContracts.forEach(contract ->
-                    eventPublisher.publishEvent(new NotificationEvent(
-                            NotificationType.CONTRACT_ENDED_SUCCESS,
-                            contract.getId(),
-                            contract.getUser().getId()
-                    ))
-            );
-        }
-
-        // 실패 계약 벌크 업데이트
-        if (!failContracts.isEmpty()) {
-            List<Long> failIds = failContracts.stream().map(Contract::getId).toList();
-            contractRepository.bulkUpdateStatus(failIds, ContractStatus.FAILED);
-
-            failContracts.forEach(contract ->
-                    eventPublisher.publishEvent(new NotificationEvent(
-                            NotificationType.CONTRACT_ENDED_FAIL,
-                            contract.getId(),
-                            contract.getUser().getId()
-                    ))
-            );
-        }
-    }
-
     // 주간 인증 상황을 점검하는 스케줄러
     @Scheduled(cron = "0 50 23 * * *")
     @Transactional
@@ -192,4 +146,73 @@ public class ContractScheduler {
         }
     }
 
+    // 계약 종료 스케줄러
+    @Scheduled(cron = "0 59 23 * * *")
+    @Transactional
+    public void endContracts() {
+        // 대기중인 인증이 "없는" 계약을 결과 대기중 상태로 변환
+        LocalDate today = LocalDate.now();
+        contractRepository.bulkUpdateCompletedContractsToWait(today);
+
+        List<Contract> waitingContracts = contractRepository.findByStatus(ContractStatus.WAIT_RESULT);
+
+        if (waitingContracts.isEmpty()) return;
+
+        // 마지막 주 주간 실패 업데이트
+        for (Contract contract : waitingContracts) {
+            long totalDays = ChronoUnit.DAYS.between(contract.getStartDate().toLocalDate(), contract.getEndDate().toLocalDate()) + 1;
+
+            if (totalDays % 7 > 0) { // 마지막 주가 7일 미만일 경우
+                // 마지막 주차 시작일 계산
+                long totalWeeks = totalDays / 7;
+                LocalDateTime startOfLastWeek = contract.getStartDate().plusDays(totalWeeks * 7);
+
+                // 마지막 주차의 인증 승인 횟수 계산
+                int successCount = proofRepository.countByContractIdAndStatusAndCreatedAtBetween(
+                        contract.getId(), ProofStatus.APPROVED, startOfLastWeek, contract.getEndDate());
+                if (successCount < contract.getProofPerWeek()) {
+                    contract.recordWeeklyFailure(contract.getProofPerWeek() - successCount);
+                }
+            }
+        }
+
+        Map<Boolean, List<Contract>> partitionedContractsByResult = waitingContracts.stream()
+                .collect(Collectors.partitioningBy(
+                        contract -> contract.getLife() >= contract.getCurrentFail()
+                ));
+
+        List<Contract> successContracts = partitionedContractsByResult.get(true);
+        List<Contract> failContracts = partitionedContractsByResult.get(false);
+
+        // 성공 계약 벌크 업데이트
+        if (!successContracts.isEmpty()) {
+            List<Long> successIds = successContracts.stream().map(Contract::getId).toList();
+            contractRepository.bulkUpdateStatus(successIds, ContractStatus.COMPLETED);
+
+            successContracts.forEach(contract ->
+                    eventPublisher.publishEvent(new NotificationEvent(
+                            NotificationType.CONTRACT_ENDED_SUCCESS,
+                            contract.getId(),
+                            contract.getUser().getId()
+                    ))
+            );
+        }
+
+        // 실패 계약 벌크 업데이트
+        if (!failContracts.isEmpty()) {
+            List<Long> failIds = failContracts.stream().map(Contract::getId).toList();
+            contractRepository.bulkUpdateStatus(failIds, ContractStatus.FAILED);
+
+            failContracts.forEach(contract ->
+                    eventPublisher.publishEvent(new NotificationEvent(
+                            NotificationType.CONTRACT_ENDED_FAIL,
+                            contract.getId(),
+                            contract.getUser().getId()
+                    ))
+            );
+        }
+
+        // 대기중인 인증이 "있는" 계약을 결과 대기중 상태로 변환
+        contractRepository.bulkUpdateApprovePendingContractsToWait(today);
+    }
 }

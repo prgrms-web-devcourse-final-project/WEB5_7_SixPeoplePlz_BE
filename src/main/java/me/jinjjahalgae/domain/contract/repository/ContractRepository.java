@@ -51,4 +51,36 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Contract c SET c.status = :status WHERE c.id IN :ids")
     void bulkUpdateStatus(@Param("ids") List<Long> ids, @Param("status") ContractStatus status);
+
+    /**
+     * 종료일이 오늘이고 처리할 인증이 "없는" 계약을 WAIT_RESULT(결과 대기)로 변경
+     * @param today 날짜
+     */
+    @Modifying(clearAutomatically = true)
+    @Query("""
+UPDATE Contract c
+SET c.status = 'WAIT_RESULT'
+WHERE c.status = 'IN_PROGRESS' AND FUNCTION('DATE', c.endDate) = :today
+AND NOT EXISTS (
+    SELECT p FROM Proof p
+    WHERE p.contractId = c.id AND p.status = 'APPROVE_PENDING'
+)
+""")
+    void bulkUpdateCompletedContractsToWait(@Param("today") LocalDate today);
+
+    /**
+     * 종료일이 오늘이고 처리할 인증이 "있는" 계약을 WAIT_RESULT(결과 대기)로 변경
+     * @param today 날짜
+     */
+    @Modifying(clearAutomatically = true)
+    @Query("""
+UPDATE Contract c
+SET c.status = 'WAIT_RESULT'
+WHERE c.status = 'IN_PROGRESS' AND FUNCTION('DATE', c.endDate) = :today
+AND EXISTS (
+    SELECT p FROM Proof p
+    WHERE p.contractId = c.id AND p.status = 'APPROVE_PENDING'
+)
+""")
+    void bulkUpdateApprovePendingContractsToWait(@Param("today") LocalDate today);
 }
