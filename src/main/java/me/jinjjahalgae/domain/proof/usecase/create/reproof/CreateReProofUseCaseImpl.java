@@ -55,6 +55,11 @@ public class CreateReProofUseCaseImpl implements CreateReProofUseCase {
             throw ErrorCode.CONTRACT_NOT_STARTED.domainException("시작 전인 계약에 인증 생성을 요청하였습니다");
         }
 
+        // 계약 종료 2일 전 재인증 생성 요청 시 예외
+        if(isWithinFinal2Days(contract)) {
+            throw ErrorCode.REPROOF_NOT_ALLOWED.domainException("계약 종료 2일 전부터는 재인증 생성이 불가능합니다.");
+        }
+
         // 해당 계약에 대해 오늘자 재인증이 존재하는 지 검증
         boolean isReProofExist = todayReProofExist(contract.getId());
         if(isReProofExist) {
@@ -95,5 +100,12 @@ public class CreateReProofUseCaseImpl implements CreateReProofUseCase {
         LocalDateTime startOfDay = today.atStartOfDay();
         LocalDateTime endOfDay = today.plusDays(1).atStartOfDay();
         return proofRepository.existsReProofByContractIdAndCreatedAtToday(contractId, startOfDay, endOfDay);
+    }
+
+    // 계약 종료일 2일 전부터 재인증 생성 불가능을 검증하는 메서드
+    private boolean isWithinFinal2Days(Contract contract) {
+        LocalDate now = LocalDate.now();
+        LocalDate endDate = contract.getEndDate().toLocalDate();
+        return !now.isBefore(endDate.minusDays(2));
     }
 }
