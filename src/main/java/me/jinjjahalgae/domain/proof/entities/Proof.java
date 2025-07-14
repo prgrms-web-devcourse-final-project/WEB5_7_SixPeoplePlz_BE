@@ -122,4 +122,9 @@ public class Proof extends BaseEntity {
     private void reject(){
         this.status = ProofStatus.REJECTED;
     }
+
+    // 인증 상태가 APPROVED 인지
+    public boolean isApproved() {
+        return this.status == ProofStatus.APPROVED;
+    }
 }

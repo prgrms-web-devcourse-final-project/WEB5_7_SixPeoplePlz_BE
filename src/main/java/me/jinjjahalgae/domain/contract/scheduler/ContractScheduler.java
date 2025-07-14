@@ -9,8 +9,6 @@ import me.jinjjahalgae.domain.notification.usecase.create.CreateNotificationUseC
 import me.jinjjahalgae.domain.notification.usecase.create.dto.NotificationCreateRequest;
 import me.jinjjahalgae.global.storage.redis.usecase.invite.delete.DeleteInviteInfoUseCase;
 import me.jinjjahalgae.global.storage.redis.usecase.invite.get.GetJoinedSupervisorsUseCase;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,12 +25,12 @@ public class ContractScheduler {
     private final CreateNotificationUseCase createNotificationUseCase;
     private final GetJoinedSupervisorsUseCase getJoinedSupervisorsUseCase;
 
+    // 시작일로 대기중인 기본계약(oneOff=false) 목록 조회
     @Scheduled(cron = "0 1 0 * * *")
     @Transactional
     public void startContracts() {
-        // 시작일로 대기중 계약 목록 조회
         LocalDate today = LocalDate.now();
-        List<Contract> pendingContracts = contractRepository.findByStatusAndStartDateOn(ContractStatus.PENDING, today);
+        List<Contract> pendingContracts = contractRepository.findByStatusAndStartDateOnAndOneOff(ContractStatus.PENDING, today, false);
 
         if (pendingContracts.isEmpty()) {
             return;
@@ -53,12 +51,13 @@ public class ContractScheduler {
         }
     }
 
+    // 종료일로 진행중인 기본계약(oneOff=false) 목록 조회
     @Scheduled(cron = "0 59 23 * * *")
     @Transactional
     public void endContracts() {
-        // 종료일로 진행중 계약 목록 조회
         LocalDate today = LocalDate.now();
-        List<Contract> progressingContracts = contractRepository.findByStatusAndEndDateOn(ContractStatus.IN_PROGRESS, today);
+        
+        List<Contract> progressingContracts = contractRepository.findByStatusAndEndDateOnAndOneOff(ContractStatus.IN_PROGRESS, today, false);
 
         if (progressingContracts.isEmpty()) {
             return;

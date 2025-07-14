@@ -3,12 +3,16 @@ package me.jinjjahalgae.domain.participation.usecase.create.supervisor;
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
+import me.jinjjahalgae.domain.notification.enums.NotificationType;
+import me.jinjjahalgae.domain.notification.usecase.create.CreateNotificationUseCase;
+import me.jinjjahalgae.domain.notification.usecase.create.dto.NotificationCreateRequest;
 import me.jinjjahalgae.domain.participation.repository.ParticipationRepository;
 import me.jinjjahalgae.domain.participation.usecase.common.dto.ParticipationCreateRequest;
 import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.global.exception.ErrorCode;
+import me.jinjjahalgae.global.storage.redis.usecase.invite.delete.DeleteInviteInfoUseCase;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -20,6 +24,9 @@ public class CreateSupervisorParticipationUseCaseImpl implements CreateSuperviso
     private final ParticipationRepository participationRepository;
     private final ContractRepository contractRepository;
     private final RedisTemplate<String, Object> redisTemplate;
+
+    private final CreateNotificationUseCase createNotificationUseCase;
+    private final DeleteInviteInfoUseCase deleteInviteInfoUseCase;
 
     @Value("${spring.data.redis.contract-supervisors}")
     private String SUPERVISOR_COUNT_PREFIX;
@@ -65,5 +72,19 @@ public class CreateSupervisorParticipationUseCaseImpl implements CreateSuperviso
 
         // redis의 해당 계약 감독자 자리 감소
         redisTemplate.opsForValue().decrement(supervisorCountKey); // decr 연산으로 원자성 보장
+
+        // 만약 단발성 계약이면 바로 시작처리
+        if (contract.isOneOff()) {
+            // 감독자 수를 1로 설정하고 계약 시작
+            contract.start(1);
+
+            // 계약 시작 알림 발송
+            createNotificationUseCase.execute(
+                    new NotificationCreateRequest(NotificationType.CONTRACT_STARTED, contract.getId(), contract.getUser().getId())
+            );
+
+            // 초대 정보 삭제
+            deleteInviteInfoUseCase.execute(contract.getId());
+        }
     }
 }
