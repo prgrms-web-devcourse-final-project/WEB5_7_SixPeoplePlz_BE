@@ -30,6 +30,9 @@ public record ContractorProofListResponse(
         @Schema(description = "인증이 생성된 날짜 (달력 일 단위 매핑용 yyyy-MM-dd)")
         String date,
 
+        @Schema(description = "계약의 종료일 (종료 2일 전 재인증 요청 불가 검증에 사용할 필드)")
+        LocalDateTime endDate,
+
         @Schema(description = "원본 인증 데이터")
         ProofSimpleResponse originalProof,
 

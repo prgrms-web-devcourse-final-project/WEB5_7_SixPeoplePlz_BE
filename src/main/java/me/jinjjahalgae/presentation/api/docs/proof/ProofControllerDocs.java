@@ -168,7 +168,7 @@ public interface ProofControllerDocs {
 
     @Operation(
             summary = "재인증 생성",
-            description = "요청한 데이터로 재인증 객체를 생성하여 저장"
+            description = "요청한 데이터로 재인증 객체를 생성하여 저장 (계약 종료 2일 전부터는 재인증 요청이 불가능)"
     )
     @ApiResponses(value = {
             @ApiResponse(
