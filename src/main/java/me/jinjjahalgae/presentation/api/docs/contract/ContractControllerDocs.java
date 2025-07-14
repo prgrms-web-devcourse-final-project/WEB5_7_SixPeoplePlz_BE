@@ -13,6 +13,7 @@ import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractRequest;
 import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractResponse;
 import me.jinjjahalgae.domain.contract.usecase.get.detail.dto.ContractDetailResponse;
 import me.jinjjahalgae.domain.contract.usecase.get.list.dto.ContractListResponse;
+import me.jinjjahalgae.domain.contract.usecase.get.preview.dto.ContractPreviewResponse;
 import me.jinjjahalgae.domain.contract.usecase.update.dto.ContractUpdateRequest;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.global.common.CommonResponse;
@@ -21,8 +22,6 @@ import me.jinjjahalgae.global.security.jwt.CustomJwtPrincipal;
 import me.jinjjahalgae.presentation.api.docs.NoContentSwaggerResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import me.jinjjahalgae.domain.contract.usecase.get.preview.dto.ContractPreviewResponse;
-import me.jinjjahalgae.presentation.api.docs.GetContractPreviewSwaggerResponse;
 
 import java.util.List;
 
