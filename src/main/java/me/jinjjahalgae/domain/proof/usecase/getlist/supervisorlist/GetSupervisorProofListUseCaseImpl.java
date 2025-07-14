@@ -52,7 +52,7 @@ public class GetSupervisorProofListUseCaseImpl implements GetSupervisorProofList
         List<Proof> proofs = proofRepository.findProofsWithProofImagesByIds(proofIds);
 
         // 입력 받은 달에 해당하는 모든 재인증 id들 (감독자가 피드백을 한 것만)
-        List<Long> reProofIds = proofRepository.findReProofIdsByMonthForSupervisor(contractId, startDate, endDate, userId);
+        List<Long> reProofIds = proofRepository.findReProofIdsByMonthForSupervisor(contractId, proofIds, userId);
 
         // 감독자가 처리한 재인증 객체들
         List<Proof> reProofs = proofRepository.findProofsWithProofImagesByIds(reProofIds);

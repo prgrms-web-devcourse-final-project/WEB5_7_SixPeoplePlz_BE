@@ -66,7 +66,7 @@ class GetContractorProofListUseCaseUnitTest {
         when(contractRepository.existsByIdAndUserId(contractId, userId)).thenReturn(true);
         when(proofRepository.findOriginalProofIdsByMonth(eq(contractId), any(), any())).thenReturn(proofIds);
         when(proofRepository.findProofsWithProofImagesByIds(proofIds)).thenReturn(proofs);
-        when(proofRepository.findReProofIdsByMonth(eq(contractId), any(), any())).thenReturn(reProofIds);
+        when(proofRepository.findReProofIdsByMonth(eq(contractId), proofIds)).thenReturn(reProofIds);
         when(proofRepository.findProofsWithProofImagesByIds(reProofIds)).thenReturn(reProofs);
 
         // when
@@ -95,7 +95,7 @@ class GetContractorProofListUseCaseUnitTest {
         when(contractRepository.existsByIdAndUserId(contractId, userId)).thenReturn(true);
         when(proofRepository.findOriginalProofIdsByMonth(eq(contractId), any(), any())).thenReturn(List.of());
         when(proofRepository.findProofsWithProofImagesByIds(any())).thenReturn(List.of());
-        when(proofRepository.findReProofIdsByMonth(eq(contractId), any(), any())).thenReturn(List.of());
+        when(proofRepository.findReProofIdsByMonth(eq(contractId), any())).thenReturn(List.of());
 
         // when
         List<ContractorProofListResponse> result = getContractorProofListUseCase.execute(contractId, year, month, userId);
@@ -118,7 +118,7 @@ class GetContractorProofListUseCaseUnitTest {
         when(contractRepository.existsByIdAndUserId(contractId, userId)).thenReturn(true);
         when(proofRepository.findOriginalProofIdsByMonth(eq(contractId), any(), any())).thenReturn(proofIds);
         when(proofRepository.findProofsWithProofImagesByIds(proofIds)).thenReturn(proofs);
-        when(proofRepository.findReProofIdsByMonth(eq(contractId), any(), any())).thenReturn(List.of());
+        when(proofRepository.findReProofIdsByMonth(eq(contractId), proofIds)).thenReturn(List.of());
         when(proofRepository.findProofsWithProofImagesByIds(List.of())).thenReturn(List.of());
 
         // when
