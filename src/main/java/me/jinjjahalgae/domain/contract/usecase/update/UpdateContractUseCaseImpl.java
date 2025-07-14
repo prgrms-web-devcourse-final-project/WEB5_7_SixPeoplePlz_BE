@@ -1,5 +1,6 @@
 package me.jinjjahalgae.domain.contract.usecase.update;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UpdateContractUseCaseImpl implements UpdateContractUseCase {
 
     private final ContractRepository contractRepository;
+    private final EntityManager entityManager;
 
     @Override
     public void execute(Long userId, Long contractId, ContractUpdateRequest request) {
@@ -43,6 +45,9 @@ public class UpdateContractUseCaseImpl implements UpdateContractUseCase {
                     request.endDate(),
                     ContractType.valueOf(request.type())
             );
+
+            entityManager.flush();
+
         } catch (OptimisticLockingFailureException e) {
             throw ErrorCode.CONTRACT_STATUS_CONFLICT.serviceException(
                     "계약 상태 변경 중 충돌이 발생했습니다. 다시 시도해주세요.");
