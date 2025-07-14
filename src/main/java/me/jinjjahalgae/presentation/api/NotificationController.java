@@ -35,6 +35,7 @@ public class NotificationController implements NotificationControllerDocs {
      * @param pageable
      * @return
      */
+    @Override
     @GetMapping
     public CommonResponse<Page<NotificationGetResponse>> getAllNotifications(
             @AuthenticationPrincipal CustomJwtPrincipal principal,
@@ -48,6 +49,7 @@ public class NotificationController implements NotificationControllerDocs {
      * @param principal
      * @return
      */
+    @Override
     @GetMapping("/unread")
     public CommonResponse<Long> countUnreadNotificationByUserId(
             @AuthenticationPrincipal CustomJwtPrincipal principal
@@ -60,6 +62,7 @@ public class NotificationController implements NotificationControllerDocs {
      * @param principal
      * @return 없음
      */
+    @Override
     @DeleteMapping
     public CommonResponse<Void> deleteAllNotification(@AuthenticationPrincipal CustomJwtPrincipal principal) {
         deleteAllNotification.execute(principal.getUserId());
@@ -71,6 +74,7 @@ public class NotificationController implements NotificationControllerDocs {
      * @param notificationId
      * @return 없음
      */
+    @Override
     @DeleteMapping("/{notificationId}")
     public CommonResponse<Void> deleteSingleNotification(@PathVariable Long notificationId) {
         deleteSingleNotification.execute(notificationId);
@@ -82,6 +86,7 @@ public class NotificationController implements NotificationControllerDocs {
      * @param notificationId
      * @return 없음
      */
+    @Override
     @PatchMapping("/{notificationId}/read")
     public CommonResponse<Void> markSingleNotificationAsRead(@PathVariable Long notificationId) {
         markSingleNotificationAsRead.execute(notificationId);
