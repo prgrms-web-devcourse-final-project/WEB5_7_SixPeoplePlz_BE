@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.feedback.dto;
+package me.jinjjahalgae.domain.feedback.usecase.common.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import me.jinjjahalgae.domain.feedback.enums.FeedbackStatus;
