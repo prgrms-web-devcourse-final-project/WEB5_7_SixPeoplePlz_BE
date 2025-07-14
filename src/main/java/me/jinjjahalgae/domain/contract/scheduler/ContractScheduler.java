@@ -7,6 +7,7 @@ import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
 import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
+import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
 import me.jinjjahalgae.global.storage.redis.usecase.invite.bulk.BulkDeleteInviteInfoUseCase;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -128,39 +130,66 @@ public class ContractScheduler {
         }
     }
 
-    // 주간 인증상황 점검 스케줄러
+    // 주간 인증 상황을 점검하는 스케줄러
     @Scheduled(cron = "0 50 23 * * *")
     @Transactional
     public void checkProgressingContracts() {
         LocalDate today = LocalDate.now();
         List<Contract> progressingContracts = contractRepository.findByStatus(ContractStatus.IN_PROGRESS);
 
-        //재인증 어카지?
-        //일주일로 하면 재인증이 있거나 인증이 종료가 안됐거나 나중에 재인증으로 인증이 되면?
-        //와 이거 큰일이네
-        //계산을 일주일 + 72시간 지나고 계산?
-        //계약 종료에도 같은 문제가 있어요...
-
         if (progressingContracts.isEmpty()) return;
 
         for (Contract contract : progressingContracts) {
-            // 계약 시작일로부터 오늘까지 몇 일이 지났는지 계산
             long daysPassed = ChronoUnit.DAYS.between(contract.getStartDate().toLocalDate(), today);
 
-            // 7일째 되는 날마다 (7, 14, 21 등) 주간 점검 수행
-            if (daysPassed > 0 && (daysPassed + 1) % 7 == 0) {
-                LocalDateTime endOfWeek = today.atTime(23, 59, 59);
-                LocalDateTime startOfWeek = endOfWeek.minusDays(6).withHour(0).withMinute(0).withSecond(0);
+            // (7일 + 3일)이 지난 후 이전 7일에 대한 점검 수행
+            // 10일째 되는 날 -> 1~7일차 점검, 17일째 되는 날 -> 8~14일차 점검
+            if (daysPassed >= (7 + 3) && (daysPassed - 3 + 1) % 7 == 0) {
+                // n주차 계산
+                long week = (daysPassed - 3 + 1) / 7;
 
-                // 지난 한 주간의 성공한 인증 횟수 조회
-                int weeklySuccessCount = proofRepository.countByContractIdAndStatusAndCreatedAtBetween(
-                        contract.getId(), ProofStatus.APPROVED, startOfWeek, endOfWeek);
+                // 점검할 주의 시작일과 종료일 계산
+                LocalDateTime startOfWeek = contract.getStartDate().toLocalDate().plusDays((week - 1) * 7).atStartOfDay();
+                LocalDateTime endOfWeek = startOfWeek.plusDays(7).minusNanos(1);
 
-                // 주간 필수 인증 횟수보다 적으면 실패 처리
-                if (weeklySuccessCount < contract.getProofPerWeek()) {
-                    contract.recordWeeklyFailure(contract.getProofPerWeek() - weeklySuccessCount);
+                // 주에 생성된 원본 인증들을 모두 조회
+                List<Proof> originalProofs = proofRepository.findOriginalProofsBetween(contract.getId(), startOfWeek, endOfWeek);
+
+                // 인증이 없으면 바로 다음 계약으로
+                if (originalProofs.isEmpty()) {
+                    contract.recordWeeklyFailure(contract.getProofPerWeek());
+                    continue;
+                }
+
+                List<Long> originalProofIds = originalProofs.stream().map(Proof::getId).toList();
+                List<Proof> reProofs = proofRepository.findReProofsByOriginalProofIds(originalProofIds);
+
+                int finalSuccessCount = 0;
+                for (Proof original : originalProofs) {
+                    // 전체 재인증 목록에서 현재 원본 인증에 해당하는 재인증을 찾음
+                    Optional<Proof> reProofOptional = reProofs.stream()
+                            .filter(rp -> original.getId().equals(rp.getProofId()))
+                            .findFirst();
+
+                    if (reProofOptional.isPresent()) {
+                        // 재인증이 승인된 경우 성공
+                        if (reProofOptional.get().getStatus() == ProofStatus.APPROVED) {
+                            finalSuccessCount++;
+                        }
+                    } else {
+                        // 재인증이 없고 원본 인증이 승인된 경우 성공
+                        if (original.getStatus() == ProofStatus.APPROVED) {
+                            finalSuccessCount++;
+                        }
+                    }
+                }
+
+                // 주간 필수 인증 횟수와 비교해 실패 처리
+                if (finalSuccessCount < contract.getProofPerWeek()) {
+                    contract.recordWeeklyFailure(contract.getProofPerWeek() - finalSuccessCount);
                 }
             }
         }
     }
+
 }

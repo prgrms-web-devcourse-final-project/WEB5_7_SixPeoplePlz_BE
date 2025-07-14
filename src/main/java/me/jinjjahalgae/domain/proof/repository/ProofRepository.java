@@ -213,4 +213,30 @@ AND p.createdAt BETWEEN :startDate AND :endDate
             @Param("endDate") LocalDateTime endDate
     );
 
+    /**
+     * 주어진 기간 동안의 원본 인증을 가져오는 쿼리
+     * @param contractId 계약 id
+     * @param startDate 시작일
+     * @param endDate 종료일
+     * @return {@link Proof}
+     */
+    @Query("""
+SELECT p
+FROM Proof p
+WHERE p.contractId = :contractId
+AND p.proofId IS NULL
+AND p.createdAt BETWEEN :startDate AND :endDate
+""")
+    List<Proof> findOriginalProofsBetween(@Param("contractId") Long contractId, 
+                                          @Param("startDate") LocalDateTime startDate, 
+                                          @Param("endDate") LocalDateTime endDate);
+
+    /**
+     * 주어진 원본 인증 id 목록에 해당하는 모든 재인증을 가져오는 쿼리
+     * @param proofIds 원본 인증의 id 목록
+     * @return {@link Proof}
+     */
+    @Query("SELECT p FROM Proof p WHERE p.proofId IN :proofIds")
+    List<Proof> findReProofsByOriginalProofIds(@Param("proofIds") List<Long> proofIds);
+
 }
