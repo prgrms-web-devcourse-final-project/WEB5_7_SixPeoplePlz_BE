@@ -185,6 +185,54 @@ AND f.userId = :userId
                                                   @Param("proofIds") List<Long> proofIds,
                                                   @Param("userId") Long userId);
 
+    /**
+     * 주어진 기간 동안의 특정 상태를 가진 인증의 수를 가져오는 쿼리
+     * @param contractId 계약 ID
+     * @param status 조회할 인증 상태
+     * @param startDate 기간 시작일
+     * @param endDate 기간 종료일
+     * @return int
+     */
+    @Query("""
+SELECT COUNT(p)
+FROM Proof p
+WHERE p.contractId = :contractId
+AND p.status = :status
+AND p.createdAt BETWEEN :startDate AND :endDate
+""")
+    int countByContractIdAndStatusAndCreatedAtBetween(
+            @Param("contractId") Long contractId,
+            @Param("status") ProofStatus status,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
+
+    /**
+     * 주어진 기간 동안의 원본 인증을 가져오는 쿼리
+     * @param contractId 계약 id
+     * @param startDate 시작일
+     * @param endDate 종료일
+     * @return {@link Proof}
+     */
+    @Query("""
+SELECT p
+FROM Proof p
+WHERE p.contractId = :contractId
+AND p.proofId IS NULL
+AND p.createdAt BETWEEN :startDate AND :endDate
+""")
+    List<Proof> findOriginalProofsBetween(@Param("contractId") Long contractId, 
+                                          @Param("startDate") LocalDateTime startDate, 
+                                          @Param("endDate") LocalDateTime endDate);
+
+    /**
+     * 주어진 원본 인증 id 목록에 해당하는 모든 재인증을 가져오는 쿼리
+     * @param proofIds 원본 인증의 id 목록
+     * @return {@link Proof}
+     */
+    @Query("SELECT p FROM Proof p WHERE p.proofId IN :proofIds")
+    List<Proof> findReProofsByOriginalProofIds(@Param("proofIds") List<Long> proofIds);
+
     @Query("SELECT p FROM Proof p WHERE p.createdAt <= :deadline AND p.status = 'APPROVE_PENDING'")
     Page<Proof> findProofsPendingOver24Hours(
             @Param("deadline") LocalDateTime deadline,
@@ -194,4 +242,5 @@ AND f.userId = :userId
     @Modifying
     @Query("UPDATE Proof p SET p.status = :status WHERE p.id IN :proofIds")
     void updateProofStatus(@Param("proofIds") List<Long> proofIds, @Param("status") ProofStatus status);
+
 }

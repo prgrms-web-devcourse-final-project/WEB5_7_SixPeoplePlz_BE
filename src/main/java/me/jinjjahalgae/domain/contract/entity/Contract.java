@@ -243,4 +243,9 @@ public class Contract extends BaseEntity {
     public int getRemainingLife() {
         return Math.max(0, this.life - this.currentFail);
     }
+
+    // 인증 실패 횟수 증가
+    public void recordWeeklyFailure(int failCounts) {
+        this.currentFail += failCounts;
+    }
 }
