@@ -37,4 +37,10 @@ WHERE p.contract_id = :contractId
   AND NOT EXISTS (SELECT 1 FROM feedback f WHERE f.proof_id = :proofId AND f.user_id = p.user_id)""",
             nativeQuery = true)
     void createAutoApprovalFeedbacks(@Param("proofId") Long proofId, @Param("contractId") Long contractId, @Param("now") LocalDateTime now);
+
+    // 인증id와 userid로 피드백 찾기 (이미 피드백을 한지 확인 여부)
+    boolean existsByProofIdAndUserId(Long proofId, Long userId);
+
+    // 인증 id로 피드백들 찾기
+    List<Feedback> findByProofId(Long proofId);
 }

@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.participation.usecase.common.dto;
+package me.jinjjahalgae.domain.participation.usecase.create.contractor.dto;
 
 import me.jinjjahalgae.domain.participation.enums.Role;
 import java.time.LocalDateTime;
@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
     title = "참여(서명) 응답",
     description = "계약 참여자의 서명 정보를 담은 응답 DTO"
 )
-public record ParticipationResponse(
+public record CreateContractorParticipationResponse(
         @Schema(description = "참여 ID", example = "1")
         Long id,
 
