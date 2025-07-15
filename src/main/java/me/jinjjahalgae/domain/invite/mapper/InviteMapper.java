@@ -6,6 +6,7 @@ import me.jinjjahalgae.domain.invite.usecase.get.contract.dto.InviteContractInfo
 import me.jinjjahalgae.domain.invite.usecase.create.invite.dto.InviteLinkResponse;
 import me.jinjjahalgae.domain.invite.model.SupervisorResponse;
 import me.jinjjahalgae.domain.participation.enums.Role;
+import me.jinjjahalgae.global.util.DateTimeConverter;
 
 import java.util.List;
 
@@ -46,8 +47,8 @@ public class InviteMapper {
                 contract.getUser().getName(),
                 null, // 서명 완료 여부만 보여주니 이미지 키는 null로 처리
                 contract.getUuid(),
-                contract.getStartDate(),
-                contract.getEndDate(),
+                DateTimeConverter.toInstant(contract.getStartDate()),
+                DateTimeConverter.toInstant(contract.getEndDate()),
                 contract.getTitle(),
                 contract.getGoal(),
                 contract.getPenalty(),

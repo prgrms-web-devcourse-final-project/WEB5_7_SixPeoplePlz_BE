@@ -30,6 +30,8 @@ spring:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 50
+        jdbc:
+          time_zone: UTC
 
 # 소셜 로그인 Secret
 oauth2:

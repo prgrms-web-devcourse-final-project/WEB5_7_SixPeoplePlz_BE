@@ -3,7 +3,7 @@ package me.jinjjahalgae.domain.proof.usecase.get.recent.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 /**
  * 최근 3개의 인증 response
@@ -33,7 +33,7 @@ public record ProofRecentResponse(
         ProofStatus status,
 
         @Schema(description = "인증 생성일")
-        LocalDateTime createdAt,
+        Instant createdAt,
 
         @Schema(description = "재인증 여부 (원본 = false, 재인증 = true")
         boolean reProof,
