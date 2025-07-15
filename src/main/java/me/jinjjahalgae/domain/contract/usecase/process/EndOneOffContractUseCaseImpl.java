@@ -2,21 +2,25 @@ package me.jinjjahalgae.domain.contract.usecase.process;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
+import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
 import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
+import me.jinjjahalgae.domain.proof.enums.ProofStatus;
+import me.jinjjahalgae.domain.proof.repository.ProofRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class EndOneOffContractUseCaseImpl implements EndOneOffContractUseCase {
-
+    private final ProofRepository proofRepository;
     private final ContractRepository contractRepository;
     private final ApplicationEventPublisher eventPublisher;
 
@@ -32,25 +36,43 @@ public class EndOneOffContractUseCaseImpl implements EndOneOffContractUseCase {
         // 성공 처리 대상 계약들 처리
         List<Contract> completableContracts = contractRepository.findCompletableOneOffContracts(deadline);
 
-        for (Contract contract : completableContracts) {
-            contract.complete();
+        if (!completableContracts.isEmpty()) {
+            List<Long> contractIdsToComplete = completableContracts.stream()
+                    .map(Contract::getId)
+                    .collect(Collectors.toList());
 
-            // 계약 성공 알림 이벤트 발행
-            eventPublisher.publishEvent(
-                new NotificationEvent(NotificationType.CONTRACT_ENDED_SUCCESS, contract.getId(), contract.getUser().getId())
+            // 인증 APPROVED 벌크 업데이트
+            proofRepository.bulkUpdatePendingProofsToApproved(
+                    contractIdsToComplete,
+                    ProofStatus.APPROVED
             );
+
+            // 계약 COMPLETE 벌크 업데이트
+            contractRepository.bulkUpdateStatus(contractIdsToComplete, ContractStatus.COMPLETED);
+
+            for (Contract contract : completableContracts) {
+                // 계약 성공 알림 이벤트 발행
+                eventPublisher.publishEvent(
+                    new NotificationEvent(NotificationType.CONTRACT_ENDED_SUCCESS, contract.getId(), contract.getUser().getId())
+                );
+            }
         }
 
         // 실패 처리 대상 계약들 처리
         List<Contract> failableContracts = contractRepository.findFailableOneOffContracts(deadline);
 
-        for (Contract contract : failableContracts) {
-            contract.fail();
+        if(!failableContracts.isEmpty()) {
+            List<Long> contractIdsToFail = failableContracts.stream().map(Contract::getId).collect(Collectors.toList());
 
-            // 계약 실패 알림 이벤트 발행
-            eventPublisher.publishEvent(
-                new NotificationEvent(NotificationType.CONTRACT_ENDED_FAIL, contract.getId(), contract.getUser().getId())
-            );
+            contractRepository.bulkUpdateStatus(contractIdsToFail, ContractStatus.FAILED);
+
+            for (Contract contract : failableContracts) {
+                // 계약 실패 알림 이벤트 발행
+                eventPublisher.publishEvent(
+                        new NotificationEvent(NotificationType.CONTRACT_ENDED_FAIL, contract.getId(), contract.getUser().getId())
+                );
+            }
         }
+
     }
 } 

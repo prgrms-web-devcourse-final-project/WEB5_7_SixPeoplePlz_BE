@@ -243,4 +243,11 @@ AND p.createdAt BETWEEN :startDate AND :endDate
     @Query("UPDATE Proof p SET p.status = :status WHERE p.id IN :proofIds")
     void updateProofStatus(@Param("proofIds") List<Long> proofIds, @Param("status") ProofStatus status);
 
+    // 계약id 목록에 속한 모든 승인 대기 상태의 인증들을 승인 상태로 일괄 변경 (단발성 계약 24시간 처리에서 사용)
+    @Modifying(clearAutomatically = true)
+    @Query("update Proof p set p.status = :newStatus where p.contractId in :contractIds and p.status = me.jinjjahalgae.domain.proof.enums.ProofStatus.APPROVE_PENDING")
+    void bulkUpdatePendingProofsToApproved(
+            @Param("contractIds") List<Long> contractIds,
+            @Param("newStatus") ProofStatus newStatus
+    );
 }
