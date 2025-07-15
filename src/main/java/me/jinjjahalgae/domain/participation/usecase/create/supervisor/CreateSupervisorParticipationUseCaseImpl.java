@@ -2,6 +2,7 @@ package me.jinjjahalgae.domain.participation.usecase.create.supervisor;
 
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.contract.entity.Contract;
+import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
 import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
@@ -38,6 +39,11 @@ public class CreateSupervisorParticipationUseCaseImpl implements CreateSuperviso
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.serviceException("존재하지 않는 계약 입니다. id =" + contractId));
 
+        // 계약 시작 전이 아닌데 서명 한 경우
+        if(contract.getStatus() != ContractStatus.PENDING) {
+            throw ErrorCode.CANNOT_PARTICIPATE_AFTER_START.serviceException("시작 전인 계약만 서명할 수 있습니다.");
+        }
+
         // 본인이 계약자인지 확인
         boolean isContractor = participationRepository.existsByContractIdAndUserIdAndRole(contractId, user.getId(), Role.CONTRACTOR);
 
@@ -55,8 +61,12 @@ public class CreateSupervisorParticipationUseCaseImpl implements CreateSuperviso
         // 감독자 자리가 다 찼는지 확인
         String supervisorCountKey = SUPERVISOR_COUNT_PREFIX + contract.getId();
         Integer remaining = (Integer) redisTemplate.opsForValue().get(supervisorCountKey);
-        if (remaining == null || remaining <= 0) {
-            throw ErrorCode.SUPERVISOR_ALREADY_FULL.serviceException("이미 5명의 감독자가 참여했습니다.");
+        if (remaining != null) {
+            if (remaining <= 0) {
+                throw ErrorCode.SUPERVISOR_ALREADY_FULL.serviceException("이미 5명의 감독자가 참여했습니다.");
+            }
+        } else {
+            throw ErrorCode.INVITE_NOT_FOUND.serviceException("존재하지 않거나 만료된 초대정보 입니다.");
         }
 
         // 새로운 참여 정보 생성

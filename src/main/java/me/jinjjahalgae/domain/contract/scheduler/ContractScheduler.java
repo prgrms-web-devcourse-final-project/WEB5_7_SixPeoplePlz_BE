@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ContractScheduler {
@@ -37,12 +38,12 @@ public class ContractScheduler {
     private final ApplicationEventPublisher eventPublisher;
 
     // 계약 시작 스케줄러
-    @Scheduled(cron = "0 1 0 * * *")
+    @Scheduled(cron = "0 10 0 * * *")
     @Transactional
     public void startContracts() {
         LocalDate today = LocalDate.now();
         List<Contract> pendingContracts = contractRepository.findByStatusAndStartDateOnAndOneOff(ContractStatus.PENDING, today, false);
-
+        log.info("pendingContracts = {}", pendingContracts);
         if (pendingContracts.isEmpty()) return;
 
         Map<Boolean, List<Contract>> pendingContractsBySupervisors = pendingContracts.stream()
@@ -57,6 +58,7 @@ public class ContractScheduler {
         for (Contract contract : startContracts) {
             int joinedSupervisors = getJoinedSupervisorsUseCase.execute(contract.getId());
             contract.start(joinedSupervisors);
+            log.info("joinedSupervisors = {}", joinedSupervisors);
 
             eventPublisher.publishEvent(new NotificationEvent(
                             NotificationType.CONTRACT_STARTED,
@@ -66,11 +68,10 @@ public class ContractScheduler {
             );
         }
 
-        // 감독자 부족 계약 벌크 삭제
+        // 감독자 부족 계약 전체 삭제
         if (!deleteContracts.isEmpty()) {
-            List<Long> deleteContractIds = deleteContracts.stream().map(Contract::getId).toList();
-            contractRepository.deleteAllByIdInBatch(deleteContractIds);
-            
+            contractRepository.deleteAll(deleteContracts);
+
             deleteContracts.forEach(contract ->
                     eventPublisher.publishEvent(new NotificationEvent(
                             NotificationType.CONTRACT_AUTO_DELETED,
@@ -92,17 +93,19 @@ public class ContractScheduler {
     public void checkProgressingContracts() {
         LocalDate today = LocalDate.now();
         List<Contract> progressingContracts = contractRepository.findByStatus(ContractStatus.IN_PROGRESS);
+        log.info("progressingContracts = {}", progressingContracts);
 
         if (progressingContracts.isEmpty()) return;
 
         for (Contract contract : progressingContracts) {
             long daysPassed = ChronoUnit.DAYS.between(contract.getStartDate().toLocalDate(), today);
+            log.info("daysPassed = {}", daysPassed);
 
             // (7일 + 3일)이 지난 후 이전 7일에 대한 점검 수행
             // 10일째 되는 날 -> 1~7일차 점검, 17일째 되는 날 -> 8~14일차 점검
-            if (daysPassed >= (7 + 3) && (daysPassed - 3 + 1) % 7 == 0) {
+            if (daysPassed >= (7 + 3) && (daysPassed - 3) % 7 == 0) {
                 // n주차 계산
-                long week = (daysPassed - 3 + 1) / 7;
+                long week = (daysPassed - 3) / 7;
 
                 // 점검할 주의 시작일과 종료일 계산
                 LocalDateTime startOfWeek = contract.getStartDate().toLocalDate().plusDays((week - 1) * 7).atStartOfDay();
@@ -158,7 +161,12 @@ public class ContractScheduler {
 
         List<Contract> waitingContracts = contractRepository.findByStatus(ContractStatus.WAIT_RESULT);
 
-        if (waitingContracts.isEmpty()) return;
+        if (waitingContracts.isEmpty()) {
+            // 대기중인 인증이 "있는" 단발이 아닌 계약을 결과 대기중 상태로 변환
+            contractRepository.bulkUpdateApprovePendingContractsToWait(today);
+
+            return;
+        }
 
         // 마지막 주차 실패 횟수 업데이트
         for (Contract contract : waitingContracts) {

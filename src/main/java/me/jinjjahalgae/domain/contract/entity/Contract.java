@@ -248,4 +248,11 @@ public class Contract extends BaseEntity {
     public void recordWeeklyFailure(int failCounts) {
         this.currentFail += failCounts;
     }
+
+    // 서명 전 계약 시작 여부 확인
+    public void isPending() {
+        if (this.status != ContractStatus.PENDING) {
+            throw ErrorCode.CANNOT_PARTICIPATE_AFTER_START.domainException("시작 전인 계약만 서명할 수 있습니다.");
+        }
+    }
 }
