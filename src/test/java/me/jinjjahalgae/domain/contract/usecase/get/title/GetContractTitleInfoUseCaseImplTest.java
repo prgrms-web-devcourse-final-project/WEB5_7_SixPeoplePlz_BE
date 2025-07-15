@@ -22,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 @ExtendWith(MockitoExtension.class)
 class ContractTitleInfoUseCaseTest {
@@ -70,6 +71,8 @@ class ContractTitleInfoUseCaseTest {
         Long userId = 1L;
         Long contractId = 1L;
 
+        given(contractRepository.findById(contractId))
+                .willReturn(Optional.of(contract));
         given(contractRepository.findValidParticipantByIdAndUserId(contractId, userId))
                 .willReturn(Optional.of(contract));
         given(contractMapper.toTitleInfoResponse(contract))
@@ -83,6 +86,7 @@ class ContractTitleInfoUseCaseTest {
         assertThat(result.title()).isEqualTo("매일 운동하기");
         assertThat(result.goal()).isEqualTo("매일 30분 이상 운동하기");
 
+        verify(contractRepository).findById(contractId);
         verify(contractRepository).findValidParticipantByIdAndUserId(contractId, userId);
         verify(contractMapper).toTitleInfoResponse(contract);
     }
@@ -94,15 +98,17 @@ class ContractTitleInfoUseCaseTest {
         Long userId = 1L;
         Long contractId = 999L;
 
-        given(contractRepository.findValidParticipantByIdAndUserId(contractId, userId))
+        given(contractRepository.findById(contractId))
                 .willReturn(Optional.empty());
 
         // When & Then
         assertThatThrownBy(() -> contractTitleInfoUseCase.execute(userId, contractId))
                 .isInstanceOf(AppException.class)
-                .hasMessage("계약에 대한 접근 권한이 없습니다.");
+                .hasMessage("존재하지 않는 계약입니다.");
 
-        verify(contractRepository).findValidParticipantByIdAndUserId(contractId, userId);
+        verify(contractRepository).findById(contractId);
+        // 계약이 존재하지 않으면 두 번째 검증은 실행되지 않아야 함
+        verifyNoInteractions(contractMapper);
     }
 
     @Test
@@ -112,6 +118,8 @@ class ContractTitleInfoUseCaseTest {
         Long userId = 999L;
         Long contractId = 1L;
 
+        given(contractRepository.findById(contractId))
+                .willReturn(Optional.of(contract));
         given(contractRepository.findValidParticipantByIdAndUserId(contractId, userId))
                 .willReturn(Optional.empty());
 
@@ -120,6 +128,9 @@ class ContractTitleInfoUseCaseTest {
                 .isInstanceOf(AppException.class)
                 .hasMessage("계약에 대한 접근 권한이 없습니다.");
 
+        verify(contractRepository).findById(contractId);
         verify(contractRepository).findValidParticipantByIdAndUserId(contractId, userId);
+        // 권한이 없으면 매퍼는 호출되지 않아야 함
+        verifyNoInteractions(contractMapper);
     }
 }
