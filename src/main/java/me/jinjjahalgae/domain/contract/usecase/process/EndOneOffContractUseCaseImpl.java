@@ -39,7 +39,7 @@ public class EndOneOffContractUseCaseImpl implements EndOneOffContractUseCase {
         if (!completableContracts.isEmpty()) {
             List<Long> contractIdsToComplete = completableContracts.stream()
                     .map(Contract::getId)
-                    .collect(Collectors.toList());
+                    .toList();
 
             // 인증 APPROVED 벌크 업데이트
             proofRepository.bulkUpdatePendingProofsToApproved(
@@ -62,7 +62,9 @@ public class EndOneOffContractUseCaseImpl implements EndOneOffContractUseCase {
         List<Contract> failableContracts = contractRepository.findFailableOneOffContracts(deadline);
 
         if(!failableContracts.isEmpty()) {
-            List<Long> contractIdsToFail = failableContracts.stream().map(Contract::getId).collect(Collectors.toList());
+            List<Long> contractIdsToFail = failableContracts.stream()
+                    .map(Contract::getId)
+                    .toList();
 
             contractRepository.bulkUpdateStatus(contractIdsToFail, ContractStatus.FAILED);
 
