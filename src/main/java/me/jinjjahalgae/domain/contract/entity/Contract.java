@@ -248,4 +248,9 @@ public class Contract extends BaseEntity {
     public void recordWeeklyFailure(int failCounts) {
         this.currentFail += failCounts;
     }
+
+    // 계약 상태가 진행중인지 검증
+    public boolean isInProgress() {
+        return this.status == ContractStatus.IN_PROGRESS;
+    }
 }

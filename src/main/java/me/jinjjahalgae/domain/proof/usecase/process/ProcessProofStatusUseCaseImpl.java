@@ -3,7 +3,6 @@ package me.jinjjahalgae.domain.proof.usecase.process;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.contract.entity.Contract;
-import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.feedback.entity.Feedback;
 import me.jinjjahalgae.domain.feedback.repository.FeedbackRepository;
@@ -55,8 +54,8 @@ public class ProcessProofStatusUseCaseImpl implements ProcessProofStatusUseCase 
                 eventPublisher.publishEvent(new NotificationEvent(NotificationType.PROOF_REJECTED, contract.getId(), contract.getUser().getId()));
             }
 
-            // "단건 계약일 때" 인증 결과에 따라 즉시 계약 상태 처리 + 알림 전송
-            if (contract.isOneOff() && contract.getStatus() == ContractStatus.IN_PROGRESS) {
+            // "단발 계약일 때" 인증 결과에 따라 즉시 계약 상태 처리 + 알림 전송
+            if (contract.isOneOff() && contract.isInProgress()) {
                 if(proof.isApproved()) {
                     contract.complete();
 
