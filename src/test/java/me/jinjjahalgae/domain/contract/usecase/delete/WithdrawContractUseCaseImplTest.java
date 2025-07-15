@@ -118,8 +118,7 @@ class WithdrawContractUseCaseImplTest {
                 .goal("목표")
                 .penalty("벌칙")
                 .reward("보상")
-                .life(3)
-                .proofPerWeek(3)
+                .totalProof(21)
                 .oneOff(false)
                 .type(ContractType.BASIC)
                 .build();

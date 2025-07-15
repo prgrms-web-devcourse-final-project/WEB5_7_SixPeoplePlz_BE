@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
 import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractRequest;
 import me.jinjjahalgae.domain.contract.usecase.create.dto.CreateContractResponse;
@@ -53,11 +54,10 @@ class CreateContractUseCaseImplTest {
                 "매일 30분 이상 운동하기", // goal
                 "치킨 못 먹기", // penalty
                 "치킨 먹기", // reward
-                3, // life
-                3, // proofPerWeek
+                10, // totalProof
                 false, // oneOff
-                LocalDateTime.of(2025, 1, 1, 0, 0, 0), // startDate
-                LocalDateTime.of(2025, 1, 31, 23, 59, 59), // endDate
+                LocalDateTime.of(2025, 1, 1, 0, 0, 0).toInstant(ZoneOffset.UTC), // startDate
+                LocalDateTime.of(2025, 1, 31, 23, 59, 59).toInstant(ZoneOffset.UTC), // endDate
                 ContractType.BASIC, // type
                 "signature.jpg" // signatureImageKey
         );
@@ -77,8 +77,7 @@ class CreateContractUseCaseImplTest {
                 .goal("매일 30분 이상 운동하기")
                 .penalty("치킨 못 먹기")
                 .reward("치킨 먹기")
-                .life(3)
-                .proofPerWeek(3)
+                .totalProof(10)
                 .oneOff(false)
                 .type(ContractType.BASIC)
                 .build();

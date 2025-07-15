@@ -29,8 +29,7 @@ public class InviteTestUtil {
                 .goal("Test Goal")
                 .penalty("Test Penalty")
                 .reward("Test Reward")
-                .life(10)
-                .proofPerWeek(3)
+                .totalProof(21)
                 .oneOff(false)
                 .type(ContractType.BASIC)  // null 대신 BASIC 타입 사용
                 .build();
