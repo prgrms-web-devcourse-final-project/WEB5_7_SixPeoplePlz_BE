@@ -40,19 +40,10 @@ public record ContractUpdateRequest(
         requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     String reward,
 
-    @Schema(description = "실패 가능 횟수", 
-        example = "5", 
-        requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "life는 필수입니다.")
-    @Min(value = 0, message = "life는 0 이상이어야 합니다.")
-    Integer life,
-
-    @Schema(description = "주간 인증 횟수",
-        example = "7", 
-        requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "proofPerWeek은 필수입니다.")
-    @Min(value = 1, message = "proofPerWeek은 1 이상이어야 합니다.")
-    Integer proofPerWeek,
+    @Schema(description = "총 실행 횟수", example = "10")
+    @NotNull(message = "totalProof는 필수입니다.")
+    @Min(value = 1, message = "totalProof는 1 이상이어야 합니다.")
+    Integer totalProof,
 
     @Schema(description = "당일 계약 여부", 
         example = "false", 

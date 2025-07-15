@@ -17,9 +17,6 @@ public record ContractBasicResponse (
         @Schema(description = "목표 상세", example = "매일 30분 이상 운동하기")
         String goal, //목표 상세
 
-        @Schema(description = "한 주 인증 수", example = "3")
-        int proofPerWeek, //설정한 한 주 인증 수
-
         @Schema(description = "벌칙", example = "치킨 못 먹기")
         String penalty, //벌칙
 
@@ -28,9 +25,6 @@ public record ContractBasicResponse (
 
         @Schema(description = "총 인증 수", example = "10")
         int totalProof, // 총 필요한 인증 수
-
-        @Schema(description = "원본 실패 가능 횟수 (계약서용)", example = "3")
-        int totalLife,
 
         @Schema(description = "시작 날짜", example = "2024-01-01T09:00:00")
         Instant startDate, //시작 날짜

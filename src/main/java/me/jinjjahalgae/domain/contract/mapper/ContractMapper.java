@@ -33,8 +33,7 @@ public class ContractMapper {
                 .goal(request.goal())
                 .penalty(request.penalty())
                 .reward(request.reward())
-                .life(request.life())
-                .proofPerWeek(request.proofPerWeek())
+                .totalProof(request.totalProof())
                 .oneOff(request.oneOff())
                 .type(ContractType.valueOf(String.valueOf(request.type())))
                 .build();
@@ -50,7 +49,6 @@ public class ContractMapper {
                 contract.getUuid(),
                 contract.getTitle(),
                 contract.getStatus(),
-                contract.getProofPerWeek(),
                 DateTimeConverter.toInstant(contract.getStartDate()),
                 DateTimeConverter.toInstant(contract.getEndDate()),
                 contract.getReward(),
@@ -68,11 +66,9 @@ public class ContractMapper {
                 contract.getUuid(),
                 contract.getTitle(),
                 contract.getGoal(),
-                contract.getProofPerWeek(),
                 contract.getPenalty(),
                 contract.getReward(),
                 contract.getTotalProof(),
-                contract.getLife(),
                 DateTimeConverter.toInstant(contract.getStartDate()),
                 DateTimeConverter.toInstant(contract.getEndDate())
         );
@@ -85,8 +81,6 @@ public class ContractMapper {
                 basicResponse,
                 contract.getStatus(),
                 contract.getCurrentProof(),
-                contract.getCurrentFail(),
-                contract.getRemainingLife(),
                 contract.calculateAchievementRatio(),
                 contract.calculatePeriodRatio(),
                 contract.calculateAchievementPercent(),

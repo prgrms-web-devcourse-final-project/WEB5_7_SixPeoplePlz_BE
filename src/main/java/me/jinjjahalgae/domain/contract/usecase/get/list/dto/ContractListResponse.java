@@ -27,9 +27,6 @@ public record ContractListResponse(
         @Schema(description = "계약 상태", example = "ACTIVE")
         ContractStatus contractStatus, //계약 현재 상태
 
-        @Schema(description = "한 주 인증 수", example = "3")
-        int proofPerWeek,
-
         @Schema(description = "계약 시작 날짜", example = "2024-01-01T09:00:00")
         Instant startDate,
 
