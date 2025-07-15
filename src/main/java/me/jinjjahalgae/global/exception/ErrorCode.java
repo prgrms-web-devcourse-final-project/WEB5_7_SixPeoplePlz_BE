@@ -26,6 +26,8 @@ public enum ErrorCode {
 
     // 계약 관련
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
+    INVALID_CONTRACT_STATUS(HttpStatus.BAD_REQUEST, "유효하지 않은 계약 상태입니다."),
+    INVALID_CONTRACT_ROLE(HttpStatus.BAD_REQUEST, "유효하지 않은 역할입니다."),
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "계약에 대한 접근 권한이 없습니다."),
     CONTRACT_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 계약입니다."),
     CONTRACT_ALREADY_SIGNED(HttpStatus.CONFLICT, "감독자가 서명한 계약은 수정할 수 없습니다."),
