@@ -25,7 +25,7 @@ public record ContractHistoryRequest(
         @Schema(description = "검색 키워드", example = "운동")
         String keyword,
 
-        @Schema(description = "종료일", example = "2025-07-11")
+        @Schema(description = "종료일", example = "2025-07-11T23:59:59Z")
         Instant endDate,
 
         @Schema(description = "계약 타입", example = "PENDING")
