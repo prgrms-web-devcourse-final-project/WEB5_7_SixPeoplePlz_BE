@@ -170,7 +170,11 @@ AND EXISTS (
         AND p.valid = true
         AND (:keyword IS NULL OR LOWER(c.title) LIKE LOWER(CONCAT('%', :keyword, '%')))
         AND (:endDate IS NULL OR c.endDate <= :endDate)
-        AND (:status IS NULL OR c.status = :status)
+        AND (
+             (:status IS NULL AND c.status IN ('COMPLETED', 'FAILED', 'ABANDONED'))
+             OR
+             (:status IS NOT NULL AND c.status = :status)
+         )
         ORDER BY c.endDate DESC
         """)
     Page<Contract> findContractHistoryByConditions(
