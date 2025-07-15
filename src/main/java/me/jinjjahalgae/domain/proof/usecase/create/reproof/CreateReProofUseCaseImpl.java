@@ -54,9 +54,9 @@ public class CreateReProofUseCaseImpl implements CreateReProofUseCase {
             throw ErrorCode.ACCESS_DENIED.domainException("계약에 대한 접근 권한이 없습니다.");
         }
 
-        // 시작 전이라면 예외
-        if (isPendingContract(contract)) {
-            throw ErrorCode.CONTRACT_NOT_STARTED.domainException("시작 전인 계약에 인증 생성을 요청하였습니다");
+        // 진행중이 아니라면
+        if (!isInProgressContract(contract)) {
+            throw ErrorCode.CONTRACT_MUST_IN_PROGRESS.domainException("계약 진행중이 아닙니다.");
         }
 
         // 계약 종료 2일 전 재인증 생성 요청 시 예외
@@ -100,8 +100,8 @@ public class CreateReProofUseCaseImpl implements CreateReProofUseCase {
         ));
     }
 
-    private boolean isPendingContract(Contract contract) {
-        return contract.getStatus() == ContractStatus.PENDING;
+    private boolean isInProgressContract(Contract contract) {
+        return contract.getStatus() == ContractStatus.IN_PROGRESS;
     }
 
     // 계약에 오늘자 재인증이 존재하는 지 확인하는 메서드
