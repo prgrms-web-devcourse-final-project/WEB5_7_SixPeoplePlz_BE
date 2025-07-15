@@ -249,6 +249,11 @@ public class Contract extends BaseEntity {
         this.currentFail += failCounts;
     }
 
+    // 현재 인증 횟수 증가
+    public void incrementCurrentProof() {
+        this.currentProof++;
+    }
+
     // 서명 전 계약 시작 여부 확인
     public void isPending() {
         if (this.status != ContractStatus.PENDING) {
