@@ -97,10 +97,18 @@ public class CreateSupervisorParticipationUseCaseImpl implements CreateSuperviso
             contract.start(1);
 
             // 계약 시작 알림 발송
+            // 계약자
             eventPublisher.publishEvent(new NotificationEvent(
                     NotificationType.CONTRACT_STARTED,
                     contract.getId(),
                     contract.getUser().getId()
+            ));
+
+            // 감독자
+            eventPublisher.publishEvent(new NotificationEvent(
+                    NotificationType.CONTRACT_STARTED,
+                    contract.getId(),
+                    user.getId()
             ));
 
             // 초대 정보 삭제

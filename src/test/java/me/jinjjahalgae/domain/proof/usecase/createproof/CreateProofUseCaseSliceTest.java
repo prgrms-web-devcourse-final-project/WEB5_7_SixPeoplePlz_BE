@@ -117,7 +117,7 @@ class CreateProofUseCaseSliceTest {
         // when & then
         assertThatThrownBy(() -> createProofUseCase.execute(requestWithoutImage, contractId, userId))
                 .isInstanceOf(AppException.class)
-                .hasMessageContaining("계약 시작 전에는 인증을 생성할 수 없습니다.");
+                .hasMessageContaining("계약 진행중에만 인증 생성이 가능합니다.");
     }
 
     @Test

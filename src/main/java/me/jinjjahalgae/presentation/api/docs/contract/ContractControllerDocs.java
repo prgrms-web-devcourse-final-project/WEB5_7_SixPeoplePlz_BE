@@ -17,7 +17,6 @@ import me.jinjjahalgae.domain.contract.usecase.get.list.dto.ContractListResponse
 import me.jinjjahalgae.domain.contract.usecase.get.preview.dto.ContractPreviewResponse;
 import me.jinjjahalgae.domain.contract.usecase.get.title.dto.ContractTitleInfoResponse;
 import me.jinjjahalgae.domain.contract.usecase.update.dto.ContractUpdateRequest;
-import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.global.common.CommonResponse;
 import me.jinjjahalgae.global.exception.ErrorResponse;
@@ -26,8 +25,6 @@ import me.jinjjahalgae.presentation.api.docs.NoContentSwaggerResponse;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 @Tag(name = "계약 API", description = "계약 생성, 조회, 수정, 포기 관련 API")
 public interface ContractControllerDocs {
@@ -979,7 +976,7 @@ public interface ContractControllerDocs {
                     {
                       "success": false,
                       "code": "ACCESS_DENIED",
-                      "message": "참여자로 등록되어있지 않은 계약서를 열람 시도함"
+                      "message": "계약에 대한 접근 권한이 없습니다."
                     }
                     """
                             )
@@ -997,7 +994,7 @@ public interface ContractControllerDocs {
                     {
                       "success": false,
                       "code": "CONTRACT_NOT_FOUND",
-                      "message": "존재하지 않는 계약id: 1"
+                      "message": "존재하지 않는 계약입니다."
                     }
                     """
                             )
@@ -1152,8 +1149,8 @@ public interface ContractControllerDocs {
                                             value = """
                     {
                       "success": false,
-                      "code": "BAD_REQUEST",
-                      "message": "role은 CONTRACTOR, SUPERVISOR 중 하나여야 합니다."
+                      "code": "INVALID_CONTRACT_ROLE",
+                      "message": "유효하지 않은 역할입니다."
                     }
                     """
                                     ),
@@ -1162,8 +1159,8 @@ public interface ContractControllerDocs {
                                             value = """
                     {
                       "success": false,
-                      "code": "BAD_REQUEST",
-                      "message": "status는 COMPLETED, FAILED, ABANDONED 중 하나여야 합니다."
+                      "code": "INVALID_CONTRACT_STATUS",
+                      "message": "유효하지 않은 계약 상태입니다."
                     }
                     """
                                     )

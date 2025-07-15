@@ -5,5 +5,5 @@ import me.jinjjahalgae.domain.proof.usecase.getlist.supervisorlist.dto.Superviso
 import java.util.List;
 
 public interface GetSupervisorProofListUseCase {
-    List<SupervisorProofListResponse> execute(Long contractId, int year, int month, Long userId);
+    List<SupervisorProofListResponse> execute(Long contractId, Integer year, Integer month, Long userId);
 }

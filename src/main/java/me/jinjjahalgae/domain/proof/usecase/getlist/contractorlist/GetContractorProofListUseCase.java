@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface GetContractorProofListUseCase {
 
-    List<ContractorProofListResponse> execute(Long contractId, int year, int month, Long userId);
+    List<ContractorProofListResponse> execute(Long contractId, Integer year, Integer month, Long userId);
 }

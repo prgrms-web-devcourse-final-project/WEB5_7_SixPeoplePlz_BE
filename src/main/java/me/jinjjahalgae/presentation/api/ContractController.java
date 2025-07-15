@@ -74,7 +74,7 @@ public class ContractController implements ContractControllerDocs {
     @GetMapping("/{contractId}")
     public CommonResponse<ContractDetailResponse> getContractDetail(
             @AuthenticationPrincipal CustomJwtPrincipal user,
-            @PathVariable Long contractId
+            @PathVariable("contractId") Long contractId
     ) {
         ContractDetailResponse response = getContractDetailUseCase.execute(user.getUserId(), contractId);
         return CommonResponse.success(response);
@@ -84,7 +84,7 @@ public class ContractController implements ContractControllerDocs {
     @GetMapping("/{contractId}/titleInfo")
     public CommonResponse<ContractTitleInfoResponse> getContractTitleInfo(
             @AuthenticationPrincipal CustomJwtPrincipal user,
-            @PathVariable Long contractId
+            @PathVariable("contractId") Long contractId
     ) {
         ContractTitleInfoResponse response = getContractTitleInfoUseCase.execute(user.getUserId(), contractId);
         return CommonResponse.success(response);
@@ -94,7 +94,7 @@ public class ContractController implements ContractControllerDocs {
     @GetMapping("/{contractId}/preview")
     public CommonResponse<ContractPreviewResponse> getContractPreview(
             @AuthenticationPrincipal CustomJwtPrincipal user,
-            @PathVariable Long contractId
+            @PathVariable("contractId") Long contractId
     ) {
         ContractPreviewResponse response = getContractPreviewUseCase.execute(user.getUserId(), contractId);
         return CommonResponse.success(response);
@@ -118,7 +118,7 @@ public class ContractController implements ContractControllerDocs {
     @PutMapping("/{contractId}")
     public CommonResponse<Void> updateContract(
             @AuthenticationPrincipal CustomJwtPrincipal user,
-            @PathVariable Long contractId,
+            @PathVariable("contractId") Long contractId,
             @Valid @RequestBody ContractUpdateRequest request
     ) {
         updateContractUseCase.execute(user.getUserId(), contractId, request);
@@ -129,7 +129,7 @@ public class ContractController implements ContractControllerDocs {
     @PatchMapping("/{contractId}/withdraw")
     public CommonResponse<Void> withdrawContract(
             @AuthenticationPrincipal CustomJwtPrincipal user,
-            @PathVariable Long contractId
+            @PathVariable("contractId") Long contractId
     ) {
         withdrawContractUseCase.execute(user.getUserId(), contractId);
         return CommonResponse.success();
@@ -139,7 +139,7 @@ public class ContractController implements ContractControllerDocs {
     @DeleteMapping("/{contractId}")
     public CommonResponse<Void> cancelContract(
             @AuthenticationPrincipal CustomJwtPrincipal user,
-            @PathVariable Long contractId
+            @PathVariable("contractId") Long contractId
     ) {
         cancelContractUseCase.execute(user.getUserId(), contractId);
         return CommonResponse.success();

@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import me.jinjjahalgae.domain.feedback.enums.FeedbackStatus;
 import me.jinjjahalgae.domain.proof.usecase.getlist.common.ProofSimpleResponse;
 
+import java.time.Instant;
+
 /**
  * 감독자 달력 표시를 위한 response
  * 재인증 필드는 재인증이 존재하지 않는 경우 null
@@ -13,7 +15,7 @@ import me.jinjjahalgae.domain.proof.usecase.getlist.common.ProofSimpleResponse;
         description = "감독자 한 달치 인증 목록 응답 DTO",
         example = """
         {
-          "date": "2025-07-09",
+          "date": "2025-07-09T00:34:38Z",
           "originalProof": {
             "imageKey": "1234abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
             "status": "REJECTED",
@@ -34,8 +36,8 @@ import me.jinjjahalgae.domain.proof.usecase.getlist.common.ProofSimpleResponse;
         """
 )
 public record SupervisorProofListResponse(
-        @Schema(description = "인증이 생성된 날짜 (달력 일 단위 매핑용 yyyy-MM-dd)")
-        String date,
+        @Schema(description = "인증이 생성된 날짜 (달력 일 단위 매핑용)")
+        Instant date,
 
         @Schema(description = "원본 인증 데이터")
         ProofSimpleResponse originalProof,

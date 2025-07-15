@@ -255,4 +255,9 @@ public class Contract extends BaseEntity {
             throw ErrorCode.CANNOT_PARTICIPATE_AFTER_START.domainException("시작 전인 계약만 서명할 수 있습니다.");
         }
     }
+
+    // 계약 상태가 진행중인지 검증
+    public boolean isInProgress() {
+        return this.status == ContractStatus.IN_PROGRESS;
+    }
 }

@@ -1,5 +1,6 @@
 package me.jinjjahalgae.domain.proof.repository;
 
+import me.jinjjahalgae.domain.notification.model.NotificationData;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 import org.springframework.data.domain.Page;
@@ -80,7 +81,7 @@ AND p.proofId IS NOT NULL
      * @param pageable   페이징 (3개의 인증을 가져옴(
      * @return List<Long> 0~3개의 인증을 가져옴
      */
-    @Query("SELECT p.id FROM Proof p WHERE p.contractId = :contractId ORDER BY p.id DESC")
+    @Query("SELECT p.id FROM Proof p WHERE p.contractId = :contractId ORDER BY p.createdAt DESC")
     List<Long> findProofIdsByContractId(@Param("contractId") Long contractId, Pageable pageable);
 
     /**
@@ -242,5 +243,22 @@ AND p.createdAt BETWEEN :startDate AND :endDate
     @Modifying
     @Query("UPDATE Proof p SET p.status = :status WHERE p.id IN :proofIds")
     void updateProofStatus(@Param("proofIds") List<Long> proofIds, @Param("status") ProofStatus status);
+
+
+    // 계약id 목록에 속한 모든 승인 대기 상태의 인증들을 승인 상태로 일괄 변경 (단발성 계약 24시간 처리에서 사용)
+    @Modifying(clearAutomatically = true)
+    @Query("update Proof p set p.status = :newStatus where p.contractId in :contractIds and p.status = me.jinjjahalgae.domain.proof.enums.ProofStatus.APPROVE_PENDING")
+    void bulkUpdatePendingProofsToApproved(
+            @Param("contractIds") List<Long> contractIds,
+            @Param("newStatus") ProofStatus newStatus
+    );
+
+    @Query(value = """
+    SELECT p.contract_id AS contractId, c.user_id AS actorUserId
+    FROM proof p
+    JOIN contract c ON p.contract_id = c.id
+    WHERE p.id IN (:proofIds)
+""", nativeQuery = true)
+    List<NotificationData> findNotificationDataByProofIds(@Param("proofIds") List<Long> proofIds);
 
 }

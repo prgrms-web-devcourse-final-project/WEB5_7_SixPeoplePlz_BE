@@ -2,7 +2,7 @@ package me.jinjjahalgae.domain.contract.usecase.get.list.dto;
 
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -31,10 +31,10 @@ public record ContractListResponse(
         int proofPerWeek,
 
         @Schema(description = "계약 시작 날짜", example = "2024-01-01T09:00:00")
-        LocalDateTime startDate,
+        Instant startDate,
 
         @Schema(description = "계약 종료 날짜", example = "2024-01-31T23:59:59")
-        LocalDateTime endDate,
+        Instant endDate,
 
         @Schema(description = "보상", example = "치킨 먹기")
         String reward,

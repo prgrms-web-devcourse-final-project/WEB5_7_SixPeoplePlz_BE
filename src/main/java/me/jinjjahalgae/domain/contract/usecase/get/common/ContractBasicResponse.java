@@ -2,7 +2,7 @@ package me.jinjjahalgae.domain.contract.usecase.get.common;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public record ContractBasicResponse (
         @Schema(description = "계약 ID", example = "1")
@@ -33,8 +33,8 @@ public record ContractBasicResponse (
         int totalLife,
 
         @Schema(description = "시작 날짜", example = "2024-01-01T09:00:00")
-        LocalDateTime startDate, //시작 날짜
+        Instant startDate, //시작 날짜
 
         @Schema(description = "종료 날짜", example = "2024-01-31T23:59:59")
-        LocalDateTime endDate //종료 날짜
+        Instant endDate //종료 날짜
 ) {}

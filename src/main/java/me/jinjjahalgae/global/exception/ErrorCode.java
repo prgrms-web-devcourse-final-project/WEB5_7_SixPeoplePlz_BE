@@ -26,6 +26,8 @@ public enum ErrorCode {
 
     // 계약 관련
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
+    INVALID_CONTRACT_STATUS(HttpStatus.BAD_REQUEST, "유효하지 않은 계약 상태입니다."),
+    INVALID_CONTRACT_ROLE(HttpStatus.BAD_REQUEST, "유효하지 않은 역할입니다."),
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "계약에 대한 접근 권한이 없습니다."),
     CONTRACT_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 계약입니다."),
     CONTRACT_ALREADY_SIGNED(HttpStatus.CONFLICT, "감독자가 서명한 계약은 수정할 수 없습니다."),
@@ -36,13 +38,13 @@ public enum ErrorCode {
     CANNOT_ABANDON_PARTICIPATION_UNLESS_IN_PROGRESS(HttpStatus.CONFLICT, "계약 진행중에만 감독을 중도 포기할 수 있습니다."),
 
     // 인증 관련
-    CONTRACT_NOT_STARTED(HttpStatus.BAD_REQUEST, "계약 시작 전에는 인증을 생성할 수 없습니다."),
+    CONTRACT_MUST_IN_PROGRESS(HttpStatus.BAD_REQUEST, "계약 진행중에만 인증 생성이 가능합니다."),
     PROOF_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 인증을 찾을 수 없습니다."),
     IMAGE_REQUIRED(HttpStatus.BAD_REQUEST, "최소 1장 이상의 이미지가 필요합니다."),
     INVALID_YEAR_MONTH(HttpStatus.BAD_REQUEST, "유효하지 않은 년, 월입니다."),
     REPROOF_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "재인증이 불가능합니다."),
-    PROOF_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "해당 날짜에 이미 인증이 존재합니다."),
-    REPROOF_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "해당 날짜에 이미 재인증이 존재합니다."),
+    PROOF_ALREADY_EXISTS(HttpStatus.CONFLICT, "해당 날짜에 이미 인증이 존재합니다."),
+    REPROOF_ALREADY_EXISTS(HttpStatus.CONFLICT, "해당 날짜에 이미 재인증이 존재합니다."),
 
     // 초대 관련
     SUPERVISOR_ALREADY_FULL(HttpStatus.CONFLICT, "이미 5명의 감독자가 참여했습니다."),
@@ -59,7 +61,7 @@ public enum ErrorCode {
     FEEDBACK_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "해당 인증에 이미 피드백이 존재합니다."),
 
     // 알림 관련
-    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 알림 타입입니다."),
+    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 알림을 찾을 수 없습니다."),
     INVALID_NOTIFICATION_TYPE(HttpStatus.BAD_REQUEST, "유효하지 않은 알림 타입입니다.");
 
     private final HttpStatus httpStatus;

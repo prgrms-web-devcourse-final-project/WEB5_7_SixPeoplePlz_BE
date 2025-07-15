@@ -18,7 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/api/notifications")
 @RequiredArgsConstructor
 public class NotificationController implements NotificationControllerDocs {
@@ -76,7 +76,7 @@ public class NotificationController implements NotificationControllerDocs {
      */
     @Override
     @DeleteMapping("/{notificationId}")
-    public CommonResponse<Void> deleteSingleNotification(@PathVariable Long notificationId) {
+    public CommonResponse<Void> deleteSingleNotification(@PathVariable("notificationId") Long notificationId) {
         deleteSingleNotification.execute(notificationId);
         return CommonResponse.success();
     }
@@ -88,7 +88,7 @@ public class NotificationController implements NotificationControllerDocs {
      */
     @Override
     @PatchMapping("/{notificationId}/read")
-    public CommonResponse<Void> markSingleNotificationAsRead(@PathVariable Long notificationId) {
+    public CommonResponse<Void> markSingleNotificationAsRead(@PathVariable("notificationId") Long notificationId) {
         markSingleNotificationAsRead.execute(notificationId);
         return CommonResponse.success();
     }
