@@ -3,7 +3,7 @@ package me.jinjjahalgae.domain.proof.usecase.get.await.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 /**
  * 대기중인 인증 조회를 위한 response
@@ -38,7 +38,7 @@ public record ProofAwaitResponse(
         String comment,
 
         @Schema(description = "인증 생성 시간 -> 인증 카드의 HH남음, mm남음 계산용")
-        LocalDateTime createdAt,
+        Instant createdAt,
 
         @Schema(description = "대기중 상태 APPROVE_PENDING (다른 상태가 전달되는 경우 예외)")
         ProofStatus status,
