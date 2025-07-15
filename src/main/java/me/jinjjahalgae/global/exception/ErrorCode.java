@@ -58,7 +58,7 @@ public enum ErrorCode {
     FEEDBACK_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "해당 인증에 이미 피드백이 존재합니다."),
 
     // 알림 관련
-    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 알림 타입입니다."),
+    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 알림을 찾을 수 없습니다."),
     INVALID_NOTIFICATION_TYPE(HttpStatus.BAD_REQUEST, "유효하지 않은 알림 타입입니다.");
 
     private final HttpStatus httpStatus;
