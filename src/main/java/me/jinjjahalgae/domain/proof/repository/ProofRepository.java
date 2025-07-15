@@ -1,5 +1,6 @@
 package me.jinjjahalgae.domain.proof.repository;
 
+import me.jinjjahalgae.domain.notification.model.NotificationData;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 import org.springframework.data.domain.Page;
@@ -243,4 +244,11 @@ AND p.createdAt BETWEEN :startDate AND :endDate
     @Query("UPDATE Proof p SET p.status = :status WHERE p.id IN :proofIds")
     void updateProofStatus(@Param("proofIds") List<Long> proofIds, @Param("status") ProofStatus status);
 
+    @Query(value = """
+    SELECT p.contract_id AS contractId, c.user_id AS actorUserId
+    FROM proof p
+    JOIN contract c ON p.contract_id = c.id
+    WHERE p.id IN (:proofIds)
+""", nativeQuery = true)
+    List<NotificationData> findNotificationDataByProofIds(@Param("proofIds") List<Long> proofIds);
 }

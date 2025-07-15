@@ -6,10 +6,15 @@ import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.domain.feedback.entity.Feedback;
 import me.jinjjahalgae.domain.feedback.enums.FeedbackStatus;
 import me.jinjjahalgae.domain.feedback.repository.FeedbackRepository;
+import me.jinjjahalgae.domain.notification.enums.NotificationType;
+import me.jinjjahalgae.domain.notification.model.NotificationData;
+import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationBatchEvent;
+import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
 import me.jinjjahalgae.global.exception.ErrorCode;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -26,6 +31,7 @@ public class CheckExpiredProofUseCaseImpl implements CheckExpiredProofUseCase {
     private final ProofRepository proofRepository;
     private final FeedbackRepository feedbackRepository;
     private final EntityManager entityManager;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -72,10 +78,14 @@ public class CheckExpiredProofUseCaseImpl implements CheckExpiredProofUseCase {
 
         // 5. Proof 상태 벌크 업데이트
         if (!approvedProofIds.isEmpty()) {
+            List<NotificationData> approveNotification = proofRepository.findNotificationDataByProofIds(approvedProofIds);
             proofRepository.updateProofStatus(approvedProofIds, ProofStatus.APPROVED);
+            eventPublisher.publishEvent(new NotificationBatchEvent(NotificationType.PROOF_ACCEPTED, approveNotification));
         }
         if (!rejectedProofIds.isEmpty()) {
+            List<NotificationData> rejectNotification = proofRepository.findNotificationDataByProofIds(rejectedProofIds);
             proofRepository.updateProofStatus(rejectedProofIds, ProofStatus.REJECTED);
+            eventPublisher.publishEvent(new NotificationBatchEvent(NotificationType.PROOF_REJECTED, rejectNotification));
         }
 
     }
