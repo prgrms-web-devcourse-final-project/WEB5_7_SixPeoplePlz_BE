@@ -33,7 +33,7 @@ public class InviteController implements InviteControllerDocs {
     @PostMapping("/{contractId}")
     @ResponseStatus(HttpStatus.CREATED)
     public CommonResponse<InviteLinkResponse> createInviteLink(
-            @PathVariable Long contractId,
+            @PathVariable("contractId") Long contractId,
             @AuthenticationPrincipal CustomJwtPrincipal principal) {
         InviteLinkResponse result = createInviteLinkUseCase.execute(contractId, principal.getUser());
         return CommonResponse.success(result);

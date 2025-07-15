@@ -3,7 +3,7 @@ package me.jinjjahalgae.domain.feedback.usecase.common.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import me.jinjjahalgae.domain.feedback.enums.FeedbackStatus;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 /**
  * 인증 상세 내 피드백 response
@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 )
 public record FeedbackResponse(
         @Schema(description = "피드백 생성일")
-        LocalDateTime createdAt,
+        Instant createdAt,
 
         @Schema(description = "피드백 상태 (APPROVED:승인, REJECTED: 거절")
         FeedbackStatus status,

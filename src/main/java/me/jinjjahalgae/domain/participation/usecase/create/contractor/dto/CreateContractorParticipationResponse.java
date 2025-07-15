@@ -1,7 +1,7 @@
 package me.jinjjahalgae.domain.participation.usecase.create.contractor.dto;
 
 import me.jinjjahalgae.domain.participation.enums.Role;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -35,5 +35,5 @@ public record CreateContractorParticipationResponse(
         Boolean valid,
 
         @Schema(description = "서명 일시", example = "2024-01-01T09:00:00")
-        LocalDateTime createdAt
+        Instant createdAt
 ) { }

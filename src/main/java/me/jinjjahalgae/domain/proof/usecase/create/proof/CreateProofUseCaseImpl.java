@@ -32,20 +32,17 @@ public class CreateProofUseCaseImpl implements CreateProofUseCase {
     @Override
     @Transactional
     public void execute(ProofCreateRequest request, Long contractId, Long userId) {
-        // 유저의 계약인지 확인
-        boolean isUserContract = contractRepository.existsByIdAndUserId(contractId, userId);
+        Contract contract = contractRepository.findByIdWithUser(contractId)
+                .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException(contractId + "에 해당하는 계약이 존재하지 않습니다."));
 
         // 유저의 계약이 아닐 경우 예외
-        if (!isUserContract) {
+        if (!isUserContract(contract, userId)) {
             throw ErrorCode.ACCESS_DENIED.domainException("계약에 대한 접근 권한이 없습니다.");
         }
 
-        // 계약이 시작전인지 확인
-        boolean isPendingContract = contractRepository.existsByIdAndStatus(contractId, ContractStatus.PENDING);
-
-        // 시작 전이라면 예외
-        if (isPendingContract) {
-            throw ErrorCode.CONTRACT_NOT_STARTED.domainException("시작 전인 계약에 인증 생성을 요청하였습니다");
+        // 진행중이 아니라면
+        if (!isInProgress(contract)) {
+            throw ErrorCode.CONTRACT_MUST_IN_PROGRESS.domainException("계약 진행중이 아닙니다.");
         }
 
         // 이미지가 1장도 없는 경우 예외 발생
@@ -59,9 +56,6 @@ public class CreateProofUseCaseImpl implements CreateProofUseCase {
         if(isProofExist) {
             throw ErrorCode.PROOF_ALREADY_EXISTS.domainException("오늘자 인증이 이미 존재합니다.");
         }
-
-        Contract contract = contractRepository.findById(contractId)
-                .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException(contractId + "에 대한 계약이 존재하지 않습니다."));
 
         // 인증 생성
         Proof proof = ProofMapper.toEntity(request.comment(), contract.getTotalSupervisor(), contractId);
@@ -91,6 +85,16 @@ public class CreateProofUseCaseImpl implements CreateProofUseCase {
                 contractId,
                 userId
         ));
+    }
+
+    // 계약이 진행중인지 확인하는 메서드
+    private boolean isInProgress(Contract contract) {
+        return contract.getStatus() == ContractStatus.IN_PROGRESS;
+    }
+
+    // 유저의 계약인지 확인하는 메서드
+    private boolean isUserContract(Contract contract, Long userId) {
+        return contract.getUser().getId().equals(userId);
     }
 
     // 계약에 오늘자 인증이 존재하는 지 확인하는 메서드

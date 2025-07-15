@@ -33,7 +33,7 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     @Query("SELECT CASE WHEN COUNT(c) > 0 THEN TRUE ELSE FALSE END FROM Contract c WHERE c.id = :contractId AND c.user.id = :userId")
     boolean existsByIdAndUserId(@Param("contractId") Long contractId, @Param("userId") Long userId);
 
-    // PENDING 상태 계약 확인용
+    // IN_PROGRESS 상태 계약 확인용
     boolean existsByIdAndStatus(Long id, ContractStatus status);
 
     // 시작일로 대기중 계약 조회
@@ -169,7 +169,11 @@ AND EXISTS (
         AND p.valid = true
         AND (:keyword IS NULL OR LOWER(c.title) LIKE LOWER(CONCAT('%', :keyword, '%')))
         AND (:endDate IS NULL OR c.endDate <= :endDate)
-        AND (:status IS NULL OR c.status = :status)
+        AND (
+             (:status IS NULL AND c.status IN ('COMPLETED', 'FAILED', 'ABANDONED'))
+             OR
+             (:status IS NOT NULL AND c.status = :status)
+         )
         ORDER BY c.endDate DESC
         """)
     Page<Contract> findContractHistoryByConditions(

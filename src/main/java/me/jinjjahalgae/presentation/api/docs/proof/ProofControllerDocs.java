@@ -54,16 +54,6 @@ public interface ProofControllerDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = {
                                     @ExampleObject(
-                                            name = "이미 인증이 존재하는 경우",
-                                            value = """
-                                            {
-                                              "success": false,
-                                              "code": "PROOF_ALREADY_EXISTS",
-                                              "message": "해당 날짜에 이미 인증이 존재합니다."
-                                            }
-                                            """
-                                    ),
-                                    @ExampleObject(
                                             name = "인증 사진이 1장도 존재하지 않는 경우",
                                             value = """
                                             {
@@ -155,6 +145,25 @@ public interface ProofControllerDocs {
 
                     )
 
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "오늘 이미 인증을 한 경우",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "오늘 날짜에 인증이 존재하는 경우",
+                                    value = """
+                                    {
+                                      "success": false,
+                                      "code": "REPROOF_ALREADY_EXISTS",
+                                      "message": "해당 날짜에 이미 인증이 존재합니다."
+                                    }
+                                    """
+                            )
+
+                    )
             )
     })
     CommonResponse<Void> createProof(
@@ -195,16 +204,6 @@ public interface ProofControllerDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = {
-                                    @ExampleObject(
-                                            name = "이미 재인증이 존재하는 경우",
-                                            value = """
-                                            {
-                                              "success": false,
-                                              "code": "REPROOF_ALREADY_EXISTS",
-                                              "message": "해당 날짜에 이미 재인증이 존재합니다."
-                                            }
-                                            """
-                                    ),
                                     @ExampleObject(
                                             name = "재인증 사진이 1장도 존재하지 않는 경우",
                                             value = """
@@ -317,7 +316,24 @@ public interface ProofControllerDocs {
                                     )
                             }
                     )
-
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "원본 인증에 대한 재인증이 존재하는 경우",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "이미 재인증이 존재하는 경우",
+                                    value = """
+                                    {
+                                      "success": false,
+                                      "code": "REPROOF_ALREADY_EXISTS",
+                                      "message": "해당 날짜에 이미 재인증이 존재합니다."
+                                    }
+                                    """
+                                    )
+                    )
             )
     })
     CommonResponse<Void> createReProof(
@@ -417,8 +433,24 @@ public interface ProofControllerDocs {
                                     }
                                     """
                             )
-
-
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "계약이 존재하지 않음",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "존재하지 않는 계약 id로 요청한 경우",
+                                    value = """
+                                    {
+                                      "success": false,
+                                      "code": "CONTRACT_NOT_FOUND",
+                                      "message": "존재하지 않는 계약입니다."
+                                    }
+                                    """
+                            )
                     )
             )
     })
@@ -680,7 +712,8 @@ public interface ProofControllerDocs {
                                       "success": true,
                                       "result": [
                                         {
-                                          "date": "2025-07-01",
+                                          "date": "2025-07-01T00:34:38Z",
+                                          "endDate": "2025-07-31T00:34:38Z",
                                           "originalProof": {
                                             "imageKey": "1234abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "status": "REJECTED",
@@ -688,7 +721,7 @@ public interface ProofControllerDocs {
                                             "completedSupervisors": 2,
                                             "proofId": 20
                                           },
-                                          "rejectedAt": "2025-07-01T10:30:00+09:00",
+                                          "rejectedAt": "2025-07-01T00:34:38Z",
                                           "reProof": {
                                             "imageKey": "5678abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "status": "APPROVED",
@@ -698,7 +731,8 @@ public interface ProofControllerDocs {
                                           }
                                         },
                                         {
-                                          "date": "2025-07-02",
+                                          "date": "2025-07-02T00:34:38Z",
+                                          "endDate": "2025-07-31T00:34:38Z",
                                           "originalProof": {
                                             "imageKey": "2344abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "status": "APPROVED",
@@ -706,7 +740,7 @@ public interface ProofControllerDocs {
                                             "completedSupervisors": 2,
                                             "proofId": 24
                                           },
-                                          "rejectedAt": "2025-07-02T11:30:00+09:00",
+                                          "rejectedAt": "2025-07-02T00:34:38Z",
                                           "reProof": null
                                         }
                                       ]
@@ -722,7 +756,7 @@ public interface ProofControllerDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
-                                    name = "년, 월 값이 잘못된 경우",
+                                    name = "년, 월 값이 잘못 되었거나 존재하지 않는 경우",
                                     value =
                                     """
                                     {
@@ -788,8 +822,8 @@ public interface ProofControllerDocs {
     })
     CommonResponse<List<ContractorProofListResponse>> getContractorProofList(
             @Parameter(description = "계약 id", required = true) @PathVariable Long contractId,
-            @Parameter(description = "년", required = true) int year,
-            @Parameter(description = "월", required = true) int month,
+            @Parameter(description = "년", required = true) Integer year,
+            @Parameter(description = "월", required = true) Integer month,
             @Parameter(hidden = true) CustomJwtPrincipal user
     );
 
@@ -812,7 +846,7 @@ public interface ProofControllerDocs {
                                       "success": true,
                                       "result": [
                                         {
-                                          "date": "2025-07-01",
+                                          "date": "2025-07-01T00:34:38Z",
                                           "originalProof": {
                                             "imageKey": "1234abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "status": "REJECTED",
@@ -831,7 +865,7 @@ public interface ProofControllerDocs {
                                           "reProofFeedbackStatus": "APPROVED"
                                         },
                                         {
-                                          "date": "2025-07-02",
+                                          "date": "2025-07-02T00:34:38Z",
                                           "originalProof": {
                                             "imageKey": "2344abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "status": "APPROVED",
@@ -856,7 +890,7 @@ public interface ProofControllerDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
-                                    name = "년, 월 값이 잘못된 경우",
+                                    name = "년, 월 값이 잘못 되었거나 존재하지 않는 경우",
                                     value =
                                     """
                                     {
@@ -916,15 +950,31 @@ public interface ProofControllerDocs {
                                     }
                                     """
                             )
-
-
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "계약이 존재하지 않음",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "존재하지 않는 계약 id로 요청한 경우",
+                                    value = """
+                                    {
+                                      "success": false,
+                                      "code": "CONTRACT_NOT_FOUND",
+                                      "message": "존재하지 않는 계약입니다."
+                                    }
+                                    """
+                            )
                     )
             )
     })
     CommonResponse<List<SupervisorProofListResponse>> getSupervisorProofList(
             @Parameter(description = "계약 id", required = true) @PathVariable Long contractId,
-            @Parameter(description = "년", required = true) int year,
-            @Parameter(description = "월", required = true) int month,
+            @Parameter(description = "년", required = true) Integer year,
+            @Parameter(description = "월", required = true) Integer month,
             @Parameter(hidden = true) CustomJwtPrincipal user
     );
 }

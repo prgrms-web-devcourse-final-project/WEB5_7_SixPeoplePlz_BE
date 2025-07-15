@@ -1,6 +1,6 @@
 package me.jinjjahalgae.domain.contract.usecase.create.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
@@ -66,13 +66,13 @@ public record CreateContractRequest(
         example = "2025-01-01T00:00:00", 
         requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "startDate은 필수입니다.")
-    LocalDateTime startDate,
+    Instant startDate,
 
     @Schema(description = "계약 종료일", 
         example = "2025-01-01T00:00:00", 
         requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "endDate은 필수입니다.")
-    LocalDateTime endDate,
+    Instant endDate,
 
     @Schema(description = "계약서 디자인 타입", 
         example = "BASIC", 

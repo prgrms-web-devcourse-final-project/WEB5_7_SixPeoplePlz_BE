@@ -1,6 +1,7 @@
 package me.jinjjahalgae.domain.proof.usecase.get.await;
 
 import lombok.RequiredArgsConstructor;
+import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.participation.repository.ParticipationRepository;
 import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.mapper.ProofMapper;
@@ -17,11 +18,20 @@ import java.util.List;
 public class GetAwaitProofUseCaseImpl implements GetAwaitProofUseCase {
 
     private final ProofRepository proofRepository;
+    private final ContractRepository contractRepository;
     private final ParticipationRepository participationRepository;
 
     @Override
     @Transactional(readOnly = true)
     public List<ProofAwaitResponse> execute(Long contractId, Long userId) {
+        // 계약이 존재하는 지 확인
+        boolean isContractExist = contractRepository.existsById(contractId);
+
+        // 계약이 존재하지 않는 다면 예외 발생
+        if(!isContractExist) {
+            throw ErrorCode.CONTRACT_NOT_FOUND.domainException(contractId + "에 대한 계약이 존재하지 않습니다.");
+        }
+
         // 유저가 계약의 참여자인지 확인
         boolean isUserParticipate = participationRepository.existsByContractIdAndUserId(contractId, userId);
 

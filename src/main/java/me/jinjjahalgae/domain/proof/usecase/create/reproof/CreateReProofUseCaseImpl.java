@@ -43,20 +43,17 @@ public class CreateReProofUseCaseImpl implements CreateReProofUseCase {
 
         // 계약 조회 - 계약이 존재하는 지 검증 겸용
         Long contractId = proof.getContractId();
-        Contract contract = contractRepository.findById(contractId)
+        Contract contract = contractRepository.findByIdWithUser(contractId)
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException(contractId + "에 대한 계약이 존재하지 않습니다."));
 
-        // 유저의 계약인지 확인
-        boolean isUserContract = contractRepository.existsByIdAndUserId(contractId, userId);
-
         // 유저의 계약이 아닐 경우 예외
-        if (!isUserContract) {
+        if (!isUserContract(contract, userId)) {
             throw ErrorCode.ACCESS_DENIED.domainException("계약에 대한 접근 권한이 없습니다.");
         }
 
-        // 시작 전이라면 예외
-        if (isPendingContract(contract)) {
-            throw ErrorCode.CONTRACT_NOT_STARTED.domainException("시작 전인 계약에 인증 생성을 요청하였습니다");
+        // 진행중이 아니라면
+        if (!isInProgressContract(contract)) {
+            throw ErrorCode.CONTRACT_MUST_IN_PROGRESS.domainException("계약 진행중이 아닙니다.");
         }
 
         // 계약 종료 2일 전 재인증 생성 요청 시 예외
@@ -100,8 +97,14 @@ public class CreateReProofUseCaseImpl implements CreateReProofUseCase {
         ));
     }
 
-    private boolean isPendingContract(Contract contract) {
-        return contract.getStatus() == ContractStatus.PENDING;
+    // 유저의 계약인지 확인하는 메서드
+    private boolean isUserContract(Contract contract, Long userId) {
+        return contract.getUser().getId().equals(userId);
+    }
+
+    // 계약이 진행중인지 확인하는 메서드
+    private boolean isInProgressContract(Contract contract) {
+        return contract.getStatus() == ContractStatus.IN_PROGRESS;
     }
 
     // 계약에 오늘자 재인증이 존재하는 지 확인하는 메서드
