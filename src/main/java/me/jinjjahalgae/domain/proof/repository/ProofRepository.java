@@ -80,7 +80,7 @@ AND p.proofId IS NOT NULL
      * @param pageable   페이징 (3개의 인증을 가져옴(
      * @return List<Long> 0~3개의 인증을 가져옴
      */
-    @Query("SELECT p.id FROM Proof p WHERE p.contractId = :contractId ORDER BY p.id DESC")
+    @Query("SELECT p.id FROM Proof p WHERE p.contractId = :contractId ORDER BY p.createdAt DESC")
     List<Long> findProofIdsByContractId(@Param("contractId") Long contractId, Pageable pageable);
 
     /**
