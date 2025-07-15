@@ -87,6 +87,7 @@ public class ProofController implements ProofControllerDocs {
     @Override
     @GetMapping("/contractors/contracts/{contractId}/proofs")
     @ResponseStatus(HttpStatus.OK)
+
     public CommonResponse<List<ContractorProofListResponse>> getContractorProofList(@PathVariable Long contractId,
                                                                                     @RequestParam(required = false) Integer year,
                                                                                     @RequestParam(required = false) Integer month,
