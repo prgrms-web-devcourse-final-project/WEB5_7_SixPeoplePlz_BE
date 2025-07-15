@@ -280,6 +280,24 @@ public interface NotificationControllerDocs {
                     )
                 }
             )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "존재하지 않는 알림",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "알림을 찾을 수 없는 경우",
+                    value = """
+                    {
+                      "success": false,
+                      "code": "NOTIFICATION_NOT_FOUND",
+                      "message": "해당 알림을 찾을 수 없습니다."
+                    }
+                    """
+                )
+            )
         )
     })
     CommonResponse<Void> deleteSingleNotification(
@@ -348,7 +366,7 @@ public interface NotificationControllerDocs {
                     {
                       "success": false,
                       "code": "NOTIFICATION_NOT_FOUND",
-                      "message": "존재하지 않는 알림 id입니다."
+                      "message": "해당 알림을 찾을 수 없습니다."
                     }"""
                 )
             )
