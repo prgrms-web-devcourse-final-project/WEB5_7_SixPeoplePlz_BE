@@ -249,8 +249,4 @@ public class Contract extends BaseEntity {
         this.currentFail += failCounts;
     }
 
-    //감독자 수 증가 반영
-    public void increaseTotalSupervisor() {
-        this.totalSupervisor++;
-    }
 }

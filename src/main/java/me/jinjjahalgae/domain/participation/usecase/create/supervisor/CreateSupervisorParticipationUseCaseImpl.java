@@ -70,7 +70,6 @@ public class CreateSupervisorParticipationUseCaseImpl implements CreateSuperviso
 
         // 계약에 참여 정보 추가 및 감독자 수 증가
         contract.addParticipation(newParticipation);
-        contract.increaseTotalSupervisor();
 
         // 감독자 참여 알림 전송
         eventPublisher.publishEvent(new NotificationEvent(
