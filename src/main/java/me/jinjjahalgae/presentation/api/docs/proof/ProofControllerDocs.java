@@ -712,7 +712,8 @@ public interface ProofControllerDocs {
                                       "success": true,
                                       "result": [
                                         {
-                                          "date": "2025-07-01",
+                                          "date": "2025-07-01T00:34:38Z",
+                                          "endDate": "2025-07-31T00:34:38Z",
                                           "originalProof": {
                                             "imageKey": "1234abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "status": "REJECTED",
@@ -720,7 +721,7 @@ public interface ProofControllerDocs {
                                             "completedSupervisors": 2,
                                             "proofId": 20
                                           },
-                                          "rejectedAt": "2025-07-01T10:30:00+09:00",
+                                          "rejectedAt": "2025-07-01T00:34:38Z",
                                           "reProof": {
                                             "imageKey": "5678abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "status": "APPROVED",
@@ -730,7 +731,8 @@ public interface ProofControllerDocs {
                                           }
                                         },
                                         {
-                                          "date": "2025-07-02",
+                                          "date": "2025-07-02T00:34:38Z",
+                                          "endDate": "2025-07-31T00:34:38Z",
                                           "originalProof": {
                                             "imageKey": "2344abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "status": "APPROVED",
@@ -738,7 +740,7 @@ public interface ProofControllerDocs {
                                             "completedSupervisors": 2,
                                             "proofId": 24
                                           },
-                                          "rejectedAt": "2025-07-02T11:30:00+09:00",
+                                          "rejectedAt": "2025-07-02T00:34:38Z",
                                           "reProof": null
                                         }
                                       ]
@@ -844,7 +846,7 @@ public interface ProofControllerDocs {
                                       "success": true,
                                       "result": [
                                         {
-                                          "date": "2025-07-01",
+                                          "date": "2025-07-01T00:34:38Z",
                                           "originalProof": {
                                             "imageKey": "1234abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "status": "REJECTED",
@@ -863,7 +865,7 @@ public interface ProofControllerDocs {
                                           "reProofFeedbackStatus": "APPROVED"
                                         },
                                         {
-                                          "date": "2025-07-02",
+                                          "date": "2025-07-02T00:34:38Z",
                                           "originalProof": {
                                             "imageKey": "2344abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "status": "APPROVED",

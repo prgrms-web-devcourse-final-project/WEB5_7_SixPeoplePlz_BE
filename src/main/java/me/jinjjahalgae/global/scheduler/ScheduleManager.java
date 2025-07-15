@@ -25,7 +25,7 @@ public class ScheduleManager {
      * - 단건 계약 서명검증
      * - 인증 24시간(만료) 체크
      */
-    @Scheduled(cron = "0 */5 * * * *")
+    @Scheduled(cron = "0 */5 * * * *", zone = "Asia/Seoul" )
     @Transactional
     public void fiveMinuteSchedule() {
         // 단건 계약 24시간 체크
