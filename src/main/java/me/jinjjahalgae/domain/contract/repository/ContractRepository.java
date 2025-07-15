@@ -184,4 +184,18 @@ AND EXISTS (
         @Param("status") ContractStatus status,
         Pageable pageable
     );
+
+    /**
+     * 어제 또는 이전에 종료되었어야 하는 '진행중' 또는 '결과 대기' 상태의 모든 계약을 조회
+     * @param statuses 조회할 계약 상태 목록 (IN_PROGRESS, WAIT_RESULT)
+     * @param before 기준 날짜 (어제)
+     * @return 조건에 맞는 계약 목록
+     */
+    @Query("""
+        SELECT c
+        FROM Contract c
+        WHERE c.status IN :statuses
+        AND FUNCTION('DATE', c.endDate) <= :before
+    """)
+    List<Contract> findContractsToEnd(@Param("statuses") List<ContractStatus> statuses, @Param("before") LocalDate before);
 }
