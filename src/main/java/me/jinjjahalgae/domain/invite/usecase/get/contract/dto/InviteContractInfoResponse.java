@@ -19,9 +19,7 @@ import java.util.List;
  * @param goal                      계약 목표
  * @param penalty                   벌칙
  * @param reward                    보상
- * @param life                      실패 가능 횟수
  * @param totalProof                총 인증 횟수
- * @param totalSupervisor           현재 감독자 수
  * @param oneOff                    단발성 여부
  * @param status                    계약 상태
  * @param type                      계약서 템플릿 타입
@@ -41,9 +39,7 @@ import java.util.List;
           "goal": "한 달 동안 매일 아침 조깅을 하여 체력을 증진한다.",
           "penalty": "실패 시 친구에게 커피 사주기",
           "reward": "성공 시 나에게 선물 사주기",
-          "life": 3,
           "totalProof": 30,
-          "totalSupervisor": 2,
           "oneOff": false,
           "status": "PENDING",
           "type": "BASIC",
@@ -88,14 +84,8 @@ public record InviteContractInfoResponse(
         @Schema(description = "보상")
         String reward,
 
-        @Schema(description = "실패 가능 횟수")
-        int life,
-
         @Schema(description = "총 인증 횟수")
         int totalProof,
-
-        @Schema(description = "현재 감독자 수")
-        int totalSupervisor,
 
         @Schema(description = "단발성 여부")
         boolean oneOff,
