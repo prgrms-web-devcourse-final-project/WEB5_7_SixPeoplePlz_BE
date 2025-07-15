@@ -249,6 +249,13 @@ public class Contract extends BaseEntity {
         this.currentFail += failCounts;
     }
 
+    // 서명 전 계약 시작 여부 확인
+    public void isPending() {
+        if (this.status != ContractStatus.PENDING) {
+            throw ErrorCode.CANNOT_PARTICIPATE_AFTER_START.domainException("시작 전인 계약만 서명할 수 있습니다.");
+        }
+    }
+
     // 계약 상태가 진행중인지 검증
     public boolean isInProgress() {
         return this.status == ContractStatus.IN_PROGRESS;

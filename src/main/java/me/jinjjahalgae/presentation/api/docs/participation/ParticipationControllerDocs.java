@@ -100,6 +100,18 @@ public interface ParticipationControllerDocs {
                             )
                     )
             ),
+            @ApiResponse(responseCode = "404", description = "존재하지 않거나 만료된 초대링크",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(name = "존재하지 않거나 만료된 초대링크", value = """
+                                    {
+                                        "success": false,
+                                        "code": "INVITE_NOT_FOUND",
+                                        "message": "존재하지 않거나 만료된 초대 정보 입니다."
+                                    }"""
+                            )
+                    )
+            ),
             @ApiResponse(
                     responseCode = "409",
                     description = "감독자 인원 초과",
@@ -113,6 +125,23 @@ public interface ParticipationControllerDocs {
                                       "success": false,
                                       "code": "SUPERVISOR_ALREADY_FULL",
                                       "message": "이미 5명의 감독자가 참여했습니다."
+                                    }"""
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "계약 시작 후 서명을 하면 예외 반환",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "계약 시작 후 서명을 한 경우",
+                                    value = """
+                                    {
+                                      "success": false,
+                                      "code": "CANNOT_PARTICIPATE_AFTER_START",
+                                      "message": "시작 전인 계약만 서명할 수 있습니다."
                                     }"""
                             )
                     )

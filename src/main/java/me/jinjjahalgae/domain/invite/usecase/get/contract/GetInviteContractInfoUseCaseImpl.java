@@ -43,7 +43,7 @@ public class GetInviteContractInfoUseCaseImpl implements GetInviteContractInfoUs
         }
 
         // 계약자 정보 조회
-        boolean hasContractorAuthority = !participationRepository.existsByContractIdAndRole(contract.getId(), Role.CONTRACTOR);
+        boolean hasContractorAuthority = participationRepository.existsByContractIdAndRole(contract.getId(), Role.CONTRACTOR);
 
         if (!hasContractorAuthority) {
             throw ErrorCode.CONTRACTOR_PARTICIPATION_NOT_FOUND.serviceException("계약자의 정보가 없는 계약입니다.");
