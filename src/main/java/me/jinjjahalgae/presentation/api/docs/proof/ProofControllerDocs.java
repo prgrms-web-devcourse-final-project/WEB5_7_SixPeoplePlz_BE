@@ -54,16 +54,6 @@ public interface ProofControllerDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = {
                                     @ExampleObject(
-                                            name = "이미 인증이 존재하는 경우",
-                                            value = """
-                                            {
-                                              "success": false,
-                                              "code": "PROOF_ALREADY_EXISTS",
-                                              "message": "해당 날짜에 이미 인증이 존재합니다."
-                                            }
-                                            """
-                                    ),
-                                    @ExampleObject(
                                             name = "인증 사진이 1장도 존재하지 않는 경우",
                                             value = """
                                             {
@@ -155,6 +145,25 @@ public interface ProofControllerDocs {
 
                     )
 
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "오늘 이미 인증을 한 경우",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "오늘 날짜에 인증이 존재하는 경우",
+                                    value = """
+                                    {
+                                      "success": false,
+                                      "code": "REPROOF_ALREADY_EXISTS",
+                                      "message": "해당 날짜에 이미 인증이 존재합니다."
+                                    }
+                                    """
+                            )
+
+                    )
             )
     })
     CommonResponse<Void> createProof(
@@ -195,16 +204,6 @@ public interface ProofControllerDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = {
-                                    @ExampleObject(
-                                            name = "이미 재인증이 존재하는 경우",
-                                            value = """
-                                            {
-                                              "success": false,
-                                              "code": "REPROOF_ALREADY_EXISTS",
-                                              "message": "해당 날짜에 이미 재인증이 존재합니다."
-                                            }
-                                            """
-                                    ),
                                     @ExampleObject(
                                             name = "재인증 사진이 1장도 존재하지 않는 경우",
                                             value = """
@@ -317,7 +316,24 @@ public interface ProofControllerDocs {
                                     )
                             }
                     )
-
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "원본 인증에 대한 재인증이 존재하는 경우",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "이미 재인증이 존재하는 경우",
+                                    value = """
+                                    {
+                                      "success": false,
+                                      "code": "REPROOF_ALREADY_EXISTS",
+                                      "message": "해당 날짜에 이미 재인증이 존재합니다."
+                                    }
+                                    """
+                                    )
+                    )
             )
     })
     CommonResponse<Void> createReProof(
