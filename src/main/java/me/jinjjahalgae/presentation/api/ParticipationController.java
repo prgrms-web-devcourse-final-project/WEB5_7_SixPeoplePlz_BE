@@ -28,7 +28,7 @@ public class ParticipationController implements ParticipationControllerDocs {
     @PostMapping("/{contractId}/signature")
     @ResponseStatus(HttpStatus.CREATED)
     public CommonResponse<Void> joinAsSupervisor(
-            @PathVariable Long contractId,
+            @PathVariable("contractId") Long contractId,
             @Valid @RequestBody CreateContractorParticipationRequest request,
             @AuthenticationPrincipal CustomJwtPrincipal principal) {
         createSupervisorParticipationUseCase.execute(contractId, request, principal.getUser());
@@ -39,7 +39,7 @@ public class ParticipationController implements ParticipationControllerDocs {
     @DeleteMapping("/{contractId}/supervisors/withdraw")
     @ResponseStatus(HttpStatus.OK)
     public CommonResponse<Void> withdrawAsSupervisor(
-            @PathVariable Long contractId,
+            @PathVariable("contractId") Long contractId,
             @AuthenticationPrincipal CustomJwtPrincipal principal) {
         deleteSupervisorParticipationUseCase.execute(contractId, principal.getUser());
         return CommonResponse.success();
@@ -49,7 +49,7 @@ public class ParticipationController implements ParticipationControllerDocs {
     @PatchMapping("/{contractId}/supervisors/withdraw")
     @ResponseStatus(HttpStatus.OK)
     public CommonResponse<Void> abandonAsSupervisor(
-            @PathVariable Long contractId,
+            @PathVariable("contractId") Long contractId,
             @AuthenticationPrincipal CustomJwtPrincipal principal) {
         patchSupervisorParticipationUseCase.execute(contractId, principal.getUser());
         return CommonResponse.success();
