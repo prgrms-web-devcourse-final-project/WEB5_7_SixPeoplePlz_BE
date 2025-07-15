@@ -13,8 +13,8 @@ import java.time.Instant;
         description = "계약자 한 달치 인증 목록 응답 DTO",
         example = """
         {
-          "date": "2025-07-09",
-          "endDate": "2025-07-31T15:00:00+09:00"
+          "date": "2025-07-09T00:34:38Z",
+          "endDate": "2025-07-31T00:34:38Z"
           "originalProof": {
             "imageKey": "1234abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
             "status": "APPROVED",
@@ -22,14 +22,14 @@ import java.time.Instant;
             "completedSupervisors": 2,
             "proofId": 20
           },
-          "rejectedAt": "2025-07-09T13:30:00+09:00",
+          "rejectedAt": "2025-07-09T00:34:38Z",
           "reProof": null
         }
         """
 )
 public record ContractorProofListResponse(
-        @Schema(description = "인증이 생성된 날짜 (달력 일 단위 매핑용 yyyy-MM-dd)")
-        String date,
+        @Schema(description = "인증이 생성된 날짜 (달력 일 단위 매핑용)")
+        Instant date,
 
         @Schema(description = "계약의 종료일 (종료 2일 전 재인증 요청 불가 검증에 사용할 필드)")
         Instant endDate,

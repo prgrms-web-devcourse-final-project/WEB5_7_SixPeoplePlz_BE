@@ -87,9 +87,10 @@ public class ProofController implements ProofControllerDocs {
     @Override
     @GetMapping("/contractors/contracts/{contractId}/proofs")
     @ResponseStatus(HttpStatus.OK)
-    public CommonResponse<List<ContractorProofListResponse>> getContractorProofList(@PathVariable("contractId") Long contractId,
-                                                                                    @RequestParam int year,
-                                                                                    @RequestParam int month,
+
+    public CommonResponse<List<ContractorProofListResponse>> getContractorProofList(@PathVariable Long contractId,
+                                                                                    @RequestParam(required = false) Integer year,
+                                                                                    @RequestParam(required = false) Integer month,
                                                                                     @AuthenticationPrincipal CustomJwtPrincipal user) {
         Long userId = user.getUserId();
         List<ContractorProofListResponse> result = getContractorProofListUseCase.execute(contractId, year, month, userId);
@@ -99,9 +100,9 @@ public class ProofController implements ProofControllerDocs {
     @Override
     @GetMapping("/supervisors/contracts/{contractId}/proofs")
     @ResponseStatus(HttpStatus.OK)
-    public CommonResponse<List<SupervisorProofListResponse>> getSupervisorProofList(@PathVariable("contractId") Long contractId,
-                                                                                    @RequestParam int year,
-                                                                                    @RequestParam int month,
+    public CommonResponse<List<SupervisorProofListResponse>> getSupervisorProofList(@PathVariable Long contractId,
+                                                                                    @RequestParam(required = false) Integer year,
+                                                                                    @RequestParam(required = false) Integer month,
                                                                                     @AuthenticationPrincipal CustomJwtPrincipal user) {
         Long userId = user.getUserId();
         List<SupervisorProofListResponse> result = getSupervisorProofListUseCase.execute(contractId, year, month, userId);

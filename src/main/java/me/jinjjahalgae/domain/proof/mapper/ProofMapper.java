@@ -145,16 +145,13 @@ public class ProofMapper {
             reProofResponse = toSimpleResponse(reProof);
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String date = proof.getCreatedAt().format(formatter);
-
         Instant rejectedAt = null;
         if(proof.getStatus().equals(ProofStatus.REJECTED)) {
             rejectedAt = DateTimeConverter.toInstant(proof.getUpdatedAt());
         }
 
         return new ContractorProofListResponse(
-                date,
+                DateTimeConverter.toInstant(proof.getCreatedAt()),
                 DateTimeConverter.toInstant(endDate),
                 orgResponse,
                 rejectedAt,
@@ -178,11 +175,8 @@ public class ProofMapper {
             reProofResponse = toSimpleResponse(reProof);
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String date = proof.getCreatedAt().format(formatter);
-
         return new SupervisorProofListResponse(
-                date,
+                DateTimeConverter.toInstant(proof.getCreatedAt()),
                 orgResponse,
                 orgStatus,
                 reProofResponse,
