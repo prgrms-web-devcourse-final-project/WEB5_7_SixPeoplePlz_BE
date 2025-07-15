@@ -9,6 +9,7 @@ import me.jinjjahalgae.domain.contract.usecase.get.historylist.dto.ContractHisto
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.global.exception.ErrorCode;
+import me.jinjjahalgae.global.util.DateTimeConverter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,15 +37,20 @@ public class GetContractHistoryListUseCaseImpl implements GetContractHistoryList
             try {
                 status = ContractStatus.valueOf(request.status());
                 if (!List.of(ContractStatus.COMPLETED, ContractStatus.FAILED, ContractStatus.ABANDONED).contains(status)) {
-                    throw ErrorCode.INVALID_REQUEST.domainException("status는 COMPLETED, FAILED, ABANDONED 중 하나여야 합니다.");
+                    throw ErrorCode.INVALID_CONTRACT_STATUS.domainException("status는 COMPLETED, FAILED, ABANDONED 중 하나여야 합니다: " + request.status());
                 }
             } catch (IllegalArgumentException e) {
-                throw ErrorCode.INVALID_REQUEST.domainException("유효하지 않은 status입니다: " + request.status());
+                throw ErrorCode.INVALID_CONTRACT_STATUS.domainException("유효하지 않은 status입니다: " + request.status());
             }
         }
 
         // Role enum 변환
-        Role role = Role.valueOf(request.role());
+        Role role;
+        try {
+            role = Role.valueOf(request.role());
+        } catch (IllegalArgumentException e) {
+            throw ErrorCode.INVALID_CONTRACT_ROLE.domainException("유효하지 않은 role입니다: " + request.role());
+        }
 
         // 키워드 검색 (null이면 검색 조건에서 제외)
         String keyword = request.keyword();
@@ -53,7 +59,7 @@ public class GetContractHistoryListUseCaseImpl implements GetContractHistoryList
         }
 
         // 계약종료일 < 입력된 날짜인 계약들 (null이면 검색 조건에서 제외)
-        LocalDateTime endDate = request.endDate();
+        LocalDateTime endDate = DateTimeConverter.toLocalDateTime(request.endDate());
 
         // repository에서 조건에 맞는 Contract 검색하기
         Page<Contract> contracts = contractRepository.findContractHistoryByConditions(

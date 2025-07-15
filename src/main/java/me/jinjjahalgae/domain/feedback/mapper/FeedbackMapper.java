@@ -5,6 +5,7 @@ import me.jinjjahalgae.domain.feedback.usecase.common.dto.FeedbackResponse;
 import me.jinjjahalgae.domain.feedback.entity.Feedback;
 import me.jinjjahalgae.domain.feedback.usecase.create.dto.CreateFeedbackRequest;
 import me.jinjjahalgae.domain.proof.entities.Proof;
+import me.jinjjahalgae.global.util.DateTimeConverter;
 
 public class FeedbackMapper {
     public static Feedback toEntity(Long userId, CreateFeedbackRequest req, Proof proof) {
@@ -20,7 +21,7 @@ public class FeedbackMapper {
 
     public static FeedbackResponse toResponse(Feedback feedback) {
         return new FeedbackResponse(
-                feedback.getCreatedAt(),
+                DateTimeConverter.toInstant(feedback.getCreatedAt()),
                 feedback.getStatus(),
                 feedback.getComment()
         );

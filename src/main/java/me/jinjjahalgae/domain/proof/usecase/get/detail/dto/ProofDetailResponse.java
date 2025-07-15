@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import me.jinjjahalgae.domain.feedback.usecase.common.dto.FeedbackResponse;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -55,8 +55,8 @@ public record ProofDetailResponse(
    @Schema(description = "인증 상태 (APPROVED: 승인완료, REJECTED: 거절됨)")
    ProofStatus status,
 
-   @Schema(description = "인증 생성 일자 (몇 일자 인증인지)")
-   LocalDateTime createdAt,
+   @Schema(description = "인증 생성일")
+   Instant createdAt,
 
    @Schema(description = "재인증 여부 (원본 = false, 재인증 = true)")
    boolean reProof,

@@ -23,7 +23,7 @@ public class FeedbackController implements FeedbackControllerDocs {
     @ResponseStatus(HttpStatus.CREATED)
     public CommonResponse<Void> createFeedback(
         @AuthenticationPrincipal CustomJwtPrincipal user,
-        @PathVariable Long proofId,
+        @PathVariable("proofId") Long proofId,
         @Valid @RequestBody CreateFeedbackRequest request
     ) {
         createFeedbackUseCase.execute(user.getUserId(), proofId, request);

@@ -20,11 +20,15 @@ public class GetContractTitleInfoUseCaseImpl implements GetContractTitleInfoUseC
     @Transactional(readOnly = true)
     public ContractTitleInfoResponse execute(Long userId, Long contractId) {
 
-        //유효한 참가자이면 감독자 상세 페이지 조회 (검증 : 참가자인가??)
-        //참가자는 계약 테이블이 아닌 참가 테이블과 조인 계야 아이디로 참가 테이블에서 계약 아이디가 같은 것들을 찾고 거기서 유저 id 검사
-        Contract contract = contractRepository.findValidParticipantByIdAndUserId(contractId, userId)
+        //실제 있는 계약인가?
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException("존재하지 않는 계약입니다."));
+
+        //그 계약에 대한 유효한 참가자인가?
+        contractRepository.findValidParticipantByIdAndUserId(contractId, userId)
                 .orElseThrow(() -> ErrorCode.ACCESS_DENIED.domainException("계약에 대한 접근 권한이 없습니다."));
 
+        //두가지 모두 문제없이 만족했다면 조회
         return contractMapper.toTitleInfoResponse(contract);
     }
 }
