@@ -185,4 +185,11 @@ AND EXISTS (
         @Param("status") ContractStatus status,
         Pageable pageable
     );
+
+    @Modifying
+    @Query(
+            value = "UPDATE contract SET current_proof = current_proof + 1 WHERE id IN (:contractIds)",
+            nativeQuery = true
+    )
+    void incrementCurrentProofForContracts(@Param("contractIds") List<Long> contractIds);
 }
