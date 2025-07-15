@@ -948,8 +948,24 @@ public interface ProofControllerDocs {
                                     }
                                     """
                             )
-
-
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "계약이 존재하지 않음",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "존재하지 않는 계약 id로 요청한 경우",
+                                    value = """
+                                    {
+                                      "success": false,
+                                      "code": "CONTRACT_NOT_FOUND",
+                                      "message": "존재하지 않는 계약입니다."
+                                    }
+                                    """
+                            )
                     )
             )
     })

@@ -1,6 +1,7 @@
 package me.jinjjahalgae.domain.proof.usecase.getlist.supervisorlist;
 
 import lombok.RequiredArgsConstructor;
+import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.feedback.entity.Feedback;
 import me.jinjjahalgae.domain.feedback.enums.FeedbackStatus;
 import me.jinjjahalgae.domain.feedback.repository.FeedbackRepository;
@@ -25,12 +26,21 @@ import java.util.stream.Collectors;
 public class GetSupervisorProofListUseCaseImpl implements GetSupervisorProofListUseCase {
 
     private final ProofRepository proofRepository;
+    private final ContractRepository contractRepository;
     private final FeedbackRepository feedbackRepository;
     private final ParticipationRepository participationRepository;
 
     @Override
     @Transactional(readOnly = true)
     public List<SupervisorProofListResponse> execute(Long contractId, int year, int month, Long userId) {
+        // 계약이 존재하는 지 확인
+        boolean isContractExist = contractRepository.existsById(contractId);
+
+        // 계약이 존재하지 않다면 예외 발생
+        if(!isContractExist) {
+            throw ErrorCode.CONTRACT_NOT_FOUND.domainException(contractId + "에 대한 계약이 존재하지 않습니다.");
+        }
+
         // 유저가 계약의 참여자인지 확인
         boolean isUserParticipate = participationRepository.existsByContractIdAndUserId(contractId, userId);
 
