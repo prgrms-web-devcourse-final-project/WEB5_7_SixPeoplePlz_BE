@@ -754,7 +754,7 @@ public interface ProofControllerDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
-                                    name = "년, 월 값이 잘못된 경우",
+                                    name = "년, 월 값이 잘못 되었거나 존재하지 않는 경우",
                                     value =
                                     """
                                     {
@@ -820,8 +820,8 @@ public interface ProofControllerDocs {
     })
     CommonResponse<List<ContractorProofListResponse>> getContractorProofList(
             @Parameter(description = "계약 id", required = true) @PathVariable Long contractId,
-            @Parameter(description = "년", required = true) int year,
-            @Parameter(description = "월", required = true) int month,
+            @Parameter(description = "년", required = true) Integer year,
+            @Parameter(description = "월", required = true) Integer month,
             @Parameter(hidden = true) CustomJwtPrincipal user
     );
 
@@ -888,7 +888,7 @@ public interface ProofControllerDocs {
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = @ExampleObject(
-                                    name = "년, 월 값이 잘못된 경우",
+                                    name = "년, 월 값이 잘못 되었거나 존재하지 않는 경우",
                                     value =
                                     """
                                     {
@@ -971,8 +971,8 @@ public interface ProofControllerDocs {
     })
     CommonResponse<List<SupervisorProofListResponse>> getSupervisorProofList(
             @Parameter(description = "계약 id", required = true) @PathVariable Long contractId,
-            @Parameter(description = "년", required = true) int year,
-            @Parameter(description = "월", required = true) int month,
+            @Parameter(description = "년", required = true) Integer year,
+            @Parameter(description = "월", required = true) Integer month,
             @Parameter(hidden = true) CustomJwtPrincipal user
     );
 }

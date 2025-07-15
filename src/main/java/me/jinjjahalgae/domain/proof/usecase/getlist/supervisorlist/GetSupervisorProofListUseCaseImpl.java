@@ -32,7 +32,12 @@ public class GetSupervisorProofListUseCaseImpl implements GetSupervisorProofList
 
     @Override
     @Transactional(readOnly = true)
-    public List<SupervisorProofListResponse> execute(Long contractId, int year, int month, Long userId) {
+    public List<SupervisorProofListResponse> execute(Long contractId, Integer year, Integer month, Long userId) {
+        // 년, 월 값에 대한 검증
+        if(year == null || month == null) {
+            throw ErrorCode.INVALID_YEAR_MONTH.domainException("년, 월 값이 비어있거나 올바르지 않습니다.");
+        }
+
         // 계약이 존재하는 지 확인
         boolean isContractExist = contractRepository.existsById(contractId);
 
