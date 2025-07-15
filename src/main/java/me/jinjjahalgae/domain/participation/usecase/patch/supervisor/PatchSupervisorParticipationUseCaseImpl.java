@@ -31,7 +31,7 @@ public class PatchSupervisorParticipationUseCaseImpl implements PatchSupervisorP
         // 감독자로 있지 않은 계약의 감독 중도 포기 요청을 한 경우 예외 반환
         Participation supervisorParticipation = contract.getParticipations()
                 .stream()
-                .filter(p -> p.getUser().equals(user) && p.getRole() == Role.SUPERVISOR)
+                .filter(p -> p.getUser().getId().equals(user.getId()) && p.getRole() == Role.SUPERVISOR)
                 .findFirst()
                 .orElseThrow(() -> ErrorCode.SUPERVISOR_PARTICIPATION_NOT_FOUND.serviceException("해당 계약에 감독으로 참여하고 있지 않습니다."));
 

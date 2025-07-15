@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import me.jinjjahalgae.domain.participation.enums.Role;
 
 public interface ContractRepository extends JpaRepository<Contract, Long> {
     Optional<Contract> findByUuid(String uuid);
