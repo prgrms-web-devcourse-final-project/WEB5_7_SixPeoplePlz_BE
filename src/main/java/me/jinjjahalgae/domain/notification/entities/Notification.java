@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import me.jinjjahalgae.domain.common.BaseEntity;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
 
 /**
@@ -17,7 +18,7 @@ import me.jinjjahalgae.domain.notification.enums.NotificationType;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Notification {
+public class Notification extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
