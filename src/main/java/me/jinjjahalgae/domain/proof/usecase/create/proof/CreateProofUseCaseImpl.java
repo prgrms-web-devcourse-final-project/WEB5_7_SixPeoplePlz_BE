@@ -19,8 +19,10 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Service
 @RequiredArgsConstructor
@@ -101,8 +103,8 @@ public class CreateProofUseCaseImpl implements CreateProofUseCase {
     // 계약에 오늘자 인증이 존재하는 지 확인하는 메서드
     private boolean todayProofExist(Long contractId) {
         LocalDate today = UtcDateTimeUtil.nowAsLocalDate();
-        LocalDateTime startOfDay = today.atStartOfDay();
-        LocalDateTime endOfDay = today.plusDays(1).atStartOfDay();
+        Instant startOfDay = today.atStartOfDay(ZoneOffset.UTC).toInstant();
+        Instant endOfDay = today.plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant();
         return proofRepository.existsByContractIdAndCreatedAtToday(contractId, startOfDay, endOfDay);
     }
 }

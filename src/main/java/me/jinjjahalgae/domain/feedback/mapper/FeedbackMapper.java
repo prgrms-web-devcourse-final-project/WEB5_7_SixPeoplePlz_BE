@@ -21,7 +21,7 @@ public class FeedbackMapper {
 
     public static FeedbackResponse toResponse(Feedback feedback) {
         return new FeedbackResponse(
-                DateTimeConverter.toInstant(feedback.getCreatedAt()),
+                feedback.getCreatedAt(),
                 feedback.getStatus(),
                 feedback.getComment()
         );

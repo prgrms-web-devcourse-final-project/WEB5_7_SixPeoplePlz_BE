@@ -41,8 +41,8 @@ public class UpdateContractUseCaseImpl implements UpdateContractUseCase {
                     request.reward(),
                     request.totalProof(),
                     request.oneOff(),
-                    DateTimeConverter.toLocalDateTime(request.startDate()),
-                    DateTimeConverter.toLocalDateTime(request.endDate()),
+                    request.startDate(),
+                    request.endDate(),
                     ContractType.valueOf(request.type())
             );
 

@@ -14,10 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import me.jinjjahalgae.global.util.UtcDateTimeUtil;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.Instant;
 
 @Slf4j
 @Service
@@ -31,11 +30,10 @@ public class EndContractsUseCaseImpl implements EndContractsUseCase {
     @Override
     @Transactional
     public void execute() {
-        LocalDate yesterday = UtcDateTimeUtil.nowAsLocalDate().minusDays(1);
-
+        Instant today = Instant.now();
         // 어제 또는 이전에 종료되었어야 하는 '진행중' 또는 '결과 대기' 상태의 계약을 모두 조회
         List<Contract> contractsToCheck = contractRepository.findContractsToEnd(
-                List.of(ContractStatus.IN_PROGRESS, ContractStatus.WAIT_RESULT), yesterday
+                List.of(ContractStatus.IN_PROGRESS, ContractStatus.WAIT_RESULT), today
         );
 
         if (contractsToCheck.isEmpty()) return;
@@ -44,7 +42,7 @@ public class EndContractsUseCaseImpl implements EndContractsUseCase {
         List<Contract> waitContracts = new ArrayList<>();
         List<Contract> failContracts = new ArrayList<>();
 
-        LocalDateTime twentyFourHours = UtcDateTimeUtil.nowAsLocalDateTime().minusHours(24);
+        Instant twentyFourHours = Instant.now().minusSeconds(24 * 3600);
 
         for (Contract contract : contractsToCheck) {
             boolean hasPendingProofs = proofRepository.existsByContractIdAndStatus(contract.getId(), ProofStatus.APPROVE_PENDING);

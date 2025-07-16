@@ -14,7 +14,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,7 +33,7 @@ public class StartContractsUseCaseImpl implements StartContractsUseCase {
     @Override
     @Transactional
     public void execute() {
-        LocalDate today = UtcDateTimeUtil.nowAsLocalDate();
+        Instant today = Instant.now();
         List<Contract> pendingContracts = contractRepository.findByStatusAndStartDateOnAndOneOff(ContractStatus.PENDING, today, false);
 
         if (pendingContracts.isEmpty()) return;

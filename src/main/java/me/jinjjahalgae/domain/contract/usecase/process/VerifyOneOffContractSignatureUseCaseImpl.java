@@ -1,6 +1,7 @@
 package me.jinjjahalgae.domain.contract.usecase.process;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
@@ -12,9 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -31,14 +35,23 @@ public class VerifyOneOffContractSignatureUseCaseImpl implements VerifyOneOffCon
     @Override
     public void execute() {
         // 24시간 전을 마감 시간으로 설정
-        LocalDateTime deadline = UtcDateTimeUtil.nowAsLocalDateTime().minusHours(24);
+        Instant deadline = Instant.now().minus(24, ChronoUnit.HOURS);
+
+        log.info("[VerifyOneOffContract] 계약 만료 검증 시작. 기준 시간(UTC): {}", deadline);
+
 
         // 감독자 서명안된 단건 계약 조회
         List<Contract> contractsToDelete = contractRepository.findExpiredOneOffContractsWithNoSupervisors(deadline);
 
+        log.info("[VerifyOneOffContract] 삭제 대상 계약 {}건 발견", contractsToDelete.size());
+
+
         for (Contract contract : contractsToDelete) {
             // 조회된 모든 감독자 서명안된 단건 계약을 삭제
             contractRepository.delete(contract);
+
+            log.info("[VerifyOneOffContract] 계약 삭제 처리. Contract ID: {}", contract.getId());
+
 
             // 자동 삭제 알림 이벤트 발행
             eventPublisher.publishEvent(

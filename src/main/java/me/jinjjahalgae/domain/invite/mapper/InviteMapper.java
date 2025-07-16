@@ -47,8 +47,8 @@ public class InviteMapper {
                 contract.getUser().getName(),
                 null, // 서명 완료 여부만 보여주니 이미지 키는 null로 처리
                 contract.getUuid(),
-                DateTimeConverter.toInstant(contract.getStartDate()),
-                DateTimeConverter.toInstant(contract.getEndDate()),
+                contract.getStartDate(),
+                contract.getEndDate(),
                 contract.getTitle(),
                 contract.getGoal(),
                 contract.getPenalty(),

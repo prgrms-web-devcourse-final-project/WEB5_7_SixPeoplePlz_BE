@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import me.jinjjahalgae.domain.user.User;
 
 import me.jinjjahalgae.global.util.UtcDateTimeUtil;
+import java.time.Instant;
 
 /**
  * 유저 탈퇴 (soft delete)
@@ -23,6 +24,6 @@ public class DeleteMyAccountUseCaseImpl implements DeleteMyAccountUseCase {
         User user = userRepository.findByIdAndDeletedAtIsNull(userId)
                 .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.domainException("유저를 찾을 수 없음"));
                 
-        user.delete(UtcDateTimeUtil.nowAsLocalDateTime());
+        user.delete(Instant.now());
     }
 } 
