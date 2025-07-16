@@ -21,6 +21,7 @@ import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -83,8 +84,7 @@ class UpdateContractUseCaseTest {
                 .goal("매일 30분 운동")
                 .penalty("치킨 못 먹기")
                 .reward("치킨 먹기")
-                .life(3)
-                .proofPerWeek(3)
+                .totalProof(10)
                 .oneOff(false)
                 .type(ContractType.BASIC)
                 .build();
@@ -98,11 +98,10 @@ class UpdateContractUseCaseTest {
                 "매일 1시간 운동",
                 "치킨 2번 못 먹기",
                 "치킨 2번 먹기",
-                5,
-                5,
+                15,
                 false,
-                LocalDateTime.now().plusDays(2),
-                LocalDateTime.now().plusDays(32),
+                LocalDateTime.now().plusDays(2).toInstant(ZoneOffset.UTC),
+                LocalDateTime.now().plusDays(32).toInstant(ZoneOffset.UTC),
                 "BASIC"
         );
     }
@@ -125,8 +124,7 @@ class UpdateContractUseCaseTest {
         assertThat(contract.getGoal()).isEqualTo("매일 1시간 운동");
         assertThat(contract.getPenalty()).isEqualTo("치킨 2번 못 먹기");
         assertThat(contract.getReward()).isEqualTo("치킨 2번 먹기");
-        assertThat(contract.getLife()).isEqualTo(5);
-        assertThat(contract.getProofPerWeek()).isEqualTo(5);
+        assertThat(contract.getTotalProof()).isEqualTo(15);
         assertThat(contract.getType()).isEqualTo(ContractType.BASIC);
     }
 
@@ -202,11 +200,10 @@ class UpdateContractUseCaseTest {
                 "매일 1시간 운동",
                 "치킨 2번 못 먹기",
                 "치킨 2번 먹기",
-                5,
-                7, // 주간 인증 횟수 증가
+                15,
                 false,
-                LocalDateTime.now().plusDays(1),
-                LocalDateTime.now().plusDays(60), // 기간 연장
+                LocalDateTime.now().plusDays(1).toInstant(ZoneOffset.UTC),
+                LocalDateTime.now().plusDays(60).toInstant(ZoneOffset.UTC), // 기간 연장
                 "BASIC"
         );
 

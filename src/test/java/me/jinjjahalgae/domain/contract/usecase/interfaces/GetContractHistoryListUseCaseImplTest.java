@@ -25,6 +25,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -286,7 +287,7 @@ class GetContractHistoryListUseCaseImplTest {
         // given
         Long userId = supervisor1.getId(); // 감독자 1이 종료일 필터
         LocalDateTime endDate = LocalDateTime.of(2024, 2, 15, 0, 0);
-        ContractHistoryRequest request = new ContractHistoryRequest("SUPERVISOR", null, endDate, null);
+        ContractHistoryRequest request = new ContractHistoryRequest("SUPERVISOR", null, endDate.toInstant(ZoneOffset.UTC), null);
         
         log.info("=== 종료일 필터 히스토리 조회 테스트 시작 ===");
         log.info("요청 정보: userId={}, role={}, keyword={}, endDate={}, status={}", 
@@ -584,7 +585,7 @@ class GetContractHistoryListUseCaseImplTest {
         // given
         Long userId = supervisor1.getId(); // 감독자 1이 복합 조건으로 조회
         LocalDateTime endDate = LocalDateTime.of(2024, 3, 1, 0, 0);
-        ContractHistoryRequest request = new ContractHistoryRequest("SUPERVISOR", "실패", endDate, "FAILED");
+        ContractHistoryRequest request = new ContractHistoryRequest("SUPERVISOR", "실패", endDate.toInstant(ZoneOffset.UTC), "FAILED");
         
         log.info("=== 감독자 복합 조건 조회 테스트 시작 ===");
         log.info("요청 정보: userId={}, role={}, keyword={}, endDate={}, status={}", 
@@ -615,7 +616,7 @@ class GetContractHistoryListUseCaseImplTest {
         ContractListResponse response = result.getContent().get(0);
         assertThat(response.contractStatus()).isEqualTo(ContractStatus.FAILED);
         assertThat(response.title()).contains("실패");
-        assertThat(response.endDate()).isBeforeOrEqualTo(endDate);
+        assertThat(response.endDate()).isBeforeOrEqualTo(endDate.toInstant(ZoneOffset.UTC));
         
         // 결과 내용 상세 로그 출력
         logContractHistoryDetails(result, "감독자 복합 조건 조회 결과");
@@ -652,7 +653,6 @@ class GetContractHistoryListUseCaseImplTest {
                     i + 1, response.contractId(), response.title(), response.contractStatus());
             log.info("     - 기간: {} ~ {}", response.startDate(), response.endDate());
             log.info("     - 인증: {}회/주, 달성률: {}% ({}), 기간률: {}% ({})", 
-                    response.proofPerWeek(), 
                     response.achievementPercent(), response.achievementRatio(),
                     response.periodPercent(), response.periodRatio());
             log.info("     - 보상: {}, 벌칙: {}", response.reward(), response.penalty());
@@ -683,11 +683,8 @@ class GetContractHistoryListUseCaseImplTest {
         log.info("  - 보상: {}", contract.getReward());
         log.info("  - 계약 타입: {}", contract.getType());
         log.info("  - 계약 상태: {}", contract.getStatus());
-        log.info("  - 주간 인증 횟수: {}", contract.getProofPerWeek());
         log.info("  - 총 인증 횟수: {}", contract.getTotalProof());
         log.info("  - 현재 인증 횟수: {}", contract.getCurrentProof());
-        log.info("  - 실패 가능 횟수: {}", contract.getLife());
-        log.info("  - 현재 실패 횟수: {}", contract.getCurrentFail());
         log.info("  - 단발성 여부: {}", contract.isOneOff());
         log.info("  - 시작일: {}", contract.getStartDate());
         log.info("  - 종료일: {}", contract.getEndDate());
@@ -728,8 +725,7 @@ class GetContractHistoryListUseCaseImplTest {
                 .goal(goal)
                 .penalty("벌칙")
                 .reward("보상")
-                .life(3)
-                .proofPerWeek(7)
+                .totalProof(21)
                 .oneOff(false)
                 .type(ContractType.BASIC)
                 .startDate(startDate)
@@ -774,9 +770,8 @@ class GetContractHistoryListUseCaseImplTest {
                         contract.getUuid(),
                         contract.getTitle(),
                         contract.getStatus(),
-                        contract.getProofPerWeek(),
-                        contract.getStartDate(),
-                        contract.getEndDate(),
+                        contract.getStartDate().toInstant(ZoneOffset.UTC),
+                        contract.getEndDate().toInstant(ZoneOffset.UTC),
                         contract.getReward(),
                         contract.getPenalty(),
                         contract.calculateAchievementRatio(),

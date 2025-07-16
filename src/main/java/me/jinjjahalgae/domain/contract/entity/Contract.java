@@ -52,12 +52,6 @@ public class Contract extends BaseEntity {
 
     private String reward; //보상
 
-    private int life; //실패 가능 횟수 (계약서용 - 불변)
-
-    private int currentFail; //현재까지 실패한 횟수
-
-    private int proofPerWeek; //주간 인증 횟수
-
     private int totalProof; //총 인증 횟수
 
     private int currentProof; //현재 인증 횟수
@@ -79,8 +73,7 @@ public class Contract extends BaseEntity {
     private List<Participation> participations = new ArrayList<>();
 
     @Builder
-    private Contract(User user, LocalDateTime startDate, LocalDateTime endDate, String title, String goal, String penalty, String reward, int life,
-                    int proofPerWeek, boolean oneOff, ContractType type) {
+    private Contract(User user, LocalDateTime startDate, LocalDateTime endDate, String title, String goal, String penalty, String reward, int totalProof, boolean oneOff, ContractType type) {
         this.user = user;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -88,16 +81,13 @@ public class Contract extends BaseEntity {
         this.goal = goal;
         this.penalty = penalty;
         this.reward = reward;
-        this.life = life;
-        this.proofPerWeek = proofPerWeek;
+        this.totalProof = totalProof;
         this.oneOff = oneOff;
         this.type = type;
     }
 
     public void initialize() {
         this.uuid = UUID.randomUUID().toString();
-        this.totalProof = calculateTotalProof(this.startDate, this.endDate, this.proofPerWeek);
-        this.currentFail = 0;
         this.currentProof = 0;
         this.totalSupervisor = 0;
         this.status = ContractStatus.PENDING;
@@ -106,16 +96,6 @@ public class Contract extends BaseEntity {
     public void addParticipation(Participation participation) {
         this.participations.add(participation);
         participation.setContract(this);
-    }
-
-    private int calculateTotalProof(LocalDateTime startDate, LocalDateTime endDate, int proofPerWeek) {
-        if (oneOff) {
-            return 1;
-        }
-
-        long totalDays = java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1;
-        long totalWeeks = (totalDays + 6) / 7; // 프론트에서 날짜 선택을 막으면 몇주인지 올림하여 계산하기만 하면 되기 때문에 6을 더해서 항상 올림 처리
-        return (int) (totalWeeks * proofPerWeek);
     }
 
     public String calculateAchievementRatio() {
@@ -183,22 +163,18 @@ public class Contract extends BaseEntity {
 
     //계약 수정
     public void update(String title, String goal, String penalty, String reward,
-                       int life, int proofPerWeek, boolean oneOff,
+                       int totalProof, boolean oneOff,
                        LocalDateTime startDate, LocalDateTime endDate, ContractType type) {
 
         this.title = title;
         this.goal = goal;
         this.penalty = penalty;
         this.reward = reward;
-        this.life = life;
-        this.proofPerWeek = proofPerWeek;
+        this.totalProof = totalProof;
         this.oneOff = oneOff;
         this.startDate = startDate;
         this.endDate = endDate;
         this.type = type;
-
-        // 수정 시 총 인증 횟수도 다시 계산
-        this.totalProof = calculateTotalProof(startDate, endDate, proofPerWeek);
     }
 
     // 총 감독자 수를 받아 계약을 시작
@@ -237,16 +213,6 @@ public class Contract extends BaseEntity {
         if (this.status != ContractStatus.PENDING) {
             throw ErrorCode.CONTRACT_NOT_PENDING.domainException("시작 전인 계약만 포기할 수 있습니다.");
         }
-    }
-
-    // 남은 실패 가능 횟수 계산
-    public int getRemainingLife() {
-        return Math.max(0, this.life - this.currentFail);
-    }
-
-    // 인증 실패 횟수 증가
-    public void recordWeeklyFailure(int failCounts) {
-        this.currentFail += failCounts;
     }
 
     // 현재 인증 횟수 증가

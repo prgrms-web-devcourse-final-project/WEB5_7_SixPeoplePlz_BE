@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
 
@@ -61,8 +62,7 @@ class GetContractListUseCaseTest {
                 .goal("매일 30분 운동")
                 .penalty("치킨 못 먹기")
                 .reward("치킨 먹기")
-                .life(3)
-                .proofPerWeek(7)
+                .totalProof(21)
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now().plusDays(30))
                 .type(ContractType.BASIC)
@@ -75,8 +75,7 @@ class GetContractListUseCaseTest {
                 .goal("담배 안 피우기")
                 .penalty("용돈 줄이기")
                 .reward("맛있는 음식 먹기")
-                .life(3)
-                .proofPerWeek(7)
+                .totalProof(21)
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now().plusDays(30))
                 .type(ContractType.BASIC)
@@ -84,14 +83,14 @@ class GetContractListUseCaseTest {
                 .build();
 
         response1 = new ContractListResponse(
-                1L, "uuid1", "매일 운동하기", ContractStatus.IN_PROGRESS, 7,
-                LocalDateTime.now(), LocalDateTime.now().plusDays(30),
+                1L, "uuid1", "매일 운동하기", ContractStatus.IN_PROGRESS,
+                LocalDateTime.now().toInstant(ZoneOffset.UTC), LocalDateTime.now().plusDays(30).toInstant(ZoneOffset.UTC),
                 "치킨 먹기", "치킨 못 먹기", "10/30", "15/30", 33.3, 50.0
         );
 
         response2 = new ContractListResponse(
-                2L, "uuid2", "금연하기", ContractStatus.PENDING, 7,
-                LocalDateTime.now(), LocalDateTime.now().plusDays(30),
+                2L, "uuid2", "금연하기", ContractStatus.PENDING,
+                LocalDateTime.now().toInstant(ZoneOffset.UTC), LocalDateTime.now().plusDays(30).toInstant(ZoneOffset.UTC),
                 "맛있는 음식 먹기", "용돈 줄이기", "0/30", "0/30", 0.0, 0.0
         );
 

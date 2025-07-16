@@ -323,9 +323,7 @@ class GetContractPreviewUseCaseImplTest {
             log.info("  - 목표: {}", response.contractBasicResponse().goal());
             log.info("  - 벌칙: {}", response.contractBasicResponse().penalty());
             log.info("  - 보상: {}", response.contractBasicResponse().reward());
-            log.info("  - 주간 인증 횟수: {}", response.contractBasicResponse().proofPerWeek());
             log.info("  - 총 인증 횟수: {}", response.contractBasicResponse().totalProof());
-            log.info("  - 실패 가능 횟수: {}", response.contractBasicResponse().totalLife());
             log.info("  - 시작일: {}", response.contractBasicResponse().startDate());
             log.info("  - 종료일: {}", response.contractBasicResponse().endDate());
         } else {
@@ -376,11 +374,8 @@ class GetContractPreviewUseCaseImplTest {
         log.info("  - 보상: {}", contract.getReward());
         log.info("  - 계약 타입: {}", contract.getType());
         log.info("  - 계약 상태: {}", contract.getStatus());
-        log.info("  - 주간 인증 횟수: {}", contract.getProofPerWeek());
         log.info("  - 총 인증 횟수: {}", contract.getTotalProof());
         log.info("  - 현재 인증 횟수: {}", contract.getCurrentProof());
-        log.info("  - 실패 가능 횟수: {}", contract.getLife());
-        log.info("  - 현재 실패 횟수: {}", contract.getCurrentFail());
         log.info("  - 단발성 여부: {}", contract.isOneOff());
         log.info("  - 시작일: {}", contract.getStartDate());
         log.info("  - 종료일: {}", contract.getEndDate());
@@ -435,8 +430,7 @@ class GetContractPreviewUseCaseImplTest {
                 .goal(goal)
                 .penalty("벌칙")
                 .reward("보상")
-                .life(3)
-                .proofPerWeek(7)
+                .totalProof(21)
                 .oneOff(false)
                 .type(ContractType.BASIC)
                 .startDate(startDate)
