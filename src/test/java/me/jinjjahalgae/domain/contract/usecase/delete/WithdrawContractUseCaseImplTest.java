@@ -6,6 +6,7 @@ import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.global.exception.AppException;
+import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -112,8 +113,8 @@ class WithdrawContractUseCaseImplTest {
     private Contract createContract(Long contractId, User user,ContractStatus status) {
         Contract contract = Contract.builder()
                 .user(user)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now().plusDays(30))
+                .startDate(UtcDateTimeUtil.nowAsLocalDateTime())
+                .endDate(UtcDateTimeUtil.nowAsLocalDateTime().plusDays(30))
                 .title("테스트 계약")
                 .goal("목표")
                 .penalty("벌칙")

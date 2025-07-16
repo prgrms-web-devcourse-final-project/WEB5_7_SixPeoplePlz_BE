@@ -10,6 +10,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import me.jinjjahalgae.global.util.UtcDateTimeUtil;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,7 +31,7 @@ public class VerifyOneOffContractSignatureUseCaseImpl implements VerifyOneOffCon
     @Override
     public void execute() {
         // 24시간 전을 마감 시간으로 설정
-        LocalDateTime deadline = LocalDateTime.now().minusHours(24);
+        LocalDateTime deadline = UtcDateTimeUtil.nowAsLocalDateTime().minusHours(24);
 
         // 감독자 서명안된 단건 계약 조회
         List<Contract> contractsToDelete = contractRepository.findExpiredOneOffContractsWithNoSupervisors(deadline);
