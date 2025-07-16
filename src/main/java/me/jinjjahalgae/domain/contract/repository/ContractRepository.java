@@ -198,4 +198,12 @@ AND EXISTS (
         AND FUNCTION('DATE', c.endDate) <= :before
     """)
     List<Contract> findContractsToEnd(@Param("statuses") List<ContractStatus> statuses, @Param("before") LocalDate before);
+
+    @Modifying
+    @Query(
+            value = "UPDATE contract SET current_proof = current_proof + 1 WHERE id IN (:contractIds)",
+            nativeQuery = true
+    )
+    void incrementCurrentProofForContracts(@Param("contractIds") List<Long> contractIds);
+
 }

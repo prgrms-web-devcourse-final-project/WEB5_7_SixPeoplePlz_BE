@@ -223,16 +223,6 @@ public interface ProofControllerDocs {
                                               "message": "계약 시작 전에는 인증을 생성할 수 없습니다."
                                             }
                                             """
-                                    ),
-                                    @ExampleObject(
-                                            name = "계약 종료 2일 전 재인증 생성 요청을 하는 경우",
-                                            value = """
-                                            {
-                                              "success": false,
-                                              "code": "REPROOF_NOT_ALLOWED",
-                                              "message": "재인증이 불가능합니다."
-                                            }
-                                            """
                                     )
                             }
                     )
