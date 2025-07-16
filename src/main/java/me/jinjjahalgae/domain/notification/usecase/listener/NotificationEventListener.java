@@ -7,9 +7,9 @@ import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationBa
 import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
 import me.jinjjahalgae.domain.notification.usecase.create.CreateNotificationUseCase;
 import me.jinjjahalgae.domain.notification.usecase.create.dto.NotificationCreateRequest;
-import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class NotificationEventListener {
      * @param event 알림 전송 이벤트
      */
     @Async
-    @EventListener
+    @TransactionalEventListener
     public void handleNotificationEvent(NotificationEvent event) {
         try {
             createNotificationUseCase.execute(
@@ -49,7 +49,7 @@ public class NotificationEventListener {
      * @param event 알림 배치 처리 이벤트
      */
     @Async
-    @EventListener
+    @TransactionalEventListener
     public void handleNotificationBatchEvent(NotificationBatchEvent event) {
         try {
             List<NotificationData> notificationData = event.notificationData();
