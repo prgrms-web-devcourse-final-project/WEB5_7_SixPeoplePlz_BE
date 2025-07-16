@@ -11,6 +11,7 @@ import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.global.exception.AppException;
+import me.jinjjahalgae.global.storage.redis.usecase.invite.delete.DeleteInviteInfoUseCaseImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +25,9 @@ class CancelContractUseCaseImplTest {
 
     @Mock
     private ContractRepository contractRepository;
+
+    @Mock
+    private DeleteInviteInfoUseCaseImpl deleteInviteInfoUseCase;
 
     @InjectMocks
     private CancelContractUseCaseImpl cancelContractUseCase;
