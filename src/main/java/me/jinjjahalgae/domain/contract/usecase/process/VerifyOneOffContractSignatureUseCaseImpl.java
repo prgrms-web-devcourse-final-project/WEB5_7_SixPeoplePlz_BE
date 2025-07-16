@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
+import me.jinjjahalgae.domain.notification.entities.Notification;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
+import me.jinjjahalgae.domain.notification.repository.NotificationRepository;
 import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
 import me.jinjjahalgae.global.storage.redis.usecase.invite.delete.DeleteInviteInfoUseCase;
 import org.springframework.context.ApplicationEventPublisher;
@@ -23,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class VerifyOneOffContractSignatureUseCaseImpl implements VerifyOneOffContractSignatureUseCase {
-
+    private final NotificationRepository notificationRepository;
     private final ContractRepository contractRepository;
     private final DeleteInviteInfoUseCase deleteInviteInfoUseCase;
     private final ApplicationEventPublisher eventPublisher;
@@ -47,19 +49,33 @@ public class VerifyOneOffContractSignatureUseCaseImpl implements VerifyOneOffCon
 
 
         for (Contract contract : contractsToDelete) {
+            // 계약 자동 삭제 알림 전송
+            createNotification(contract);
+
             // 조회된 모든 감독자 서명안된 단건 계약을 삭제
             contractRepository.delete(contract);
 
             log.info("[VerifyOneOffContract] 계약 삭제 처리. Contract ID: {}", contract.getId());
 
-
-            // 자동 삭제 알림 이벤트 발행
-            eventPublisher.publishEvent(
-                new NotificationEvent(NotificationType.CONTRACT_AUTO_DELETED, contract.getId(), contract.getUser().getId())
-            );
-
             // 초대 정보 삭제
             deleteInviteInfoUseCase.execute(contract.getId());
         }
+    }
+
+    private void createNotification(Contract contract) {
+        Long contractorId = contract.getUser().getId();
+        String contractName = contract.getTitle();
+        String message = "시작일까지 '" + contractName + "' 계약에 참여한 감독자가 없어 자동으로 삭제되었습니다.";
+
+        // Notification 객체를 직접 생성
+        Notification notification = Notification.builder()
+                .userId(contractorId) // 알림 받을 사람: 계약자
+                .contractId(contract.getId()) // 관련 계약 ID
+                .content(message) // 알림 메시지
+                .type(NotificationType.CONTRACT_AUTO_DELETED) // 알림 타입
+                .build();
+
+        // 알림을 저장
+        notificationRepository.save(notification);
     }
 } 
