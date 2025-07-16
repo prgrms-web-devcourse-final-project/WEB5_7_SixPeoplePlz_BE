@@ -356,7 +356,7 @@ public interface ProofControllerDocs {
                                           "secondImageKey": null,
                                           "thirdImageKey": null,
                                           "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
-                                          "createdAt": "2025-07-09T19:30:00+09:00",
+                                          "createdAt": "2025-07-09T00:34:38Z",
                                           "status": "APPROVE_PENDING",
                                           "reProof": false,
                                           "proofId": 11
@@ -366,7 +366,7 @@ public interface ProofControllerDocs {
                                           "secondImageKey": "1134abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                           "thirdImageKey": "4567abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                           "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
-                                          "createdAt": "2025-07-08T19:30:00+09:00",
+                                          "createdAt": "2025-07-08T00:34:38Z",
                                           "status": "APPROVE_PENDING",
                                           "reProof": false,
                                           "proofId": 10
@@ -471,7 +471,7 @@ public interface ProofControllerDocs {
                                           {
                                             "imageKey": "1234abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
-                                            "createdAt": "2025-07-09T19:30:00+09:00",
+                                            "createdAt": "2025-07-09T00:34:38Z",
                                             "status": "APPROVE_PENDING",
                                             "reProof": false,
                                             "proofId": 12
@@ -479,7 +479,7 @@ public interface ProofControllerDocs {
                                           {
                                             "imageKey": "3453abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
-                                            "createdAt": "2025-07-08T19:30:00+09:00",
+                                            "createdAt": "2025-07-08T00:34:38Z",
                                             "status": "APPROVED",
                                             "reProof": false,
                                             "proofId": 11
@@ -487,7 +487,7 @@ public interface ProofControllerDocs {
                                           {
                                             "imageKey": "3453abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
-                                            "createdAt": "2025-07-07T19:30:00+09:00",
+                                            "createdAt": "2025-07-07T00:34:38Z",
                                             "status": "APPROVED",
                                             "reProof": false,
                                             "proofId": 10
@@ -580,21 +580,21 @@ public interface ProofControllerDocs {
                                         ],
                                         "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
                                         "status": "REJECTED",
-                                        "createdAt": "2025-07-09T13:30:00",
+                                        "createdAt": "2025-07-09T00:34:38Z",
                                         "reProof": false,
                                         "feedbacks": [
                                           {
-                                            "createdAt": "2025-07-09T13:30:00",
+                                            "createdAt": "2025-07-09T00:34:38Z",
                                             "status": "APPROVED",
                                             "comment": "확인했습니다!"
                                           },
                                           {
-                                            "createdAt": "2025-07-09T14:55:00",
+                                            "createdAt": "2025-07-09T00:34:38Z",
                                             "status": "REJECTED",
                                             "comment": "사진만 찍고 온거 아님?"
                                           },
                                           {
-                                            "createdAt": "2025-07-09T16:00:00",
+                                            "createdAt": "2025-07-09T00:34:38Z",
                                             "status": "REJECTED",
                                             "comment": null
                                           }
