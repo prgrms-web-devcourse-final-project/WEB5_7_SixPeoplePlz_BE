@@ -1,6 +1,7 @@
 package me.jinjjahalgae.global.util;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -39,5 +40,13 @@ public class UtcDateTimeUtil {
      */
     public static LocalDateTime nowAsLocalDateTime() {
         return toLocalDateTime(now());
+    }
+
+    /**
+     * UTC 기준 현재 날짜를 LocalDate로 반환
+     * @return LocalDate
+     */
+    public static LocalDate nowAsLocalDate() {
+        return nowAsLocalDateTime().toLocalDate();
     }
 } 
