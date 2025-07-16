@@ -523,8 +523,7 @@ public interface ContractControllerDocs {
 
     @Operation(
             summary = "계약 수정",
-            description = "기존 계약의 내용을 수정합니다. 감독자가 서명하기 전에만 수정 가능하며, 계약자만 수정할 수 있습니다. " +
-                    "날짜나 주간 인증 횟수 변경 시 총 인증 횟수가 자동으로 재계산됩니다.",
+            description = "기존 계약의 내용을 수정합니다. 감독자가 서명하기 전에만 수정 가능하며, 계약자만 수정할 수 있습니다. ",
             security = { @SecurityRequirement(name = "bearerAuth") }
     )
     @ApiResponses(value = {
