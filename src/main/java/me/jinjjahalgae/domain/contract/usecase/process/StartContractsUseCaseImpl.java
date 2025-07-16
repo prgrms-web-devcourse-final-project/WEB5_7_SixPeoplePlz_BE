@@ -5,8 +5,9 @@ import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
+import me.jinjjahalgae.domain.notification.usecase.create.CreateNotificationUseCase;
+import me.jinjjahalgae.domain.notification.usecase.create.dto.NotificationCreateRequest;
 import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
-import me.jinjjahalgae.domain.proof.repository.ProofRepository;
 import me.jinjjahalgae.global.storage.redis.usecase.invite.bulk.BulkDeleteInviteInfoUseCase;
 import me.jinjjahalgae.global.storage.redis.usecase.invite.get.GetJoinedSupervisorsUseCase;
 import me.jinjjahalgae.global.util.UtcDateTimeUtil;
@@ -29,6 +30,7 @@ public class StartContractsUseCaseImpl implements StartContractsUseCase {
     private final BulkDeleteInviteInfoUseCase bulkdeleteInviteInfoUseCase;
     private final GetJoinedSupervisorsUseCase getJoinedSupervisorsUseCase;
     private final ApplicationEventPublisher eventPublisher;
+    private final CreateNotificationUseCase createNotificationUseCase;
 
     @Override
     @Transactional
@@ -64,7 +66,7 @@ public class StartContractsUseCaseImpl implements StartContractsUseCase {
             contractRepository.deleteAll(deleteContracts);
 
             deleteContracts.forEach(contract ->
-                    eventPublisher.publishEvent(new NotificationEvent(
+                    createNotificationUseCase.execute(new NotificationCreateRequest(
                             NotificationType.CONTRACT_AUTO_DELETED,
                             contract.getId(),
                             contract.getUser().getId()
