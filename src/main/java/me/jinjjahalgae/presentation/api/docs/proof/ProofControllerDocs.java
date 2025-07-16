@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import me.jinjjahalgae.domain.proof.usecase.create.common.ProofCreateRequest;
 import me.jinjjahalgae.domain.proof.usecase.get.await.dto.ProofAwaitResponse;
@@ -26,7 +27,8 @@ public interface ProofControllerDocs {
 
     @Operation(
             summary = "인증 생성",
-            description = "요청한 데이터로 인증 객체를 생성하여 저장"
+            description = "요청한 데이터로 인증 객체를 생성하여 저장",
+            security = {@SecurityRequirement(name = "bearerAuth")}
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -177,7 +179,8 @@ public interface ProofControllerDocs {
 
     @Operation(
             summary = "재인증 생성",
-            description = "요청한 데이터로 재인증 객체를 생성하여 저장"
+            description = "요청한 데이터로 재인증 객체를 생성하여 저장",
+            security = {@SecurityRequirement(name = "bearerAuth")}
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -335,7 +338,8 @@ public interface ProofControllerDocs {
 
     @Operation(
             summary = "대기중인 인증들 조회",
-            description = "승인/거절 처리를 해야하는 대기중인 인증 데이터를 응답에 담아 반환 (대기중인 인증이 여러 개일 수 있음)"
+            description = "승인/거절 처리를 해야하는 대기중인 인증 데이터를 응답에 담아 반환 (대기중인 인증이 여러 개일 수 있음)",
+            security = {@SecurityRequirement(name = "bearerAuth")}
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -452,7 +456,8 @@ public interface ProofControllerDocs {
 
     @Operation(
             summary = "최근 인증 조회",
-            description = "최근 3개의 인증의 데이터를 응답에 담아 반환 (0~3개 응답 예정)"
+            description = "최근 3개의 인증의 데이터를 응답에 담아 반환 (0~3개 응답 예정)",
+            security = {@SecurityRequirement(name = "bearerAuth")}
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -557,7 +562,8 @@ public interface ProofControllerDocs {
 
     @Operation(
             summary = "인증 상세 조회",
-            description = "인증에 대한 상세 정보를 응답에 담아 반환"
+            description = "인증에 대한 상세 정보를 응답에 담아 반환",
+            security = {@SecurityRequirement(name = "bearerAuth")}
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -685,7 +691,8 @@ public interface ProofControllerDocs {
 
     @Operation(
             summary = "계약자용 인증 목록 조회",
-            description = "한 달에 대한 인증 정보를 응답에 담아 반환"
+            description = "한 달에 대한 인증 정보를 응답에 담아 반환",
+            security = {@SecurityRequirement(name = "bearerAuth")}
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -819,7 +826,8 @@ public interface ProofControllerDocs {
 
     @Operation(
             summary = "감독자용 인증 목록 조회",
-            description = "한 달에 대한 처리 완료된 인증 정보를 응답에 담아 반환 (대기중인 인증은 반환 X)"
+            description = "한 달에 대한 처리 완료된 인증 정보를 응답에 담아 반환 (대기중인 인증은 반환 X)",
+            security = {@SecurityRequirement(name = "bearerAuth")}
     )
     @ApiResponses(value = {
             @ApiResponse(
