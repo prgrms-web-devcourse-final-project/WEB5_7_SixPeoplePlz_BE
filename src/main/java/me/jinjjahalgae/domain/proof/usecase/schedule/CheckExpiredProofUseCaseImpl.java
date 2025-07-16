@@ -3,6 +3,7 @@ package me.jinjjahalgae.domain.proof.usecase.schedule;
 
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.feedback.entity.Feedback;
 import me.jinjjahalgae.domain.feedback.enums.FeedbackStatus;
 import me.jinjjahalgae.domain.feedback.repository.FeedbackRepository;
@@ -32,6 +33,7 @@ public class CheckExpiredProofUseCaseImpl implements CheckExpiredProofUseCase {
     private final FeedbackRepository feedbackRepository;
     private final EntityManager entityManager;
     private final ApplicationEventPublisher eventPublisher;
+    private final ContractRepository contractRepository;
 
     @Override
     @Transactional
@@ -43,6 +45,8 @@ public class CheckExpiredProofUseCaseImpl implements CheckExpiredProofUseCase {
         Page<Proof> proofPage;
         List<Long> approvedProofIds = new ArrayList<>();
         List<Long> rejectedProofIds = new ArrayList<>();
+        List<Long> approvedContractIds = new ArrayList<>();
+
 
         do {
             proofPage = proofRepository.findProofsPendingOver24Hours(
@@ -68,6 +72,7 @@ public class CheckExpiredProofUseCaseImpl implements CheckExpiredProofUseCase {
                 // 4. 승인/거절 비율에 따라 Proof 상태 결정
                 if (approvedCount > rejectedCount) {
                     approvedProofIds.add(refreshedProof.getId());
+                    approvedContractIds.add(refreshedProof.getContractId());
                 } else {
                     rejectedProofIds.add(refreshedProof.getId());
                 }
@@ -80,13 +85,14 @@ public class CheckExpiredProofUseCaseImpl implements CheckExpiredProofUseCase {
         if (!approvedProofIds.isEmpty()) {
             List<NotificationData> approveNotification = proofRepository.findNotificationDataByProofIds(approvedProofIds);
             proofRepository.updateProofStatus(approvedProofIds, ProofStatus.APPROVED);
+            contractRepository.incrementCurrentProofForContracts(approvedContractIds);
             eventPublisher.publishEvent(new NotificationBatchEvent(NotificationType.PROOF_ACCEPTED, approveNotification));
         }
+
         if (!rejectedProofIds.isEmpty()) {
             List<NotificationData> rejectNotification = proofRepository.findNotificationDataByProofIds(rejectedProofIds);
             proofRepository.updateProofStatus(rejectedProofIds, ProofStatus.REJECTED);
             eventPublisher.publishEvent(new NotificationBatchEvent(NotificationType.PROOF_REJECTED, rejectNotification));
         }
-
     }
 }

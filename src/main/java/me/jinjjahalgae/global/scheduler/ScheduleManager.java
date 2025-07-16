@@ -18,7 +18,6 @@ public class ScheduleManager {
     private final CheckExpiredProofUseCase checkExpiredProofUseCase;
 
     private final StartContractsUseCase startContractsUseCase;
-    private final CheckContractsWeeklyProofUseCase checkContractsWeeklyProofUseCase;
     private final EndContractsUseCase endContractsUseCase;
 
     /**
@@ -53,9 +52,6 @@ public class ScheduleManager {
     public void daySchedule() {
         // 시작일 확인 후 계약 시작
         startContractsUseCase.execute();
-
-        // 7일 + 3일(재인증 유예시간)이 지나면 주간 인증 현황 체크
-        checkContractsWeeklyProofUseCase.execute();
 
         // 성공 실패를 판단 후 계약 종료
         endContractsUseCase.execute();
