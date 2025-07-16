@@ -179,6 +179,6 @@ class CreateProofUseCaseSliceTest {
         // when & then
         assertThatThrownBy(() -> createProofUseCase.execute(validRequest, nonExistentContractId, userId))
                 .isInstanceOf(AppException.class)
-                .hasMessageContaining("계약에 대한 접근 권한이 없습니다.");
+                .hasMessageContaining("존재하지 않는 계약입니다.");
     }
 } 
