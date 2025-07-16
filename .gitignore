@@ -37,4 +37,9 @@ out/
 .vscode/
 
 
-application*.yml
+application-local.yml
+
+
+/mysql-data
+/redis-data
+/letsencrypt

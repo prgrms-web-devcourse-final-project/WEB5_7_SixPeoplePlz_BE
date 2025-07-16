@@ -1,0 +1,75 @@
+package me.jinjjahalgae.domain.proof.usecase.getlist.contractorlist;
+
+import lombok.RequiredArgsConstructor;
+import me.jinjjahalgae.domain.contract.entity.Contract;
+import me.jinjjahalgae.domain.contract.repository.ContractRepository;
+import me.jinjjahalgae.domain.proof.entities.Proof;
+import me.jinjjahalgae.domain.proof.mapper.ProofMapper;
+import me.jinjjahalgae.domain.proof.repository.ProofRepository;
+import me.jinjjahalgae.domain.proof.usecase.getlist.contractorlist.dto.ContractorProofListResponse;
+import me.jinjjahalgae.global.exception.ErrorCode;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.ZoneOffset;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class GetContractorProofListUseCaseImpl implements GetContractorProofListUseCase {
+
+    private final ProofRepository proofRepository;
+    private final ContractRepository contractRepository;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ContractorProofListResponse> execute(Long contractId, Integer year, Integer month, Long userId) {
+        // 년, 월 값에 대한 검증
+        if(year == null || month == null) {
+            throw ErrorCode.INVALID_YEAR_MONTH.domainException("년, 월 값이 비어있거나 올바르지 않습니다.");
+        }
+
+        // 종료일을 위해 계약을 가져옴
+        Contract contract = contractRepository.findByIdWithUser(contractId)
+                .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.domainException(contractId + "에 대한 계약이 존재하지 않습니다."));
+
+        // 계약자인지 확인
+        contract.validateContractor(userId);
+
+        // 달의 시작일 00:00:00
+        Instant startDate = LocalDateTime.of(year, month, 1, 0, 0).toInstant(ZoneOffset.UTC);
+
+        // 달의 마지막 날 23:59:59.999999999
+        Instant endDate = LocalDateTime.of(year, month, YearMonth.of(year, month).lengthOfMonth(), 23, 59, 59, 999999999).toInstant(ZoneOffset.UTC);
+
+        // 한 달에 해당하는 원본 인증 id들
+        List<Long> proofIds = proofRepository.findOriginalProofIdsByMonth(contractId, startDate, endDate);
+
+        // 모든 원본 인증들
+        List<Proof> proofs = proofRepository.findProofsWithProofImagesByIds(proofIds);
+
+        // 입력 받은 달에 해당하는 모든 재인증 id들
+        List<Long> reProofIds = proofRepository.findReProofIdsByMonth(contractId, proofIds);
+
+        // 모든 재인증 객체들
+        List<Proof> reProofs = proofRepository.findProofsWithProofImagesByIds(reProofIds);
+
+        // 원본 인증 id를 기반으로 재인증을 Map으로 매핑
+        Map<Long, Proof> reProofMap = reProofs.stream()
+                .collect(Collectors.toMap(Proof::getProofId, Function.identity()));
+
+        // 인증과 재인증을 하나의 응답으로 매핑
+        return proofs.stream()
+                .map(org -> {
+                    Proof reProof = reProofMap.get(org.getId());
+                    return ProofMapper.toContractorListResponse(org, reProof, contract.getEndDate());
+                })
+                .toList();
+    }
+}
