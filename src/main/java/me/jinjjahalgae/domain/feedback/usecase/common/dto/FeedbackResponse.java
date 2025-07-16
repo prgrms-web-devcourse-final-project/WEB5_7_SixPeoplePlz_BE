@@ -13,7 +13,7 @@ import java.time.Instant;
         description = "상세 페이지 내 피드백 응답 DTO",
         example = """
         {
-          "createdAt": "2025-07-09T13:30:00",
+          "createdAt": "2025-07-09T13:30:00Z",
           "status": "APPROVED",
           "comment": "확인했습니다!"
         }

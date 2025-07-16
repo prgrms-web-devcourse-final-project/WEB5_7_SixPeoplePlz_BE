@@ -26,9 +26,9 @@ public record ContractBasicResponse (
         @Schema(description = "총 인증 수", example = "10")
         int totalProof, // 총 필요한 인증 수
 
-        @Schema(description = "시작 날짜", example = "2024-01-01T09:00:00")
+        @Schema(description = "시작 날짜", example = "2024-01-01T09:00:00Z")
         Instant startDate, //시작 날짜
 
-        @Schema(description = "종료 날짜", example = "2024-01-31T23:59:59")
+        @Schema(description = "종료 날짜", example = "2024-01-31T23:59:59Z")
         Instant endDate //종료 날짜
 ) {}

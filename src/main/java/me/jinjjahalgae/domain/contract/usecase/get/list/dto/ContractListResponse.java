@@ -27,10 +27,10 @@ public record ContractListResponse(
         @Schema(description = "계약 상태", example = "ACTIVE")
         ContractStatus contractStatus, //계약 현재 상태
 
-        @Schema(description = "계약 시작 날짜", example = "2024-01-01T09:00:00")
+        @Schema(description = "계약 시작 날짜", example = "2024-01-01T09:00:00Z")
         Instant startDate,
 
-        @Schema(description = "계약 종료 날짜", example = "2024-01-31T23:59:59")
+        @Schema(description = "계약 종료 날짜", example = "2024-01-31T23:59:59Z")
         Instant endDate,
 
         @Schema(description = "보상", example = "치킨 먹기")

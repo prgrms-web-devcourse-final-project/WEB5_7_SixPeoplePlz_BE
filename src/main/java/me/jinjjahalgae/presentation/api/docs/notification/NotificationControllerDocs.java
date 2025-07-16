@@ -48,14 +48,14 @@ public interface NotificationControllerDocs {
                             "type": "CONTRACT_STARTED",
                             "content": "'홍길동'님의 '운동하기' 계약이 시작되었습니다.",
                             "read": false,
-                            "createdAt": "2024-05-01T12:00:00"
+                            "createdAt": "2024-05-01T12:00:00Z"
                           },
                           {
                             "id": 2,
                             "type": "SUPERVISOR_ADDED",
                             "content": "'홍길동'님이 '운동하기' 계약의 감독자로 추가되었습니다.",
                             "read": true,
-                            "createdAt": "2024-05-01T10:30:00"
+                            "createdAt": "2024-05-01T10:30:00Z"
                           }
                         ],
                         "pageable": {},
@@ -295,8 +295,7 @@ public interface NotificationControllerDocs {
                       "success": false,
                       "code": "NOTIFICATION_NOT_FOUND",
                       "message": "해당 알림을 찾을 수 없습니다."
-                    }
-                    """
+                    }"""
                 )
             )
         )

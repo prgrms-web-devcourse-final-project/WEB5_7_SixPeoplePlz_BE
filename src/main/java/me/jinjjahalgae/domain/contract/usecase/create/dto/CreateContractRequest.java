@@ -54,13 +54,13 @@ public record CreateContractRequest(
     Boolean oneOff,
 
     @Schema(description = "계약 시작일", 
-        example = "2025-01-01T00:00:00", 
+        example = "2025-01-01T00:00:00Z", 
         requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "startDate은 필수입니다.")
     Instant startDate,
 
     @Schema(description = "계약 종료일", 
-        example = "2025-01-01T00:00:00", 
+        example = "2025-01-01T00:00:00Z", 
         requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "endDate은 필수입니다.")
     Instant endDate,

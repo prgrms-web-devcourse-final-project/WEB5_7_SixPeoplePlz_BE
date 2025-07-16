@@ -17,7 +17,7 @@ import java.time.Instant;
  */
 public record ContractHistoryRequest(
 
-        @Schema(description = "조회할 역할 (CONTRACTOR/SUPERVISOR)")
+        @Schema(description = "조회할 역할 (CONTRACTOR/SUPERVISOR)", example = "CONTRACTOR")
         @NotNull(message = "조회할 역할(CONTRACTOR/SUPERVISOR)는 필수입니다")
         @EnumValue(enumClass = Role.class, message = "role은 CONTRACTOR, SUPERVISOR 중 하나여야 합니다.")
         String role,
