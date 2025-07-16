@@ -5,9 +5,8 @@ import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.user.User;
+import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 import org.springframework.test.util.ReflectionTestUtils;
-
-import java.time.LocalDateTime;
 
 public class InviteTestUtil {
 
@@ -23,8 +22,8 @@ public class InviteTestUtil {
     public static Contract createContract(Long id, User contractor) {
         Contract contract = Contract.builder()
                 .user(contractor)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now().plusDays(30))
+                .startDate(UtcDateTimeUtil.nowAsLocalDateTime())
+                .endDate(UtcDateTimeUtil.nowAsLocalDateTime().plusDays(30))
                 .title("Test Contract " + id)
                 .goal("Test Goal")
                 .penalty("Test Penalty")

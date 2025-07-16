@@ -13,6 +13,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class EndContractsUseCaseImpl implements EndContractsUseCase {
         List<Contract> waitContracts = new ArrayList<>();
         List<Contract> failContracts = new ArrayList<>();
 
-        LocalDateTime twentyFourHours = LocalDateTime.now().minusHours(24);
+        LocalDateTime twentyFourHours = UtcDateTimeUtil.nowAsLocalDateTime().minusHours(24);
 
         for (Contract contract : contractsToCheck) {
             boolean hasPendingProofs = proofRepository.existsByContractIdAndStatus(contract.getId(), ProofStatus.APPROVE_PENDING);

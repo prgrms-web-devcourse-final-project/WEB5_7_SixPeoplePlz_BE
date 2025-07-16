@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 
 @Component
 @RequiredArgsConstructor
@@ -37,7 +37,7 @@ public class ScheduleManager {
         verifyOneOffContractSignatureUseCase.execute();
 
         // 인증 24시간(만료) 체크
-        checkExpiredProofUseCase.execute(LocalDateTime.now());
+        checkExpiredProofUseCase.execute(UtcDateTimeUtil.nowAsLocalDateTime());
     }
 
     /**

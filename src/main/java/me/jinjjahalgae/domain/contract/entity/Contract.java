@@ -12,6 +12,7 @@ import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.global.exception.ErrorCode;
+import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -114,7 +115,7 @@ public class Contract extends BaseEntity {
 
     public double calculatePeriodPercent() {
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = UtcDateTimeUtil.nowAsLocalDateTime();
 
         if (now.isBefore(startDate)) {
             return 0.0; // 시작 전이면 0%
@@ -134,7 +135,7 @@ public class Contract extends BaseEntity {
     }
 
     private long getPassedDays() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = UtcDateTimeUtil.nowAsLocalDateTime();
         if (now.isBefore(startDate)) return 0;
         if (now.isAfter(endDate)) return getTotalDays();
         return java.time.temporal.ChronoUnit.DAYS.between(startDate, now) + 1;
