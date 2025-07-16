@@ -43,9 +43,8 @@ public class ScheduleManager {
     /**
      * 매일 00:01 에 실행되는 스케줄러
      *
-     * - 단건 계약 24시간 체크
-     * - 단건 계약 서명검증
-     * - 인증 24시간(만료) 체크
+     * - 시작일 확인 후 계약 시작
+     * - 성공 실패를 판단 후 계약 종료
      */
     @Scheduled(cron = "0 1 0 * * *", zone = "Asia/Seoul" )
     @Transactional
