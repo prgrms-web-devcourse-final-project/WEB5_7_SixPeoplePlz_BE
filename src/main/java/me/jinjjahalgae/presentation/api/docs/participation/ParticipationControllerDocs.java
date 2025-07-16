@@ -48,15 +48,28 @@ public interface ParticipationControllerDocs {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "이미 참여한 계약에 서명한 경우",
-                                    value = """
-                                            {
-                                              "success": false,
-                                              "code": "INVITE_ALREADY_PARTICIPATED",
-                                              "message": "이미 참여한 계약입니다."
-                                            }"""
-                            )
+                            examples = { // examples에 새로운 케이스 추가
+                                    @ExampleObject(
+                                            name = "이미 참여한 계약에 서명한 경우",
+                                            summary = "INVITE_ALREADY_PARTICIPATED",
+                                            value = """
+                                    {
+                                      "success": false,
+                                      "code": "INVITE_ALREADY_PARTICIPATED",
+                                      "message": "이미 참여한 계약입니다."
+                                    }"""
+                                    ),
+                                    @ExampleObject(
+                                            name = "자신의 계약에 감독으로 참여하려는 경우",
+                                            summary = "자신의 계약에 계약자가 서명하려 한 경우",
+                                            value = """
+                                    {
+                                      "success": false,
+                                      "code": "CANNOT_PARTICIPATE_SELF_CONTRACT",
+                                      "message": "본인이 생성한 계약에는 감독자로 참여할 수 없습니다."
+                                    }"""
+                                    )
+                            }
                     )
             ),
             @ApiResponse(
