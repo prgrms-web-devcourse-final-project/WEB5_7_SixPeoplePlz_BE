@@ -56,11 +56,6 @@ public class CreateReProofUseCaseImpl implements CreateReProofUseCase {
             throw ErrorCode.CONTRACT_MUST_IN_PROGRESS.domainException("계약 진행중이 아닙니다.");
         }
 
-        // 계약 종료 2일 전 재인증 생성 요청 시 예외
-        if(isWithinFinal2Days(contract)) {
-            throw ErrorCode.REPROOF_NOT_ALLOWED.domainException("계약 종료 2일 전부터는 재인증 생성이 불가능합니다.");
-        }
-
         // 해당 계약에 대해 오늘자 재인증이 존재하는 지 검증
         boolean isReProofExist = todayReProofExist(contract.getId());
         if(isReProofExist) {
