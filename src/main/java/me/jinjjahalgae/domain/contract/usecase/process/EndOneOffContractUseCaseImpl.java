@@ -12,6 +12,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import me.jinjjahalgae.global.util.UtcDateTimeUtil;
+
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +34,7 @@ public class EndOneOffContractUseCaseImpl implements EndOneOffContractUseCase {
      */
     @Override
     public void execute() {
-        LocalDateTime deadline = LocalDateTime.now().minusHours(24);
+        Instant deadline = Instant.now().minus(24, java.time.temporal.ChronoUnit.HOURS);
 
         // 성공 처리 대상 계약들 처리
         List<Contract> completableContracts = contractRepository.findCompletableOneOffContracts(deadline);

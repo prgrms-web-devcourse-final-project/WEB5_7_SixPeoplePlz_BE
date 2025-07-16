@@ -9,11 +9,14 @@ import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEv
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
 import me.jinjjahalgae.global.storage.redis.usecase.invite.bulk.BulkDeleteInviteInfoUseCase;
 import me.jinjjahalgae.global.storage.redis.usecase.invite.get.GetJoinedSupervisorsUseCase;
+import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,7 +33,7 @@ public class StartContractsUseCaseImpl implements StartContractsUseCase {
     @Override
     @Transactional
     public void execute() {
-        LocalDate today = LocalDate.now();
+        Instant today = Instant.now();
         List<Contract> pendingContracts = contractRepository.findByStatusAndStartDateOnAndOneOff(ContractStatus.PENDING, today, false);
 
         if (pendingContracts.isEmpty()) return;

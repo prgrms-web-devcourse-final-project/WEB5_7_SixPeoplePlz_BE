@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -59,11 +58,10 @@ public class GetContractHistoryListUseCaseImpl implements GetContractHistoryList
         }
 
         // 계약종료일 < 입력된 날짜인 계약들 (null이면 검색 조건에서 제외)
-        LocalDateTime endDate = DateTimeConverter.toLocalDateTime(request.endDate());
-
+        // Instant endDate = request.endDate(); // 불필요한 변환 제거
         // repository에서 조건에 맞는 Contract 검색하기
         Page<Contract> contracts = contractRepository.findContractHistoryByConditions(
-            userId, role, keyword, endDate, status, pageable
+            userId, role, keyword, request.endDate(), status, pageable
         );
 
         // mapper에서 mapping해서 리턴

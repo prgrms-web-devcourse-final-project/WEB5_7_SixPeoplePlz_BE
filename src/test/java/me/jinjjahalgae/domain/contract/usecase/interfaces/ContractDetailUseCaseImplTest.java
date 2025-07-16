@@ -30,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import me.jinjjahalgae.domain.participation.repository.ParticipationRepository;
+import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 
 @ExtendWith(MockitoExtension.class)
 class GetContractDetailUseCaseTest {
@@ -85,8 +86,8 @@ class GetContractDetailUseCaseTest {
         // 계약 생성
         contractWithParticipants = Contract.builder()
                 .user(contractor)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now().plusDays(30))
+                .startDate(UtcDateTimeUtil.nowAsLocalDateTime())
+                .endDate(UtcDateTimeUtil.nowAsLocalDateTime().plusDays(30))
                 .title("운동하기")
                 .goal("매일 30분 운동")
                 .penalty("치킨 못 먹기")

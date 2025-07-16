@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,16 +38,16 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     boolean existsByIdAndStatus(Long id, ContractStatus status);
 
     // 시작일로 대기중 계약 조회
-    @Query("SELECT c FROM Contract c WHERE c.status = :status AND FUNCTION('DATE', c.startDate) = :date AND c.oneOff = :oneOff")
-    List<Contract> findByStatusAndStartDateOnAndOneOff(@Param("status") ContractStatus status, @Param("date") LocalDate date, @Param("oneOff") boolean oneOff);
+    @Query("SELECT c FROM Contract c WHERE c.status = :status AND c.startDate = :date AND c.oneOff = :oneOff")
+    List<Contract> findByStatusAndStartDateOnAndOneOff(@Param("status") ContractStatus status, @Param("date") Instant date, @Param("oneOff") boolean oneOff);
 
     // 종료일로 진행중 계약 조회
-    @Query("SELECT c FROM Contract c WHERE c.status = :status AND FUNCTION('DATE', c.endDate) = :date AND c.oneOff = :oneOff")
-    List<Contract> findByStatusAndEndDateOnAndOneOff(@Param("status") ContractStatus status, @Param("date") LocalDate date, @Param("oneOff") boolean oneOff);
+    @Query("SELECT c FROM Contract c WHERE c.status = :status AND c.endDate = :date AND c.oneOff = :oneOff")
+    List<Contract> findByStatusAndEndDateOnAndOneOff(@Param("status") ContractStatus status, @Param("date") Instant date, @Param("oneOff") boolean oneOff);
 
     // 시작일로 대기중인 일반(단발이 아닌) 계약 조회
-    @Query("SELECT c FROM Contract c WHERE c.status = :status AND FUNCTION('DATE', c.startDate) = :date AND c.oneOff = false")
-    List<Contract> findByStatusAndStartDateOn(@Param("status") ContractStatus status, @Param("date") LocalDate date);
+    @Query("SELECT c FROM Contract c WHERE c.status = :status AND c.startDate = :date AND c.oneOff = false")
+    List<Contract> findByStatusAndStartDateOn(@Param("status") ContractStatus status, @Param("date") Instant date);
 
     // 계약 조회 시 관련한 유저 정보도 한번에
     @Query("SELECT c FROM Contract c JOIN FETCH c.user WHERE c.id = :contractId")
@@ -58,14 +59,14 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
         from Contract c
         join fetch c.user
         where c.oneOff = true
-            and c.status = 'PENDING'
+            and c.status IN ('PENDING', 'IN_PROGRESS')
             and c.createdAt <= :date
             and not exists
                 (select p
                 from Participation p
                 where p.contract = c and p.role = 'SUPERVISOR')
     """)
-    List<Contract> findExpiredOneOffContractsWithNoSupervisors(@Param("date") LocalDateTime date);
+    List<Contract> findExpiredOneOffContractsWithNoSupervisors(@Param("date") Instant date);
 
     // 시작된 지 24시간이 지났고 인증이 하나 이상 존재하고 피드백이 하나라도 없는 진행중인 단건 계약 목록 조회
     @Query("""
@@ -86,7 +87,7 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
                     from Proof p
                     where p.contractId = c.id))
     """)
-    List<Contract> findCompletableOneOffContracts(@Param("date") LocalDateTime date);
+    List<Contract> findCompletableOneOffContracts(@Param("date") Instant date);
 
     // 시작된 지 24시간이 지났고 인증이 하나도 없고 진행중인 단건 계약 목록 조회
     @Query("""
@@ -100,7 +101,7 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
               from Proof p
               where p.contractId = c.id)
     """)
-    List<Contract> findFailableOneOffContracts(@Param("date") LocalDateTime date);
+    List<Contract> findFailableOneOffContracts(@Param("date") Instant date);
     // 여러 계약의 상태를 한 번에 업데이트하는 벌크 쿼리
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Contract c SET c.status = :status WHERE c.id IN :ids")
@@ -114,14 +115,14 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     @Query("""
 UPDATE Contract c
 SET c.status = 'WAIT_RESULT'
-WHERE c.status = 'IN_PROGRESS' AND FUNCTION('DATE', c.endDate) = :today
+WHERE c.status = 'IN_PROGRESS' AND c.endDate <= :today
 AND c.oneOff = false
 AND NOT EXISTS (
     SELECT p FROM Proof p
     WHERE p.contractId = c.id AND p.status = 'APPROVE_PENDING'
 )
 """)
-    void bulkUpdateCompletedContractsToWait(@Param("today") LocalDate today);
+    void bulkUpdateCompletedContractsToWait(@Param("today") Instant today);
 
     /**
      * 종료일이 오늘이고 처리할 인증이 "있는" 일반(단발이 아닌) 계약을 WAIT_RESULT(결과 대기)로 변경
@@ -131,14 +132,14 @@ AND NOT EXISTS (
     @Query("""
 UPDATE Contract c
 SET c.status = 'WAIT_RESULT'
-WHERE c.status = 'IN_PROGRESS' AND FUNCTION('DATE', c.endDate) = :today
+WHERE c.status = 'IN_PROGRESS' AND c.endDate <= :today
 AND c.oneOff = false
 AND EXISTS (
     SELECT p FROM Proof p
     WHERE p.contractId = c.id AND p.status = 'APPROVE_PENDING'
 )
 """)
-    void bulkUpdateApprovePendingContractsToWait(@Param("today") LocalDate today);
+    void bulkUpdateApprovePendingContractsToWait(@Param("today") Instant today);
 
     // 감독자로 참여한 계약 조회 (대기, 진행만)
     @Query("SELECT c FROM Contract c " +
@@ -180,7 +181,7 @@ AND EXISTS (
         @Param("userId") Long userId,
         @Param("role") Role role,
         @Param("keyword") String keyword,
-        @Param("endDate") LocalDateTime endDate,
+        @Param("endDate") Instant endDate,
         @Param("status") ContractStatus status,
         Pageable pageable
     );
@@ -195,9 +196,9 @@ AND EXISTS (
         SELECT c
         FROM Contract c
         WHERE c.status IN :statuses
-        AND FUNCTION('DATE', c.endDate) <= :before
+        AND c.endDate <= :before
     """)
-    List<Contract> findContractsToEnd(@Param("statuses") List<ContractStatus> statuses, @Param("before") LocalDate before);
+    List<Contract> findContractsToEnd(@Param("statuses") List<ContractStatus> statuses, @Param("before") Instant before);
 
     @Modifying
     @Query(

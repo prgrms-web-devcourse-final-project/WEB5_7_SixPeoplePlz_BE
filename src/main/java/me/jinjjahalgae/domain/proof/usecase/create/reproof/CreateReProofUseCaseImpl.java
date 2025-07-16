@@ -14,12 +14,15 @@ import me.jinjjahalgae.domain.proof.mapper.ProofMapper;
 import me.jinjjahalgae.domain.proof.repository.ProofImageRepository;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
 import me.jinjjahalgae.global.exception.ErrorCode;
+import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Service
 @RequiredArgsConstructor
@@ -104,16 +107,16 @@ public class CreateReProofUseCaseImpl implements CreateReProofUseCase {
 
     // 계약에 오늘자 재인증이 존재하는 지 확인하는 메서드
     private boolean todayReProofExist(Long contractId) {
-        LocalDate today = LocalDate.now();
-        LocalDateTime startOfDay = today.atStartOfDay();
-        LocalDateTime endOfDay = today.plusDays(1).atStartOfDay();
+        LocalDate today = UtcDateTimeUtil.nowAsLocalDate();
+        Instant startOfDay = today.atStartOfDay(ZoneOffset.UTC).toInstant();
+        Instant endOfDay = today.plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant();
         return proofRepository.existsReProofByContractIdAndCreatedAtToday(contractId, startOfDay, endOfDay);
     }
 
     // 계약 종료일 2일 전부터 재인증 생성 불가능을 검증하는 메서드
     private boolean isWithinFinal2Days(Contract contract) {
-        LocalDate now = LocalDate.now();
-        LocalDate endDate = contract.getEndDate().toLocalDate();
+        LocalDate now = UtcDateTimeUtil.nowAsLocalDate();
+        LocalDate endDate = contract.getEndDate().atZone(ZoneOffset.UTC).toLocalDate();
         return !now.isBefore(endDate.minusDays(2));
     }
 }

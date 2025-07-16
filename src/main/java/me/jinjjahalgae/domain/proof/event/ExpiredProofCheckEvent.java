@@ -4,10 +4,10 @@ package me.jinjjahalgae.domain.proof.event;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Getter
 @RequiredArgsConstructor
 public class ExpiredProofCheckEvent {
-    private final LocalDateTime now;
+    private final Instant now;
 }

@@ -31,7 +31,7 @@ public class ParticipationMapper {
                 participation.getImageKey(),
                 participation.getRole(),
                 participation.getValid(),
-                DateTimeConverter.toInstant(participation.getCreatedAt())
+                participation.getCreatedAt()
         );
     }
 
