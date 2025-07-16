@@ -22,21 +22,21 @@ import java.util.List;
           ],
           "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
           "status": "REJECTED",
-          "createdAt": "2025-07-09T13:30:00",
+          "createdAt": "2025-07-09T13:30:00Z",
           "reProof": false,
           "feedbacks": [
             {
-              "createdAt": "2025-07-09T13:30:00",
+              "createdAt": "2025-07-09T13:30:00Z",
               "status": "APPROVED",
               "comment": "확인했습니다!"
             },
             {
-              "createdAt": "2025-07-09T14:55:00",
+              "createdAt": "2025-07-09T14:55:00Z",
               "status": "REJECTED",
               "comment": "사진만 찍고 온거 아님?"
             },
             {
-              "createdAt": "2025-07-09T16:00:00",
+              "createdAt": "2025-07-09T16:00:00Z",
               "status": "REJECTED",
               "comment": null
             }
