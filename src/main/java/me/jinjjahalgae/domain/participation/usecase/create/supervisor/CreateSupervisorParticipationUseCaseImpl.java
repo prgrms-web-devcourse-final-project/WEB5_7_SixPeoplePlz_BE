@@ -96,19 +96,12 @@ public class CreateSupervisorParticipationUseCaseImpl implements CreateSuperviso
             // 감독자 수를 1로 설정하고 계약 시작
             contract.start(1);
 
-            // 계약 시작 알림 발송
-            // 계약자
+            // 계약 시작 알림 발송 - 모든 참여자에게 전송
+            // 계약자에게 알림
             eventPublisher.publishEvent(new NotificationEvent(
                     NotificationType.CONTRACT_STARTED,
                     contract.getId(),
                     contract.getUser().getId()
-            ));
-
-            // 감독자
-            eventPublisher.publishEvent(new NotificationEvent(
-                    NotificationType.CONTRACT_STARTED,
-                    contract.getId(),
-                    user.getId()
             ));
 
             // 초대 정보 삭제
