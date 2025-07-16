@@ -261,4 +261,17 @@ AND p.createdAt BETWEEN :startDate AND :endDate
 """, nativeQuery = true)
     List<NotificationData> findNotificationDataByProofIds(@Param("proofIds") List<Long> proofIds);
 
+    // 계약에 대해 처리 대기중인 인증이 있는지 확인
+    boolean existsByContractIdAndStatus(Long contractId, ProofStatus status);
+
+    /**
+     * 24시간 내에 재인증이 가능한 거절된 인증의 개수를 조회
+     */
+    @Query("""
+SELECT COUNT(p)
+FROM Proof p
+WHERE p.contractId = :contractId AND p.proofId IS NULL
+AND p.status = 'REJECTED' AND p.updatedAt >= :twentyFourHours
+""")
+    int countRecentRejectedProofs(@Param("contractId") Long contractId, @Param("twentyFourHours") LocalDateTime twentyFourHours);
 }

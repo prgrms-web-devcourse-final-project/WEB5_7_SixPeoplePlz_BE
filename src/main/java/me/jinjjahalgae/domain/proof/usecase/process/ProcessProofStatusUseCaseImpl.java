@@ -47,10 +47,15 @@ public class ProcessProofStatusUseCaseImpl implements ProcessProofStatusUseCase 
             // 계산해서 처리
             proof.processFeedbackResult(feedbacks);
 
-            // 인증 계산 결과에 따른 알림 전송
+            // 인증 계산 결과에 따른 처리
             if(proof.isApproved()) {
+                // 승인된 경우 계약의 현재 인증 횟수 증가
+                contract.incrementCurrentProof();
+
+                // 인증 승인 알림 전송
                 eventPublisher.publishEvent(new NotificationEvent(NotificationType.PROOF_ACCEPTED, contract.getId(), contract.getUser().getId()));
             }else{
+                // 인증 거절 알림 전송
                 eventPublisher.publishEvent(new NotificationEvent(NotificationType.PROOF_REJECTED, contract.getId(), contract.getUser().getId()));
             }
 

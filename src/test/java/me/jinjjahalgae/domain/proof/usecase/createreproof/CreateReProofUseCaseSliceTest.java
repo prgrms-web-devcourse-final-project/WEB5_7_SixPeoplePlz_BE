@@ -161,63 +161,6 @@ class CreateReProofUseCaseSliceTest {
     }
 
     @Test
-    @DisplayName("계약 종료 2일 전 재인증 생성 요청 시 예외 - 슬라이스 테스트")
-    void execute_ThrowsException_WhenContractEndDateMinus2Days() {
-        // given
-        contract.start(3);
-        entityManager.createNativeQuery("UPDATE contract SET end_date = :newEndDate WHERE id = :id")
-                .setParameter("newEndDate", LocalDateTime.now().minusDays(2))
-                .setParameter("id", contract.getId())
-                .executeUpdate();
-
-        entityManager.flush();
-        entityManager.clear();
-
-        // when & then
-        assertThatThrownBy(() -> createReProofUseCase.execute(validRequest, proofId, userId))
-                .isInstanceOf(AppException.class)
-                .hasMessageContaining("재인증이 불가능합니다.");
-    }
-
-    @Test
-    @DisplayName("계약 종료 1일 전 재인증 생성 요청 시 예외 - 슬라이스 테스트")
-    void execute_ThrowsException_WhenContractEndDateMinus1Days() {
-        // given
-        contract.start(3);
-        entityManager.createNativeQuery("UPDATE contract SET end_date = :newEndDate WHERE id = :id")
-                .setParameter("newEndDate", LocalDateTime.now().minusDays(1))
-                .setParameter("id", contract.getId())
-                .executeUpdate();
-
-        entityManager.flush();
-        entityManager.clear();
-
-        // when & then
-        assertThatThrownBy(() -> createReProofUseCase.execute(validRequest, proofId, userId))
-                .isInstanceOf(AppException.class)
-                .hasMessageContaining("재인증이 불가능합니다.");
-    }
-
-    @Test
-    @DisplayName("계약 종료일 재인증 생성 요청 시 예외 - 슬라이스 테스트")
-    void execute_ThrowsException_WhenContractEndDate() {
-        // given
-        contract.start(3);
-        entityManager.createNativeQuery("UPDATE contract SET end_date = :newEndDate WHERE id = :id")
-                .setParameter("newEndDate", LocalDateTime.now())
-                .setParameter("id", contract.getId())
-                .executeUpdate();
-
-        entityManager.flush();
-        entityManager.clear();
-
-        // when & then
-        assertThatThrownBy(() -> createReProofUseCase.execute(validRequest, proofId, userId))
-                .isInstanceOf(AppException.class)
-                .hasMessageContaining("재인증이 불가능합니다.");
-    }
-
-    @Test
     @DisplayName("세 번째 이미지까지 포함한 재인증 생성 성공 - 슬라이스 테스트")
     void execute_Success_WithThirdImage() {
         // given

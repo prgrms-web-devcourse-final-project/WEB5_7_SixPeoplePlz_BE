@@ -64,12 +64,12 @@ public interface ProofControllerDocs {
                                             """
                                     ),
                                     @ExampleObject(
-                                            name = "시작 전 계약에 인증을 생성하려는 경우",
+                                            name = "진행중인 계약이 아닌 경우",
                                             value = """
                                             {
                                               "success": false,
-                                              "code": "CONTRACT_NOT_STARTED",
-                                              "message": "계약 시작 전에는 인증을 생성할 수 없습니다."
+                                              "code": "CONTRACT_MUST_IN_PROGRESS",
+                                              "message": "계약 진행중에만 인증 생성이 가능합니다."
                                             }
                                             """
                                     )
@@ -215,22 +215,12 @@ public interface ProofControllerDocs {
                                             """
                                     ),
                                     @ExampleObject(
-                                            name = "시작 전 계약에 인증을 생성하려는 경우",
+                                            name = "진행중인 계약이 아닌 경우",
                                             value = """
                                             {
                                               "success": false,
-                                              "code": "CONTRACT_NOT_STARTED",
-                                              "message": "계약 시작 전에는 인증을 생성할 수 없습니다."
-                                            }
-                                            """
-                                    ),
-                                    @ExampleObject(
-                                            name = "계약 종료 2일 전 재인증 생성 요청을 하는 경우",
-                                            value = """
-                                            {
-                                              "success": false,
-                                              "code": "REPROOF_NOT_ALLOWED",
-                                              "message": "재인증이 불가능합니다."
+                                              "code": "CONTRACT_MUST_IN_PROGRESS",
+                                              "message": "계약 진행중에만 인증 생성이 가능합니다."
                                             }
                                             """
                                     )
