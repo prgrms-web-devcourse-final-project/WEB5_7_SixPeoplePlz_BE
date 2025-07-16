@@ -31,7 +31,7 @@ public class EndContractsUseCaseImpl implements EndContractsUseCase {
     @Override
     @Transactional
     public void execute() {
-        LocalDate yesterday = LocalDate.now().minusDays(1);
+        LocalDate yesterday = UtcDateTimeUtil.nowAsLocalDate().minusDays(1);
 
         // 어제 또는 이전에 종료되었어야 하는 '진행중' 또는 '결과 대기' 상태의 계약을 모두 조회
         List<Contract> contractsToCheck = contractRepository.findContractsToEnd(
