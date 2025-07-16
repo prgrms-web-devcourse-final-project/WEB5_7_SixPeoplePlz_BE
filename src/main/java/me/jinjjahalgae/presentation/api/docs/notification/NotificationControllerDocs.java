@@ -233,7 +233,8 @@ public interface NotificationControllerDocs {
 
     @Operation(
         summary = "알림 단건 삭제",
-        description = "주어진 알림 ID에 해당하는 알림을 삭제합니다."
+        description = "주어진 알림 ID에 해당하는 알림을 삭제합니다.",
+        security = { @SecurityRequirement(name = "bearerAuth") }
     )
     @ApiResponses(value = {
         @ApiResponse(
@@ -306,7 +307,8 @@ public interface NotificationControllerDocs {
 
     @Operation(
         summary = "알림 읽음 처리",
-        description = "주어진 알림 ID에 해당하는 알림을 읽음 상태로 설정합니다."
+        description = "주어진 알림 ID에 해당하는 알림을 읽음 상태로 설정합니다.",
+        security = { @SecurityRequirement(name = "bearerAuth") }
     )
     @ApiResponses(value = {
         @ApiResponse(
