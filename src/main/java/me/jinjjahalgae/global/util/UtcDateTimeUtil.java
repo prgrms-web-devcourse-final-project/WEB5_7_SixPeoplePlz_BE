@@ -11,6 +11,9 @@ public class UtcDateTimeUtil {
             .ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
             .withZone(ZoneOffset.UTC);
 
+    /**
+     * (권장X) LocalDateTime을 포맷팅. Instant를 직접 사용하세요.
+     */
     public static String format(LocalDateTime localDateTime) {
         if (localDateTime == null) return null;
         

@@ -21,7 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,8 +37,8 @@ public class CheckExpiredProofUseCaseImpl implements CheckExpiredProofUseCase {
 
     @Override
     @Transactional
-    public void execute(LocalDateTime now) {
-        LocalDateTime deadline = now.minusHours(24);
+    public void execute(Instant now) {
+        Instant deadline = now.minusSeconds(24 * 3600);
 
         int page = 0;
         int size = 50;

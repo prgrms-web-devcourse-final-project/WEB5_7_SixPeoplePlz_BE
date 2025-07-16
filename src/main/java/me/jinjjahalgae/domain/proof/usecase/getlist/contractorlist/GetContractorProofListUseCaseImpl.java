@@ -11,8 +11,10 @@ import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -41,10 +43,10 @@ public class GetContractorProofListUseCaseImpl implements GetContractorProofList
         contract.validateContractor(userId);
 
         // 달의 시작일 00:00:00
-        LocalDateTime startDate = LocalDateTime.of(year, month, 1, 0, 0);
+        Instant startDate = LocalDateTime.of(year, month, 1, 0, 0).toInstant(ZoneOffset.UTC);
 
         // 달의 마지막 날 23:59:59.999999999
-        LocalDateTime endDate = LocalDateTime.of(year, month, YearMonth.of(year, month).lengthOfMonth(), 23, 59, 59, 999999999);
+        Instant endDate = LocalDateTime.of(year, month, YearMonth.of(year, month).lengthOfMonth(), 23, 59, 59, 999999999).toInstant(ZoneOffset.UTC);
 
         // 한 달에 해당하는 원본 인증 id들
         List<Long> proofIds = proofRepository.findOriginalProofIdsByMonth(contractId, startDate, endDate);

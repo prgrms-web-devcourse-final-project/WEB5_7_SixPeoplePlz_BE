@@ -1,6 +1,7 @@
 package me.jinjjahalgae.global.scheduler;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.contract.usecase.process.*;
 import me.jinjjahalgae.domain.proof.usecase.schedule.CheckExpiredProofUseCase;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -8,7 +9,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import me.jinjjahalgae.global.util.UtcDateTimeUtil;
+import java.time.Instant;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ScheduleManager {
@@ -27,9 +30,11 @@ public class ScheduleManager {
      * - 단건 계약 서명검증
      * - 인증 24시간(만료) 체크
      */
-    @Scheduled(cron = "0 */5 * * * *", zone = "Asia/Seoul" )
+    @Scheduled(cron = "0 */2 * * * *")
     @Transactional
     public void fiveMinuteSchedule() {
+        log.info("[Scheduler] 5분 스케줄러 시작. 현재 UTC 시간: {}", Instant.now());
+
         // 단건 계약 24시간 체크
         endOneOffContractUseCase.execute();
 
@@ -37,7 +42,7 @@ public class ScheduleManager {
         verifyOneOffContractSignatureUseCase.execute();
 
         // 인증 24시간(만료) 체크
-        checkExpiredProofUseCase.execute(UtcDateTimeUtil.nowAsLocalDateTime());
+        checkExpiredProofUseCase.execute(Instant.now());
     }
 
     /**
@@ -46,7 +51,7 @@ public class ScheduleManager {
      * - 시작일 확인 후 계약 시작
      * - 성공 실패를 판단 후 계약 종료
      */
-    @Scheduled(cron = "0 1 0 * * *", zone = "Asia/Seoul" )
+    @Scheduled(cron = "0 1 0 * * *" )
     @Transactional
     public void daySchedule() {
         // 시작일 확인 후 계약 시작

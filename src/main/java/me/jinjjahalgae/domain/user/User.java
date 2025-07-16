@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.jinjjahalgae.domain.common.BaseEntity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Getter
@@ -25,7 +25,7 @@ public class User extends BaseEntity {
 
     private String email; // (Optional) 이메일
 
-    private LocalDateTime deletedAt;
+    private Instant deletedAt;
 
     @Builder
     public User(Long id, String name, String nickname, String email) {
@@ -39,7 +39,7 @@ public class User extends BaseEntity {
         this.nickname = nickname;
     }
 
-    public void delete(LocalDateTime deletedAt) {
+    public void delete(Instant deletedAt) {
         this.deletedAt = deletedAt;
     }
 }
