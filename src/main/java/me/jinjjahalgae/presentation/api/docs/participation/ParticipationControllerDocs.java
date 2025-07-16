@@ -23,7 +23,7 @@ public interface ParticipationControllerDocs {
     @Operation(
             summary = "감독으로 계약 참여 (서명)",
             description = "초대받은 계약에 감독으로 참여하고 서명을 등록합니다. 로그인이 필요합니다.",
-            security = { @SecurityRequirement(name = "bearerAuth") }
+            security = {@SecurityRequirement(name = "bearerAuth")}
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -35,10 +35,10 @@ public interface ParticipationControllerDocs {
                             examples = @ExampleObject(
                                     name = "성공 응답",
                                     value = """
-                                    {
-                                      "success": true,
-                                      "result": null
-                                    }"""
+                                            {
+                                              "success": true,
+                                              "result": null
+                                            }"""
                             )
                     )
             ),
@@ -51,11 +51,11 @@ public interface ParticipationControllerDocs {
                             examples = @ExampleObject(
                                     name = "이미 참여한 계약에 서명한 경우",
                                     value = """
-                                    {
-                                      "success": false,
-                                      "code": "INVITE_ALREADY_PARTICIPATED",
-                                      "message": "이미 참여한 계약입니다."
-                                    }"""
+                                            {
+                                              "success": false,
+                                              "code": "INVITE_ALREADY_PARTICIPATED",
+                                              "message": "이미 참여한 계약입니다."
+                                            }"""
                             )
                     )
             ),
@@ -67,83 +67,80 @@ public interface ParticipationControllerDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = {
                                     @ExampleObject(name = "인증 실패", value = """
-                                    {
-                                      "success": false,
-                                      "code": "INVALID_TOKEN",
-                                      "message": "유효하지 않은 토큰입니다."
-                                    }
-                                    """),
+                                            {
+                                              "success": false,
+                                              "code": "INVALID_TOKEN",
+                                              "message": "유효하지 않은 토큰입니다."
+                                            }
+                                            """),
                                     @ExampleObject(name = "만료된 토큰", value = """
-                                    {
-                                      "success": false,
-                                      "code": "EXPIRED_TOKEN",
-                                      "message": "토큰이 만료되었습니다."
-                                    }
-                                    """)
+                                            {
+                                              "success": false,
+                                              "code": "EXPIRED_TOKEN",
+                                              "message": "토큰이 만료되었습니다."
+                                            }
+                                            """)
                             }
                     )
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "존재하지 않는 계약",
+                    description = "데이터 없음",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "계약이 존재하지 않는 경우",
-                                    value = """
-                                    {
-                                      "success": false,
-                                      "code": "CONTRACT_NOT_FOUND",
-                                      "message": "존재하지 않는 계약입니다."
-                                    }"""
-                            )
-                    )
-            ),
-            @ApiResponse(responseCode = "404", description = "존재하지 않거나 만료된 초대링크",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(name = "존재하지 않거나 만료된 초대링크", value = """
-                                    {
-                                        "success": false,
-                                        "code": "INVITE_NOT_FOUND",
-                                        "message": "존재하지 않거나 만료된 초대 정보 입니다."
-                                    }"""
-                            )
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "409",
-                    description = "감독자 인원 초과",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "감독자의 인원이 5명 다 채워진 경우",
-                                    value = """
-                                    {
-                                      "success": false,
-                                      "code": "SUPERVISOR_ALREADY_FULL",
-                                      "message": "이미 5명의 감독자가 참여했습니다."
-                                    }"""
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "계약이 존재하지 않는 경우",
+                                            summary = "해당하는 id의 계약이 존재하지 않는 경우",
+                                            value = """
+                                                    {
+                                                      "success": false,
+                                                      "code": "CONTRACT_NOT_FOUND",
+                                                      "message": "존재하지 않는 계약입니다."
+                                                    }"""
+                                    ),
+                                    @ExampleObject(
+                                            name = "초대 정보가 없는 경우",
+                                            summary = "초대 정보가 없거나 만료된 초대 정보인 경우",
+                                            value = """
+                                                    {
+                                                        "success": false,
+                                                        "code": "INVITE_NOT_FOUND",
+                                                        "message": "존재하지 않거나 만료된 초대 정보 입니다."
+                                                    }"""
+                                    )
+                            }
                     )
             ),
             @ApiResponse(
                     responseCode = "409",
-                    description = "계약 시작 후 서명을 하면 예외 반환",
+                    description = "요청 충돌 (인원 초과 또는 잘못된 계약 상태)",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "계약 시작 후 서명을 한 경우",
-                                    value = """
-                                    {
-                                      "success": false,
-                                      "code": "CANNOT_PARTICIPATE_AFTER_START",
-                                      "message": "시작 전인 계약만 서명할 수 있습니다."
-                                    }"""
-                            )
+                            examples = {
+                                    @ExampleObject(
+                                            name = "감독자 인원 초과",
+                                            summary = "이미 5명의 감독자가 전부 참여한 경우",
+                                            value = """
+                                                    {
+                                                      "success": false,
+                                                      "code": "SUPERVISOR_ALREADY_FULL",
+                                                      "message": "이미 5명의 감독자가 참여했습니다."
+                                                    }"""
+                                    ),
+                                    @ExampleObject(
+                                            name = "계약 시작 후 서명",
+                                            summary = "계약이 시작 되었는데 서명하려 한 경우",
+                                            value = """
+                                                    {
+                                                      "success": false,
+                                                      "code": "CANNOT_PARTICIPATE_AFTER_START",
+                                                      "message": "시작 전인 계약만 서명할 수 있습니다."
+                                                    }"""
+                                    )
+                            }
                     )
             )
     })
@@ -155,7 +152,7 @@ public interface ParticipationControllerDocs {
     @Operation(
             summary = "감독 참여 철회 (계약 시작 전)",
             description = "시작 전인 계약에 대한 감독 참여를 완전히 철회합니다. 참여 기록이 삭제됩니다. 로그인이 필요합니다.",
-            security = { @SecurityRequirement(name = "bearerAuth") }
+            security = {@SecurityRequirement(name = "bearerAuth")}
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -167,10 +164,10 @@ public interface ParticipationControllerDocs {
                             examples = @ExampleObject(
                                     name = "성공 응답",
                                     value = """
-                                    {
-                                      "success": true,
-                                      "result": null
-                                    }"""
+                                            {
+                                              "success": true,
+                                              "result": null
+                                            }"""
                             )
                     )
             ),
@@ -182,19 +179,19 @@ public interface ParticipationControllerDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = {
                                     @ExampleObject(name = "인증 실패", value = """
-                                    {
-                                      "success": false,
-                                      "code": "INVALID_TOKEN",
-                                      "message": "유효하지 않은 토큰입니다."
-                                    }
-                                    """),
+                                            {
+                                              "success": false,
+                                              "code": "INVALID_TOKEN",
+                                              "message": "유효하지 않은 토큰입니다."
+                                            }
+                                            """),
                                     @ExampleObject(name = "만료된 토큰", value = """
-                                    {
-                                      "success": false,
-                                      "code": "EXPIRED_TOKEN",
-                                      "message": "토큰이 만료되었습니다."
-                                    }
-                                    """)
+                                            {
+                                              "success": false,
+                                              "code": "EXPIRED_TOKEN",
+                                              "message": "토큰이 만료되었습니다."
+                                            }
+                                            """)
                             }
                     )
             ),
@@ -206,19 +203,19 @@ public interface ParticipationControllerDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = {
                                     @ExampleObject(name = "계약이 존재하지 않는 경우", summary = "계약서 없음", value = """
-                                    {
-                                      "success": false,
-                                      "code": "CONTRACT_NOT_FOUND",
-                                      "message": "존재하지 않는 계약입니다."
-                                    }
-                                    """),
+                                            {
+                                              "success": false,
+                                              "code": "CONTRACT_NOT_FOUND",
+                                              "message": "존재하지 않는 계약입니다."
+                                            }
+                                            """),
                                     @ExampleObject(name = "해당 계약에 감독으로 참여하고 있지 않은 경우", summary = "감독 참여 정보 없음", value = """
-                                    {
-                                      "success": false,
-                                      "code": "SUPERVISOR_PARTICIPATION_NOT_FOUND",
-                                      "message": "해당 계약에 감독으로 참여하고 있지 않습니다."
-                                    }
-                                    """)
+                                            {
+                                              "success": false,
+                                              "code": "SUPERVISOR_PARTICIPATION_NOT_FOUND",
+                                              "message": "해당 계약에 감독으로 참여하고 있지 않습니다."
+                                            }
+                                            """)
                             }
                     )
             ),
@@ -231,11 +228,11 @@ public interface ParticipationControllerDocs {
                             examples = @ExampleObject(
                                     name = "계약이 시작되기 전에만 감독 철회 가능",
                                     value = """
-                                    {
-                                      "success": false,
-                                      "code": "CANNOT_WITHDRAW_PARTICIPATION_AFTER_START",
-                                      "message": "계약이 시작되기 전에만 감독 계약을 철회할 수 있습니다."
-                                    }"""
+                                            {
+                                              "success": false,
+                                              "code": "CANNOT_WITHDRAW_PARTICIPATION_AFTER_START",
+                                              "message": "계약이 시작되기 전에만 감독 계약을 철회할 수 있습니다."
+                                            }"""
                             )
                     )
             )
@@ -248,7 +245,7 @@ public interface ParticipationControllerDocs {
     @Operation(
             summary = "감독 중도 포기 (계약 진행 중)",
             description = "진행 중인 계약의 감독 역할을 포기합니다. 참여 기록은 남고 상태만 변경됩니다. 로그인이 필요합니다.",
-            security = { @SecurityRequirement(name = "bearerAuth") }
+            security = {@SecurityRequirement(name = "bearerAuth")}
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -260,10 +257,10 @@ public interface ParticipationControllerDocs {
                             examples = @ExampleObject(
                                     name = "성공 응답",
                                     value = """
-                                    {
-                                      "success": true,
-                                      "result": null
-                                    }"""
+                                            {
+                                              "success": true,
+                                              "result": null
+                                            }"""
                             )
                     )
             ),
@@ -275,19 +272,19 @@ public interface ParticipationControllerDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = {
                                     @ExampleObject(name = "인증 실패", value = """
-                                    {
-                                      "success": false,
-                                      "code": "INVALID_TOKEN",
-                                      "message": "유효하지 않은 토큰입니다."
-                                    }
-                                    """),
+                                            {
+                                              "success": false,
+                                              "code": "INVALID_TOKEN",
+                                              "message": "유효하지 않은 토큰입니다."
+                                            }
+                                            """),
                                     @ExampleObject(name = "만료된 토큰", value = """
-                                    {
-                                      "success": false,
-                                      "code": "EXPIRED_TOKEN",
-                                      "message": "토큰이 만료되었습니다."
-                                    }
-                                    """)
+                                            {
+                                              "success": false,
+                                              "code": "EXPIRED_TOKEN",
+                                              "message": "토큰이 만료되었습니다."
+                                            }
+                                            """)
                             }
                     )
             ),
@@ -299,19 +296,19 @@ public interface ParticipationControllerDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = {
                                     @ExampleObject(name = "계약이 존재하지 않는 경우", summary = "계약서 없음", value = """
-                                    {
-                                      "success": false,
-                                      "code": "CONTRACT_NOT_FOUND",
-                                      "message": "존재하지 않는 계약입니다."
-                                    }
-                                    """),
+                                            {
+                                              "success": false,
+                                              "code": "CONTRACT_NOT_FOUND",
+                                              "message": "존재하지 않는 계약입니다."
+                                            }
+                                            """),
                                     @ExampleObject(name = "해당 계약에 감독으로 참여하고 있지 않은 경우", summary = "감독 참여 정보 없음", value = """
-                                    {
-                                      "success": false,
-                                      "code": "SUPERVISOR_PARTICIPATION_NOT_FOUND",
-                                      "message": "해당 계약에 감독으로 참여하고 있지 않습니다."
-                                    }
-                                    """)
+                                            {
+                                              "success": false,
+                                              "code": "SUPERVISOR_PARTICIPATION_NOT_FOUND",
+                                              "message": "해당 계약에 감독으로 참여하고 있지 않습니다."
+                                            }
+                                            """)
                             }
                     )
             ),
@@ -324,11 +321,11 @@ public interface ParticipationControllerDocs {
                             examples = @ExampleObject(
                                     name = "계약 진행중에만 감독 중도 포기 가능",
                                     value = """
-                                    {
-                                      "success": false,
-                                      "code": "CANNOT_ABANDON_PARTICIPATION_UNLESS_IN_PROGRESS",
-                                      "message": "계약 진행중에만 감독을 중도 포기할 수 있습니다."
-                                    }"""
+                                            {
+                                              "success": false,
+                                              "code": "CANNOT_ABANDON_PARTICIPATION_UNLESS_IN_PROGRESS",
+                                              "message": "계약 진행중에만 감독을 중도 포기할 수 있습니다."
+                                            }"""
                             )
                     )
             )
