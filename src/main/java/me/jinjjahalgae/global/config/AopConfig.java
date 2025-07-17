@@ -17,9 +17,4 @@ public class AopConfig {
     ) {
         return new LogTraceAspect(logTrace, objectMapper, logVersionInfo);
     }
-
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
 }
