@@ -43,3 +43,10 @@ invite:
   expired-time: 24    # 초대 만료시간 24시간
   max-supervisors: 5  # 최대 감독자 수
   invite-url-prefix: "https://jinjjahalgae.xyz/api/invite/"
+
+log:
+  version-info:
+    service-name: jinjjahalgae
+    version: 1.0.0
+    commit-id: ${git.commit.id:unknown}
+    build-time: ${build.time:unknown}
