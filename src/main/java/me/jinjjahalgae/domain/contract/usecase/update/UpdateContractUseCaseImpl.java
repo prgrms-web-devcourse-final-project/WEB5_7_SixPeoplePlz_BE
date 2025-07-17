@@ -45,6 +45,9 @@ public class UpdateContractUseCaseImpl implements UpdateContractUseCase {
                     ContractType.valueOf(request.type())
             );
 
+            //총 인증 횟수는 계약일 수를 넘을 수 없으며 단발성이라면 총 인증 횟수 1인지도 검사
+            contract.validateTotalProof();
+
             entityManager.flush();
 
         } catch (OptimisticLockingFailureException e) {
