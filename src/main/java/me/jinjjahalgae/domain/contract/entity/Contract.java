@@ -245,6 +245,10 @@ public class Contract extends BaseEntity {
     public void validateTotalProof() {
         long contractDays = getTotalDays();
 
+        if (this.oneOff) {
+            totalProof = 1;
+        }
+
         if (this.totalProof > contractDays) {
             throw ErrorCode.INVALID_TOTAL_PROOF.domainException("계약 실행 횟수는 계약 기간 일을 넘길 수 없습니다.");
         }
