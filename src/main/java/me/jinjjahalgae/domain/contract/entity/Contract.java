@@ -240,4 +240,9 @@ public class Contract extends BaseEntity {
     public boolean isInProgress() {
         return this.status == ContractStatus.IN_PROGRESS;
     }
+
+    // 계약 상태가 결과대기인지 검증
+    public boolean isWaitResult() {
+        return this.status == ContractStatus.WAIT_RESULT;
+    }
 }

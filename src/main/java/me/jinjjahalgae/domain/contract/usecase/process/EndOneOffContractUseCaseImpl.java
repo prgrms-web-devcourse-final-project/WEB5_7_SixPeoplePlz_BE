@@ -12,12 +12,10 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import me.jinjjahalgae.global.util.UtcDateTimeUtil;
-
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,55 +27,81 @@ public class EndOneOffContractUseCaseImpl implements EndOneOffContractUseCase {
 
     /**
      * 단건 계약(oneOff=true)이 시작되고 24시간이 지났는지 확인하고 계약 상태를 결정합니다.
-     * - 인증을 올렸는데 계약이 생성된지 24시간이 지난 후에도 피드백이 없으면 계약 성공
+     * - 인증을 올렸는데 계약이 생성된지 24시간이 지난 후에도 피드백이 없으면 결과대기 상태로 변경
      * - 인증을 안올리고 계약이 생성된지 24시간이 지나면 계약 실패
+     * - 결과대기 상태에서 인증이 생성된지 24시간이 지나면 결과 승인처리
      */
     @Override
     public void execute() {
-        Instant deadline = Instant.now().minus(24, java.time.temporal.ChronoUnit.HOURS);
+        Instant deadline = Instant.now().minus(24, ChronoUnit.HOURS);
 
-        // 성공 처리 대상 계약들 처리
-        List<Contract> completableContracts = contractRepository.findCompletableOneOffContracts(deadline);
+        List<Contract> endedOneOffContracts = contractRepository.findEndedOneOffContracts(deadline);
 
-        if (!completableContracts.isEmpty()) {
-            List<Long> contractIdsToComplete = completableContracts.stream()
-                    .map(Contract::getId)
-                    .toList();
-
-            // 인증 APPROVED 벌크 업데이트
-            proofRepository.bulkUpdatePendingProofsToApproved(
-                    contractIdsToComplete,
-                    ProofStatus.APPROVED
-            );
-
-            // 계약 COMPLETE 벌크 업데이트
-            contractRepository.bulkUpdateStatus(contractIdsToComplete, ContractStatus.COMPLETED);
-
-            for (Contract contract : completableContracts) {
-                // 계약 성공 알림 이벤트 발행
-                eventPublisher.publishEvent(
-                    new NotificationEvent(NotificationType.CONTRACT_ENDED_SUCCESS, contract.getId(), contract.getUser().getId())
-                );
-            }
+        if (endedOneOffContracts.isEmpty()) {
+            return;
         }
 
-        // 실패 처리 대상 계약들 처리
-        List<Contract> failableContracts = contractRepository.findFailableOneOffContracts(deadline);
+        List<Contract> completeContracts = new ArrayList<>();
+        List<Contract> waitContracts = new ArrayList<>();
+        List<Contract> failContracts = new ArrayList<>();
 
-        if(!failableContracts.isEmpty()) {
-            List<Long> contractIdsToFail = failableContracts.stream()
-                    .map(Contract::getId)
-                    .toList();
+        for (Contract contract : endedOneOffContracts) {
+            boolean hasPendingProofs = proofRepository.existsByContractIdAndStatus(contract.getId(), ProofStatus.APPROVE_PENDING);
 
-            contractRepository.bulkUpdateStatus(contractIdsToFail, ContractStatus.FAILED);
+            // 성공 확정: 목표 달성했고, 처리 대기중인 인증도 없는 경우
+            if (contract.getCurrentProof() >= contract.getTotalProof() && !hasPendingProofs) {
+                completeContracts.add(contract);
 
-            for (Contract contract : failableContracts) {
-                // 계약 실패 알림 이벤트 발행
-                eventPublisher.publishEvent(
-                        new NotificationEvent(NotificationType.CONTRACT_ENDED_FAIL, contract.getId(), contract.getUser().getId())
-                );
+                continue;
             }
+
+            // 실패 확정: 목표 미달성, 처리 대기 인증도 없는 경우
+            if (contract.getCurrentProof() < contract.getTotalProof() && !hasPendingProofs) {
+                failContracts.add(contract);
+
+                continue;
+            }
+
+            // 위 두 조건에 해당하지 않으면 'WAIT_RESULT' 상태로 최대 하루 더 유예
+            waitContracts.add(contract);
         }
 
+
+        // 각 리스트에 따라 일괄 업데이트 및 알림 처리
+        if (!completeContracts.isEmpty()) {
+            List<Long> successIds = extractIdsFromContracts(completeContracts);
+
+            contractRepository.bulkUpdateStatus(successIds, ContractStatus.COMPLETED);
+
+            createNotificationsToParticipants(completeContracts, NotificationType.CONTRACT_ENDED_SUCCESS);
+        }
+
+        if (!waitContracts.isEmpty()) {
+            List<Long> waitIds = extractIdsFromContracts(waitContracts);
+
+            contractRepository.bulkUpdateStatus(waitIds, ContractStatus.WAIT_RESULT);
+        }
+
+        if (!failContracts.isEmpty()) {
+            List<Long> failIds = extractIdsFromContracts(failContracts);
+
+            contractRepository.bulkUpdateStatus(failIds, ContractStatus.FAILED);
+
+            createNotificationsToParticipants(failContracts, NotificationType.CONTRACT_ENDED_FAIL);
+        }
+    }
+
+    private void createNotificationsToParticipants(List<Contract> contracts, NotificationType type) {
+        contracts.forEach(contract -> eventPublisher.publishEvent(
+                new NotificationEvent(
+                        type,
+                        contract.getId(),
+                        contract.getUser().getId())
+                )
+        );
+    }
+
+    private List<Long> extractIdsFromContracts(List<Contract> contracts) {
+        return contracts.stream().map(Contract::getId).toList();
     }
 } 
