@@ -73,6 +73,26 @@ public interface ContractControllerDocs {
                         """
                                     ),
                                     @ExampleObject(
+                                            name = "totalProof 유효성 실패",
+                                            value = """
+                        {
+                          "success": false,
+                          "code": "BAD_REQUEST",
+                          "message": "totalProof는 계약 기간을 초과할 수 없습니다."
+                        }
+                        """
+                                    ),
+                                    @ExampleObject(
+                                            name = "일회성 계약 totalProof 오류",
+                                            value = """
+                        {
+                          "success": false,
+                          "code": "BAD_REQUEST",
+                          "message": "일회성 계약의 totalProof는 1이어야 합니다."
+                        }
+                        """
+                                    ),
+                                    @ExampleObject(
                                             name = "날짜 유효성 실패",
                                             value = """
                         {
@@ -558,6 +578,26 @@ public interface ContractControllerDocs {
                           "success": false,
                           "code": "BAD_REQUEST",
                           "message": "title은 필수 입력 값입니다."
+                        }
+                        """
+                                    ),
+                                    @ExampleObject(
+                                            name = "totalProof 유효성 실패",
+                                            value = """
+                        {
+                          "success": false,
+                          "code": "BAD_REQUEST",
+                          "message": "totalProof는 계약 기간을 초과할 수 없습니다."
+                        }
+                        """
+                                    ),
+                                    @ExampleObject(
+                                            name = "일회성 계약 totalProof 오류",
+                                            value = """
+                        {
+                          "success": false,
+                          "code": "BAD_REQUEST",
+                          "message": "일회성 계약의 totalProof는 1이어야 합니다."
                         }
                         """
                                     ),
