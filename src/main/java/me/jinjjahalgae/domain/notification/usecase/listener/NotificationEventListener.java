@@ -29,8 +29,7 @@ public class NotificationEventListener {
      *   1초 대기 -> 3차 시도 -> 실패
      *   예외 던짐
      */
-
-    private final CreateNotificationUseCase createNotificationUseCase;
+    private final NotificationRetryProcessor retryProcessor;
 
     /**
      * NotificationEvent를 핸들링하는 리스너
@@ -40,19 +39,8 @@ public class NotificationEventListener {
      */
     @Async
     @TransactionalEventListener
-    @Retryable(retryFor = Exception.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public void handleNotificationEvent(NotificationEvent event) {
-        try {
-            createNotificationUseCase.execute(
-                    new NotificationCreateRequest(
-                            event.notificationType(),
-                            event.contractId(),
-                            event.actorUserId()
-                    )
-            );
-        } catch (Exception e) {
-            log.error("알림 전송 중 오류 발생: {}", e.getMessage(), e);
-        }
+        retryProcessor.processSingle(event);
     }
 
     /**
@@ -63,21 +51,7 @@ public class NotificationEventListener {
      */
     @Async
     @TransactionalEventListener
-    @Retryable(retryFor = Exception.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public void handleNotificationBatchEvent(NotificationBatchEvent event) {
-        try {
-            List<NotificationData> notificationData = event.notificationData();
-            for (NotificationData data : notificationData) {
-                createNotificationUseCase.execute(
-                        new NotificationCreateRequest(
-                                event.notificationType(),
-                                data.contractId(),
-                                data.actorUserId()
-                        )
-                );
-            }
-        } catch (Exception e) {
-            log.error("알림 전송 중 오류 발생: {}", e.getMessage(), e);
-        }
+        retryProcessor.processBatch(event);
     }
 }
