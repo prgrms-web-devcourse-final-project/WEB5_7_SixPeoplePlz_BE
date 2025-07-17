@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import me.jinjjahalgae.domain.user.User;
 
-import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 import java.time.Instant;
 
 /**

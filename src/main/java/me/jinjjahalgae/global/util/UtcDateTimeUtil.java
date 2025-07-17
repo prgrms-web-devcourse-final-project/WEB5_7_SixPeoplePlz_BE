@@ -12,15 +12,6 @@ public class UtcDateTimeUtil {
             .withZone(ZoneOffset.UTC);
 
     /**
-     * (권장X) LocalDateTime을 포맷팅. Instant를 직접 사용하세요.
-     */
-    public static String format(LocalDateTime localDateTime) {
-        if (localDateTime == null) return null;
-        
-        return ISO_UTC_FORMATTER.format(localDateTime.atZone(ZoneOffset.UTC));
-    }
-
-    /**
      * UTC 기준 현재 시간을 Instant로 반환
      * @return Instant
      */
