@@ -11,8 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -207,4 +205,14 @@ AND EXISTS (
     )
     void incrementCurrentProofForContracts(@Param("contractIds") List<Long> contractIds);
 
+
+    // 시작된 지 24시간이 지난 '진행중', '결과대기' 상태의 단발성 계약을 모두 조회
+    @Query("""
+        select c
+        from Contract c
+        where c.oneOff = true
+        and c.status in ("IN_PROGRESS", "WAIT_RESULT")
+        and c.startDate <= :date
+    """)
+    List<Contract> findEndedOneOffContracts(@Param("date") Instant date);
 }

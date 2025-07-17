@@ -13,7 +13,6 @@ import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.mapper.ParticipationMapper;
 import me.jinjjahalgae.domain.participation.usecase.common.ParticipantSimpleResponse;
 import me.jinjjahalgae.domain.user.User;
-import me.jinjjahalgae.global.util.DateTimeConverter;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
