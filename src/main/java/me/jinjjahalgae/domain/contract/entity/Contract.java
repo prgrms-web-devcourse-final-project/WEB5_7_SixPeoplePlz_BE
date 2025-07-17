@@ -240,6 +240,19 @@ public class Contract extends BaseEntity {
         return this.status == ContractStatus.IN_PROGRESS;
     }
 
+    //총 실행 횟수 검증
+    public void validateTotalProof() {
+        long contractDays = getTotalDays();
+
+        if (this.oneOff && this.totalProof != 1) {
+            throw ErrorCode.INVALID_ONE_OFF_TOTAL_PROOF.domainException("단발성 계약의 실행 횟수는 반드시 1이여야 합니다.");
+        }
+
+        if (this.totalProof > contractDays) {
+            throw ErrorCode.INVALID_TOTAL_PROOF.domainException("계약 실행 횟수는 계약 기간 일을 넘길 수 없습니다.");
+        }
+    }
+  
     // 계약 상태가 결과대기인지 검증
     public boolean isWaitResult() {
         return this.status == ContractStatus.WAIT_RESULT;
