@@ -125,7 +125,7 @@ public interface ContractControllerDocs {
             summary = "계약 목록 조회",
             description = "사용자의 계약 목록을 역할별로 페이징하여 조회합니다. " +
                     "계약자(CONTRACTOR)로 참여한 계약과 감독자(SUPERVISOR)로 참여한 계약을 구분하여 조회하며, " +
-                    "진행중(IN_PROGRESS)과 대기중(PENDING) 계약만 반환합니다.",
+                    "진행중(IN_PROGRESS), 대기중(PENDING),결과대기중(WAIT_RESULT) 계약만 반환합니다.",
             security = { @SecurityRequirement(name = "bearerAuth") }
     )
     @ApiResponses(value = {
