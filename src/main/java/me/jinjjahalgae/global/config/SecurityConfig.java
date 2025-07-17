@@ -51,6 +51,7 @@ public class SecurityConfig {
                         .requestMatchers(LOGIN_PATHS).permitAll()
                         .requestMatchers(SWAGGER_PATHS).permitAll()
                         .requestMatchers("/health").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
