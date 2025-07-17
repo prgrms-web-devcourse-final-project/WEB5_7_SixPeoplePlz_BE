@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.3'
     id 'io.spring.dependency-management' version '1.1.7'
+    id "com.gorylenko.gradle-git-properties" version "2.4.1"
 }
 
 group = 'me'
@@ -64,3 +65,14 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+tasks.register("generateBuildInfo") {
+    doLast {
+        def props = new Properties()
+        props.setProperty("build.time", new Date().format("yyyy-MM-dd HH:mm:ss Z"))
+        layout.buildDirectory.dir("resources/main/buildInfo.properties").get().asFile.withWriter { writer ->
+            props.store(writer, null)
+        }
+    }
+}
+processResources.finalizedBy generateBuildInfo

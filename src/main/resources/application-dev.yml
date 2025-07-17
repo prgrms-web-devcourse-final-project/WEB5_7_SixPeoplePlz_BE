@@ -74,3 +74,15 @@ management:
     web:
       exposure:
         include: health,info,prometheus
+
+logging:
+  level:
+    root: info
+    me.jinjjahalgae: debug
+
+log:
+  version-info:
+    service-name: jinjjahalgae
+    version: 1.0.0
+    commit-id: ${git.commit.id:unknown}
+    build-time: ${build.time:unknown}
