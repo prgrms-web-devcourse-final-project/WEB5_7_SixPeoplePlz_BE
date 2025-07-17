@@ -42,13 +42,13 @@ public record ContractUpdateRequest(
 
     @Schema(description = "총 실행 횟수", example = "10")
     @NotNull(message = "totalProof는 필수입니다.")
-    @Min(value = 1, message = "totalProof는 1 이상이어야 합니다.")
+    @Min(value = 1, message = "totalProof는 1 이상이어야 하며 총 계약 일수를 초과할 수 없습니다.")
     Integer totalProof,
 
     @Schema(description = "당일 계약 여부", 
         example = "false", 
         requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "oneOff는 필수입니다.")
+    @NotNull(message = "oneOff는 필수입니다. 당일 계약으로 설정 시 totalProof는 1로 고정됩니다.")
     Boolean oneOff,
 
     @Schema(description = "계약 시작일", 
