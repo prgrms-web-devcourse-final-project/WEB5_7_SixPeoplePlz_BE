@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.contract.usecase.process.*;
 import me.jinjjahalgae.domain.proof.usecase.schedule.CheckExpiredProofUseCase;
+import me.jinjjahalgae.global.scheduler.processor.ContractJobProcessor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +20,7 @@ public class ScheduleManager {
     private final VerifyOneOffContractSignatureUseCase verifyOneOffContractSignatureUseCase;
     private final CheckExpiredProofUseCase checkExpiredProofUseCase;
 
-    private final StartContractsUseCase startContractsUseCase;
-    private final EndContractsUseCase endContractsUseCase;
-
+    private final ContractJobProcessor contractJobProcessor;
     /**
      * 5분마다 실행되는 스케줄러
      *
@@ -49,14 +48,17 @@ public class ScheduleManager {
      *
      * - 시작일 확인 후 계약 시작
      * - 성공 실패를 판단 후 계약 종료
+     *
+     * 재시도
+     * - 개별 유스케이스 마다 재시도 수행
+     * - 3번 수행 후 최종 실패 시 로그 출력
      */
     @Scheduled(cron = "0 1 0 * * *" )
-    @Transactional
     public void daySchedule() {
         // 시작일 확인 후 계약 시작
-        startContractsUseCase.execute();
+        contractJobProcessor.startContracts("start");
 
         // 성공 실패를 판단 후 계약 종료
-        endContractsUseCase.execute();
+        contractJobProcessor.endContracts("end");
     }
 }
