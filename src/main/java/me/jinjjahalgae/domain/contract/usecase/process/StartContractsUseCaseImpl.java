@@ -10,14 +10,11 @@ import me.jinjjahalgae.domain.notification.usecase.create.dto.NotificationCreate
 import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
 import me.jinjjahalgae.global.storage.redis.usecase.invite.bulk.BulkDeleteInviteInfoUseCase;
 import me.jinjjahalgae.global.storage.redis.usecase.invite.get.GetJoinedSupervisorsUseCase;
-import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

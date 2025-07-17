@@ -2,10 +2,8 @@ package me.jinjjahalgae.domain.feedback.usecase.create.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import me.jinjjahalgae.domain.feedback.enums.FeedbackStatus;
-import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.global.validation.EnumValue;
 
 /**

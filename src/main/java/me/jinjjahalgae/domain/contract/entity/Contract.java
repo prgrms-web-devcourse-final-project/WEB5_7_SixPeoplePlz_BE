@@ -12,7 +12,6 @@ import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.global.exception.ErrorCode;
-import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
