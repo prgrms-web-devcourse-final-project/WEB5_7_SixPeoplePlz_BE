@@ -9,7 +9,6 @@ import me.jinjjahalgae.domain.contract.usecase.get.historylist.dto.ContractHisto
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.global.exception.ErrorCode;
-import me.jinjjahalgae.global.util.DateTimeConverter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

@@ -6,7 +6,6 @@ import me.jinjjahalgae.domain.invite.usecase.get.contract.dto.InviteContractInfo
 import me.jinjjahalgae.domain.invite.usecase.create.invite.dto.InviteLinkResponse;
 import me.jinjjahalgae.domain.invite.model.SupervisorResponse;
 import me.jinjjahalgae.domain.participation.enums.Role;
-import me.jinjjahalgae.global.util.DateTimeConverter;
 
 import java.util.List;
 
