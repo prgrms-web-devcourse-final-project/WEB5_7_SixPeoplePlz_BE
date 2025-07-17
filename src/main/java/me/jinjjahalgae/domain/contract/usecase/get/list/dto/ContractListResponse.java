@@ -24,7 +24,7 @@ public record ContractListResponse(
         @Schema(description = "계약 제목", example = "매일 운동하기")
         String title,
 
-        @Schema(description = "계약 상태", example = "ACTIVE")
+        @Schema(description = "계약 상태", example = "PENDING")
         ContractStatus contractStatus, //계약 현재 상태
 
         @Schema(description = "계약 시작 날짜", example = "2024-01-01T09:00:00Z")
