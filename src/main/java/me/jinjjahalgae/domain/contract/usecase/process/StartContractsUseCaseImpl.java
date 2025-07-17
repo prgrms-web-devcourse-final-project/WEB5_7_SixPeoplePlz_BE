@@ -50,7 +50,7 @@ public class StartContractsUseCaseImpl implements StartContractsUseCase {
         List<Contract> startContracts = pendingContractsBySupervisors.get(true);
         List<Contract> deleteContracts = pendingContractsBySupervisors.get(false);
 
-        // 계약 시작 처리 및 알림 배치
+        // 계약 시작 처리 및 batch 알림
         if (!startContracts.isEmpty()) {
             for (Contract contract : startContracts) {
                 int joinedSupervisors = getJoinedSupervisorsUseCase.execute(contract.getId());
