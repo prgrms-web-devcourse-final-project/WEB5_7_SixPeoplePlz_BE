@@ -252,7 +252,13 @@ public class Contract extends BaseEntity {
             throw ErrorCode.INVALID_TOTAL_PROOF.domainException("계약 실행 횟수는 계약 기간 일을 넘길 수 없습니다.");
         }
     }
-  
+
+    public void validateDates() {
+        if (startDate.isAfter(endDate)) {
+            throw ErrorCode.INVALID_CONTRACT_DATES.domainException("계약 종료일은 시작일보다 늦어야 합니다.");
+        }
+    }
+
     // 계약 상태가 결과대기인지 검증
     public boolean isWaitResult() {
         return this.status == ContractStatus.WAIT_RESULT;

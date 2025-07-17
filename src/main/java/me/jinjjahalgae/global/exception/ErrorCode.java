@@ -38,6 +38,7 @@ public enum ErrorCode {
     CANNOT_ABANDON_PARTICIPATION_UNLESS_IN_PROGRESS(HttpStatus.CONFLICT, "계약 진행중에만 감독을 중도 포기할 수 있습니다."),
     INVALID_TOTAL_PROOF(HttpStatus.BAD_REQUEST, "계약 실행 횟수는 계약 기간 일을 넘길 수 없습니다."),
     INVALID_ONE_OFF_TOTAL_PROOF(HttpStatus.BAD_REQUEST, "단발성 계약의 실행 횟수는 반드시 1이여야 합니다."),
+    INVALID_CONTRACT_DATES(HttpStatus.BAD_REQUEST, "계약 종료일은 시작일보다 늦어야 합니다."),
 
     // 인증 관련
     CONTRACT_MUST_IN_PROGRESS(HttpStatus.BAD_REQUEST, "계약 진행중에만 인증 생성이 가능합니다."),
