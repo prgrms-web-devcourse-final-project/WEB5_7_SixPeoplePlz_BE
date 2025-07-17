@@ -6,6 +6,8 @@ import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
+import me.jinjjahalgae.domain.notification.model.NotificationData;
+import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationBatchEvent;
 import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
@@ -63,36 +65,32 @@ public class EndContractsUseCaseImpl implements EndContractsUseCase {
             waitContracts.add(contract);
         }
 
-        // 분류된 계약들을 상태별로 일괄 업데이트 및 이벤트 발행
+        // 성공 계약 일괄 업데이트 및 batch 알림
         if (!completeContracts.isEmpty()) {
             List<Long> successIds = completeContracts.stream().map(Contract::getId).toList();
             contractRepository.bulkUpdateStatus(successIds, ContractStatus.COMPLETED);
-
-            completeContracts.forEach(contract ->
-                    eventPublisher.publishEvent(new NotificationEvent(
-                            NotificationType.CONTRACT_ENDED_SUCCESS,
-                            contract.getId(),
-                            contract.getUser().getId()
-                    ))
-            );
+            createBatchNotificationsToParticipants(completeContracts, NotificationType.CONTRACT_ENDED_SUCCESS);
         }
 
+        // 결과 대기 계약 일괄 업데이트
         if (!waitContracts.isEmpty()) {
             List<Long> waitIds = waitContracts.stream().map(Contract::getId).toList();
             contractRepository.bulkUpdateStatus(waitIds, ContractStatus.WAIT_RESULT);
         }
 
+        // 실패 계약 일괄 업데이트 및 batch 알림
         if (!failContracts.isEmpty()) {
             List<Long> failIds = failContracts.stream().map(Contract::getId).toList();
             contractRepository.bulkUpdateStatus(failIds, ContractStatus.FAILED);
-
-            failContracts.forEach(contract ->
-                    eventPublisher.publishEvent(new NotificationEvent(
-                            NotificationType.CONTRACT_ENDED_FAIL,
-                            contract.getId(),
-                            contract.getUser().getId()
-                    ))
-            );
+            createBatchNotificationsToParticipants(failContracts, NotificationType.CONTRACT_ENDED_FAIL);
         }
+    }
+
+    private void createBatchNotificationsToParticipants(List<Contract> contracts, NotificationType type) {
+        List<NotificationData> notificationDataList = contracts.stream()
+                .map(contract -> new NotificationData(contract.getId(), contract.getUser().getId()))
+                .toList();
+
+        eventPublisher.publishEvent(new NotificationBatchEvent(type, notificationDataList));
     }
 }
