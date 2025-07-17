@@ -7,16 +7,11 @@ import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.notification.entities.Notification;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
 import me.jinjjahalgae.domain.notification.repository.NotificationRepository;
-import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
 import me.jinjjahalgae.global.storage.redis.usecase.invite.delete.DeleteInviteInfoUseCase;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import me.jinjjahalgae.global.util.UtcDateTimeUtil;
-
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -28,7 +23,6 @@ public class VerifyOneOffContractSignatureUseCaseImpl implements VerifyOneOffCon
     private final NotificationRepository notificationRepository;
     private final ContractRepository contractRepository;
     private final DeleteInviteInfoUseCase deleteInviteInfoUseCase;
-    private final ApplicationEventPublisher eventPublisher;
 
     /**
      * 단건 계약(oneOff=true)의 서명을 검증합니다

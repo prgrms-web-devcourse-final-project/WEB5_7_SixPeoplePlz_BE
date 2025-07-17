@@ -25,7 +25,7 @@ public class GetContractListUseCaseImpl implements GetContractListUseCase {
     @Transactional(readOnly = true)
     public Page<ContractListResponse> execute(Long userId, Role role, Pageable pageable) {
 
-        List<ContractStatus> activeStatuses = List.of(ContractStatus.PENDING, ContractStatus.IN_PROGRESS);
+        List<ContractStatus> activeStatuses = List.of(ContractStatus.PENDING, ContractStatus.IN_PROGRESS, ContractStatus.WAIT_RESULT);
 
         Page<Contract> contractPage;
 
