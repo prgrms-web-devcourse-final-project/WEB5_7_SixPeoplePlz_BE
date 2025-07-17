@@ -5,7 +5,8 @@ import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
-import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
+import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationBatchEvent;
+import me.jinjjahalgae.domain.notification.model.NotificationData;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
 import org.springframework.context.ApplicationEventPublisher;
@@ -73,7 +74,7 @@ public class EndOneOffContractUseCaseImpl implements EndOneOffContractUseCase {
 
             contractRepository.bulkUpdateStatus(successIds, ContractStatus.COMPLETED);
 
-            createNotificationsToParticipants(completeContracts, NotificationType.CONTRACT_ENDED_SUCCESS);
+            createBatchNotificationsToParticipants(completeContracts, NotificationType.CONTRACT_ENDED_SUCCESS);
         }
 
         if (!waitContracts.isEmpty()) {
@@ -87,18 +88,16 @@ public class EndOneOffContractUseCaseImpl implements EndOneOffContractUseCase {
 
             contractRepository.bulkUpdateStatus(failIds, ContractStatus.FAILED);
 
-            createNotificationsToParticipants(failContracts, NotificationType.CONTRACT_ENDED_FAIL);
+            createBatchNotificationsToParticipants(failContracts, NotificationType.CONTRACT_ENDED_FAIL);
         }
     }
 
-    private void createNotificationsToParticipants(List<Contract> contracts, NotificationType type) {
-        contracts.forEach(contract -> eventPublisher.publishEvent(
-                new NotificationEvent(
-                        type,
-                        contract.getId(),
-                        contract.getUser().getId())
-                )
-        );
+    private void createBatchNotificationsToParticipants(List<Contract> contracts, NotificationType type) {
+        List<NotificationData> notificationDataList = contracts.stream()
+                .map(contract -> new NotificationData(contract.getId(), contract.getUser().getId()))
+                .toList();
+        
+        eventPublisher.publishEvent(new NotificationBatchEvent(type, notificationDataList));
     }
 
     private List<Long> extractIdsFromContracts(List<Contract> contracts) {
