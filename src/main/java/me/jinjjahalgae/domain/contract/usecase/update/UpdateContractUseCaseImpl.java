@@ -7,7 +7,6 @@ import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.contract.usecase.update.dto.ContractUpdateRequest;
 import me.jinjjahalgae.global.exception.ErrorCode;
-import me.jinjjahalgae.global.util.DateTimeConverter;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

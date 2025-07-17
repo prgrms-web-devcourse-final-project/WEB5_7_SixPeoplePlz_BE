@@ -12,7 +12,6 @@ import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.global.exception.ErrorCode;
-import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -252,5 +251,9 @@ public class Contract extends BaseEntity {
         if (this.totalProof > contractDays) {
             throw ErrorCode.INVALID_TOTAL_PROOF.domainException("계약 실행 횟수는 계약 기간 일을 넘길 수 없습니다.");
         }
+  
+    // 계약 상태가 결과대기인지 검증
+    public boolean isWaitResult() {
+        return this.status == ContractStatus.WAIT_RESULT;
     }
 }

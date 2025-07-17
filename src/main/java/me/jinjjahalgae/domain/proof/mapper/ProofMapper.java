@@ -13,10 +13,7 @@ import me.jinjjahalgae.domain.proof.usecase.getlist.common.ProofSimpleResponse;
 import me.jinjjahalgae.domain.proof.usecase.get.detail.dto.ProofDetailResponse;
 import me.jinjjahalgae.domain.proof.usecase.get.recent.dto.ProofRecentResponse;
 import me.jinjjahalgae.domain.proof.usecase.getlist.supervisorlist.dto.SupervisorProofListResponse;
-import me.jinjjahalgae.global.util.DateTimeConverter;
-
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class ProofMapper {
