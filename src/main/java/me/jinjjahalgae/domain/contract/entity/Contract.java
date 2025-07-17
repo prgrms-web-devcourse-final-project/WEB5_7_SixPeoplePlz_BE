@@ -240,4 +240,13 @@ public class Contract extends BaseEntity {
     public boolean isInProgress() {
         return this.status == ContractStatus.IN_PROGRESS;
     }
+
+    //총 실행 횟수 검증
+    public void validateTotalProof() {
+        long contractDays = getTotalDays();
+
+        if (this.totalProof > contractDays) {
+            throw ErrorCode.INVALID_TOTAL_PROOF.domainException("계약 실행 횟수는 계약 기간 일을 넘길 수 없습니다.");
+        }
+    }
 }
