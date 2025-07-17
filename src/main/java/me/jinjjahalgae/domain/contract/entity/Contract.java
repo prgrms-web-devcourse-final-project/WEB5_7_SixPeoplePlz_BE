@@ -245,8 +245,8 @@ public class Contract extends BaseEntity {
     public void validateTotalProof() {
         long contractDays = getTotalDays();
 
-        if (this.oneOff) {
-            totalProof = 1;
+        if (this.oneOff && this.totalProof != 1) {
+            throw ErrorCode.INVALID_ONE_OFF_TOTAL_PROOF.domainException("단발성 계약의 실행 횟수는 반드시 1이여야 합니다.");
         }
 
         if (this.totalProof > contractDays) {
