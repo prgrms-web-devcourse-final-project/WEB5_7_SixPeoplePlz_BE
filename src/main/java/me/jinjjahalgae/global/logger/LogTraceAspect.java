@@ -22,9 +22,8 @@ public class LogTraceAspect {
     private final ObjectMapper objectMapper;
     private final LogVersionInfo logVersionInfo;
 
-    @Around("execution(* me.jinjjahalgae.domain..*(..)) || execution(* me.jinjjahalgae.presentation.api..*(..))")
+    @Around("execution(* me.jinjjahalgae.domain..*(..)) || execution(* me.jinjjahalgae.presentation.api..*(..)) || execution(* me.jinjjahalgae.global.scheduler..*(..))" )
     public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {
-        // 불필요한 디버그 로그는 개발 환경에서만 남기자
         if (log.isDebugEnabled()) {
             log.debug("[LogTraceAspect] AOP 진입, 메서드: {}", joinPoint.getSignature().toShortString());
         }

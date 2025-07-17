@@ -4,6 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -11,12 +13,8 @@ import java.io.StringWriter;
 @Slf4j
 @RequiredArgsConstructor
 public class ThreadLocalLogTrace implements LogTrace{
-    private static final String START_PREFIX = "-->";
-    private static final String COMPLETE_PREFIX = "<--";
-    private static final String EX_PREFIX = "<X-";
 
     private final LogVersionInfo logVersionInfo;
-    private final HttpServletRequest request;
 
     private final ThreadLocal<TraceId> traceIdHolder = new ThreadLocal<>();
 
@@ -30,9 +28,9 @@ public class ThreadLocalLogTrace implements LogTrace{
                 "traceId", traceId.getId(),
                 LogConstants.LOG_VERSION, logVersionInfo.version(),
                 LogConstants.LOG_METHOD, message,
-                LogConstants.LOG_REQUEST_URI, request != null ? request.getRequestURI() : "N/A",
-                LogConstants.LOG_REQUEST_METHOD, request != null ? request.getMethod() : "N/A",
-                LogConstants.LOG_USER_SESSION, request != null ? getSessionId(request) : "N/A",
+                LogConstants.LOG_REQUEST_URI, getRequestUriSafe(),
+                LogConstants.LOG_REQUEST_METHOD, getRequestMethodSafe(),
+                LogConstants.LOG_USER_SESSION, getSessionIdSafe(),
                 LogConstants.LOG_INVOKE_TIME, startTimeMs
         ));
         return new TraceStatus(traceId, startTimeMs, message);
@@ -58,9 +56,9 @@ public class ThreadLocalLogTrace implements LogTrace{
                     "traceId",traceId.getId(),
                     LogConstants.LOG_VERSION, logVersionInfo.version(),
                     LogConstants.LOG_METHOD, status.getMessage(),
-                    LogConstants.LOG_REQUEST_URI, request != null ? request.getRequestURI() : "N/A",
-                    LogConstants.LOG_REQUEST_METHOD, request != null ? request.getMethod() : "N/A",
-                    LogConstants.LOG_USER_SESSION, request != null ? getSessionId(request) : "N/A",
+                    LogConstants.LOG_REQUEST_URI, getRequestUriSafe(),
+                    LogConstants.LOG_REQUEST_METHOD, getRequestMethodSafe(),
+                    LogConstants.LOG_USER_SESSION, getSessionIdSafe(),
                     LogConstants.LOG_STATUS, "SUCCESS",
                     LogConstants.LOG_ELAPSED_MS, resultTimeMs,
                     LogConstants.LOG_INVOKE_TIME, status.getStartTimeMs()
@@ -70,9 +68,9 @@ public class ThreadLocalLogTrace implements LogTrace{
                     "traceId",traceId.getId(),
                     LogConstants.LOG_VERSION, logVersionInfo.version(),
                     LogConstants.LOG_METHOD, status.getMessage(),
-                    LogConstants.LOG_REQUEST_URI, request != null ? request.getRequestURI() : "N/A",
-                    LogConstants.LOG_REQUEST_METHOD, request != null ? request.getMethod() : "N/A",
-                    LogConstants.LOG_USER_SESSION, request != null ? getSessionId(request) : "N/A",
+                    LogConstants.LOG_REQUEST_URI, getRequestUriSafe(),
+                    LogConstants.LOG_REQUEST_METHOD, getRequestMethodSafe(),
+                    LogConstants.LOG_USER_SESSION, getSessionIdSafe(),
                     LogConstants.LOG_STATUS, "FAILED",
                     LogConstants.LOG_ELAPSED_MS, resultTimeMs,
                     LogConstants.LOG_INVOKE_TIME, status.getStartTimeMs(),
@@ -80,6 +78,31 @@ public class ThreadLocalLogTrace implements LogTrace{
             ));
         }
         releaseTraceId();
+    }
+
+    private String getRequestUriSafe() {
+        var att = RequestContextHolder.getRequestAttributes();
+        if (att instanceof ServletRequestAttributes sra) {
+            return sra.getRequest().getRequestURI();
+        }
+        return "N/A";
+    }
+
+    private String getRequestMethodSafe() {
+        var att = RequestContextHolder.getRequestAttributes();
+        if (att instanceof ServletRequestAttributes sra) {
+            return sra.getRequest().getMethod();
+        }
+        return "N/A";
+    }
+
+    private String getSessionIdSafe() {
+        var att = RequestContextHolder.getRequestAttributes();
+        if (att instanceof ServletRequestAttributes sra) {
+            var session = sra.getRequest().getSession(false);
+            return (session != null) ? session.getId() : "N/A";
+        }
+        return "N/A";
     }
 
     private String combineLogs(Object... args) {
