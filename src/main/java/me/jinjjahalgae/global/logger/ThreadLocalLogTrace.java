@@ -27,7 +27,7 @@ public class ThreadLocalLogTrace implements LogTrace{
         Long startTimeMs = System.currentTimeMillis();
         // 서비스 버전, 배포 정보, 요청 정보 등 구조적으로 한 줄에 남기기
         log.info(combineLogs(
-                traceId.getId(),
+                "traceId", traceId.getId(),
                 LogConstants.LOG_VERSION, logVersionInfo.version(),
                 LogConstants.LOG_METHOD, message,
                 LogConstants.LOG_REQUEST_URI, request != null ? request.getRequestURI() : "N/A",
@@ -55,7 +55,7 @@ public class ThreadLocalLogTrace implements LogTrace{
         // 예외 발생 시 스택 트레이스 전체를 ERROR로 남기고, 일반 흐름은 INFO로 남기기
         if (e == null) {
             log.info(combineLogs(
-                    traceId.getId(),
+                    "traceId",traceId.getId(),
                     LogConstants.LOG_VERSION, logVersionInfo.version(),
                     LogConstants.LOG_METHOD, status.getMessage(),
                     LogConstants.LOG_REQUEST_URI, request != null ? request.getRequestURI() : "N/A",
@@ -67,7 +67,7 @@ public class ThreadLocalLogTrace implements LogTrace{
             ));
         } else {
             log.error(combineLogs(
-                    traceId.getId(),
+                    "traceId",traceId.getId(),
                     LogConstants.LOG_VERSION, logVersionInfo.version(),
                     LogConstants.LOG_METHOD, status.getMessage(),
                     LogConstants.LOG_REQUEST_URI, request != null ? request.getRequestURI() : "N/A",
