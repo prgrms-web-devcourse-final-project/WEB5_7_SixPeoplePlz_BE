@@ -591,6 +591,7 @@ public interface ContractControllerDocs {
                         }
                         """
                                     ),
+
                                     @ExampleObject(
                                             name = "일회성 계약 totalProof 오류",
                                             value = """
@@ -610,10 +611,21 @@ public interface ContractControllerDocs {
                           "message": "감독자가 서명한 계약은 수정할 수 없습니다."
                         }
                         """
+                                    ),
+                                    @ExampleObject(
+                                            name = "날짜 유효성 실패",
+                                            value = """
+                        {
+                          "success": false,
+                          "code": "BAD_REQUEST",
+                          "message": "계약 종료일은 시작일보다 늦어야 합니다."
+                        }
+                        """
                                     )
                             }
                     )
             ),
+
             @ApiResponse(
                     responseCode = "401",
                     description = "인증 실패",
