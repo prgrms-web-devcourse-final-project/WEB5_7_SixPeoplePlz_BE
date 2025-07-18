@@ -1,8 +1,8 @@
 package me.jinjjahalgae.domain.auth.usecase.refresh;
 
 import lombok.RequiredArgsConstructor;
-import me.jinjjahalgae.domain.auth.Auth;
-import me.jinjjahalgae.domain.auth.AuthRepository;
+import me.jinjjahalgae.domain.auth.entity.Auth;
+import me.jinjjahalgae.domain.auth.repository.AuthRepository;
 import me.jinjjahalgae.domain.auth.mapper.AuthMapper;
 import me.jinjjahalgae.domain.auth.usecase.refresh.dto.RefreshRequest;
 import me.jinjjahalgae.domain.auth.usecase.refresh.dto.RefreshResponse;
