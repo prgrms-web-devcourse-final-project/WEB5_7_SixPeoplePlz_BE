@@ -2,9 +2,11 @@ package me.jinjjahalgae.domain.auth.usecase.login.social;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jinjjahalgae.domain.auth.Auth;
-import me.jinjjahalgae.domain.auth.AuthRepository;
+import me.jinjjahalgae.domain.auth.entity.Auth;
+import me.jinjjahalgae.domain.auth.entity.FcmToken;
+import me.jinjjahalgae.domain.auth.repository.AuthRepository;
 import me.jinjjahalgae.domain.auth.mapper.AuthMapper;
+import me.jinjjahalgae.domain.auth.repository.FcmTokenRepository;
 import me.jinjjahalgae.domain.auth.usecase.login.social.dto.SocialLoginRequest;
 import me.jinjjahalgae.domain.auth.usecase.login.social.dto.SocialLoginResponse;
 import me.jinjjahalgae.domain.auth.model.SocialProfile;
@@ -27,6 +29,7 @@ public class SocialLoginUseCaseImpl implements SocialLoginUseCase {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthRepository authRepository;
     private final UserRepository userRepository;
+    private final FcmTokenRepository fcmTokenRepository;
     private final AuthMapper authMapper;
 
     @Override
@@ -34,6 +37,7 @@ public class SocialLoginUseCaseImpl implements SocialLoginUseCase {
     public SocialLoginResponse execute(SocialLoginRequest req) {
         String provider = req.provider();
         String thirdPartyAccessToken = req.accessToken();
+        String fcmToken = req.fcmToken();
 
         // 소셜 로그인 전략 추출
         SocialLogin socialLogin = socialLoginFactory.getStrategy(provider);
@@ -72,6 +76,9 @@ public class SocialLoginUseCaseImpl implements SocialLoginUseCase {
             authRepository.save(auth);
         }
 
+        // FCM 토큰 등록 / 갱신
+        registerFcmToken(auth.getUserId(), fcmToken);
+
         // 토큰 생성
         Token token = jwtTokenProvider.generateToken(auth.getUserId());
 
@@ -79,5 +86,33 @@ public class SocialLoginUseCaseImpl implements SocialLoginUseCase {
         auth.updateRefreshToken(token.refreshToken());
 
         return authMapper.toSocialLoginResponse(token);
+    }
+
+    // 사용자의 FCM 토큰을 등록/업데이트
+    private void registerFcmToken(Long userId, String token) {
+        // 전달받은 토큰 값으로 DB에서 토큰 정보를 조회
+        Optional<FcmToken> optionalFcmToken = fcmTokenRepository.findByToken(token);
+
+        // DB에 이미 토큰이 존재하는 경우
+        if (optionalFcmToken.isPresent()) {
+            FcmToken existingToken = optionalFcmToken.get();
+
+            if (!existingToken.getUserId().equals(userId)) {
+                // 소유주가 다른 사람이면, 현재 로그인한 사용자로 소유주를 변경
+                existingToken.updateUserId(userId);
+
+                log.info("FCM 토큰의 소유주 변경. New UserId: {}", userId);
+            }
+
+        // DB에 토큰이 없는 새로운 경우
+        } else {
+            // 현재 로그인한 사용자를 소유주로 하여 새로 저장
+            FcmToken newFcmToken = FcmToken.builder()
+                    .userId(userId)
+                    .token(token)
+                    .build();
+            fcmTokenRepository.save(newFcmToken);
+            log.info("신규 FCM 토큰 저장. UserId: {}", userId);
+        }
     }
 }

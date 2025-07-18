@@ -1,4 +1,4 @@
-package me.jinjjahalgae.domain.auth;
+package me.jinjjahalgae.domain.auth.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;

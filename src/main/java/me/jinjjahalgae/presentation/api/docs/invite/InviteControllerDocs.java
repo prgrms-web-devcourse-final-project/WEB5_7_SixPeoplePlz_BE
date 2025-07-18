@@ -133,8 +133,7 @@ public interface InviteControllerDocs {
             @Valid VerifyInvitePasswordRequest request);
 
 
-    @Operation(summary = "초대 계약서 상세 조회", description = "비밀번호 검증 후 계약서의 상세 정보를 조회합니다. 로그인이 필요합니다.",
-            security = { @SecurityRequirement(name = "bearerAuth") })
+    @Operation(summary = "초대 계약서 상세 조회", description = "비밀번호 검증 후 계약서의 상세 정보를 조회합니다. 로그인이 필요합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "계약서 조회 성공",
                     content = @Content(mediaType = "application/json",
