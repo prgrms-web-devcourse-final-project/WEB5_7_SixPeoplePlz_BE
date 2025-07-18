@@ -3,8 +3,10 @@ package me.jinjjahalgae.global.config;
 import lombok.RequiredArgsConstructor;
 import me.jinjjahalgae.global.security.jwt.CustomAuthenticationEntryPoint;
 import me.jinjjahalgae.global.security.jwt.JwtAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -16,6 +18,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -23,6 +26,9 @@ import java.util.List;
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+
+    @Value("${cors.origins}")
+    private String allowedOrigins;
 
     // 스웨거 문서 경로
     private final String[] SWAGGER_PATHS = {
@@ -36,6 +42,7 @@ public class SecurityConfig {
             "/api/auth/login/social/body",
             "/api/auth/login/social/cookie",
             "/api/auth/refresh",
+            "/api/auth/test-login"
     };
 
     @Bean
@@ -50,6 +57,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(LOGIN_PATHS).permitAll()
                         .requestMatchers(SWAGGER_PATHS).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/invites/*/verify").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/invites/**").permitAll()
                         .requestMatchers("/health").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .anyRequest().authenticated()
@@ -66,7 +75,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("*"));
+        configuration.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

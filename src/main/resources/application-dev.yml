@@ -74,3 +74,11 @@ management:
     web:
       exposure:
         include: health,info,prometheus
+
+# 파이어베이스
+firebase:
+  key-path: ${DEV_FCM_KEY_PATH}
+
+# cors
+cors:
+  origins: ${DEV_CORS_ORIGINS}
