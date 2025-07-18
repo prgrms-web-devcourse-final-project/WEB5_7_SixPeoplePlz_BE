@@ -1,5 +1,6 @@
-package me.jinjjahalgae.domain.auth;
+package me.jinjjahalgae.domain.auth.repository;
 
+import me.jinjjahalgae.domain.auth.entity.Auth;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
