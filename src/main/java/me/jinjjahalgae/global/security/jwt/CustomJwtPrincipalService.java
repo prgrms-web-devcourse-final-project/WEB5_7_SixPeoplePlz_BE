@@ -14,7 +14,7 @@ public class CustomJwtPrincipalService implements UserDetailsService {
 
     @Override
     public CustomJwtPrincipal loadUserByUsername(String userId) {
-        User user = userRepository.findById(Long.parseLong(userId))
+        User user = userRepository.findByIdAndDeletedAtIsNull(Long.parseLong(userId))
                 .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.serviceException("토큰 sub로 유저를 찾을 수 없음 ID: " + userId));
 
         return new CustomJwtPrincipal(user);
