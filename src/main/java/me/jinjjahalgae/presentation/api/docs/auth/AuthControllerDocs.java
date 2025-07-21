@@ -319,6 +319,24 @@ public interface AuthControllerDocs {
                     )
                 }
             )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "존재하지 않거나 탈퇴한 유저",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ErrorResponse.class),
+                examples = @ExampleObject(
+                    name = "USER_NOT_FOUND",
+                    value = """
+                    {
+                      "success": false,
+                      "code": "USER_NOT_FOUND",
+                      "message": "존재하지 않는 유저입니다."
+                    }
+                    """
+                )
+            )
         )
     })
     CommonResponse<RefreshResponse> refresh(
