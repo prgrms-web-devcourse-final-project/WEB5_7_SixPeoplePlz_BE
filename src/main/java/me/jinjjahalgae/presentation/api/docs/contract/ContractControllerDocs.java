@@ -612,6 +612,16 @@ public interface ContractControllerDocs {
                         """
                                     ),
                                     @ExampleObject(
+                                            name = "종료된 계약",
+                                            value = """
+                        {
+                            "success": false,
+                            "code": "CONTRACT_STATUS_INVALID",
+                            "message": "계약 수정은 대기 상태에서만 가능합니다."
+                        }
+                        """
+                                    ),
+                                    @ExampleObject(
                                             name = "날짜 유효성 실패",
                                             value = """
                         {
@@ -670,23 +680,6 @@ public interface ContractControllerDocs {
                       "message": "계약에 대한 접근 권한이 없습니다."
                     }
                     """
-                            )
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "종료된 계약 수정 시도",
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(
-                                    name = "종료된 계약",
-                                    value = """
-                {
-                    "success": false,
-                    "code": "CONTRACT_STATUS_INVALID", 
-                    "message": "계약 수정은 대기 상태에서만 가능합니다."
-                }
-                """
                             )
                     )
             ),
