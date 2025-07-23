@@ -32,7 +32,7 @@ public interface InviteControllerDocs {
                                  {
                                    "success": true,
                                    "result": {
-                                     "inviteUrl": "https://jinjjahalgae.xyz/api/invite/da2316d7",
+                                     "inviteUrl": "https://jinjahalgae.vercel.app/invite/da2316d7",
                                      "password": "ac08ee16"
                                    }
                                  }"""))),
@@ -142,6 +142,7 @@ public interface InviteControllerDocs {
                                  {
                                    "success": true,
                                    "result": {
+                                     "contractId": 1,
                                      "contractorName": "홍길동",
                                      "contractorSignatureKey": "36865103-5d08-4139-ba4a-b32da2316d7f",
                                      "uuid": "36865103-5d08-4139-ba4a-b32da2316d7f",

@@ -38,7 +38,7 @@ out/
 
 
 application-local.yml
-
+jjhg-fcm-key.json
 
 /mysql-data
 /redis-data

@@ -43,6 +43,7 @@ public class InviteMapper {
                 .toList();
 
         return new InviteContractInfoResponse(
+                contract.getId(),
                 contract.getUser().getName(),
                 null, // 서명 완료 여부만 보여주니 이미지 키는 null로 처리
                 contract.getUuid(),
