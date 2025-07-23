@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
         description = "계약의 초대 링크와 비밀번호 응답 DTO",
         example = """
         {
-          "inviteUrl": "https://jinjjahalgae.xyz/api/invite/da2316d7",
+          "inviteUrl": "https://jinjahalgae.vercel.app/invite/da2316d7",
           "password": "ac08ee16"
         }
         """

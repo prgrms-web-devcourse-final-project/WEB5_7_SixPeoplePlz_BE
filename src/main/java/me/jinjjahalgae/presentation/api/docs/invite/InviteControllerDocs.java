@@ -32,7 +32,7 @@ public interface InviteControllerDocs {
                                  {
                                    "success": true,
                                    "result": {
-                                     "inviteUrl": "https://jinjjahalgae.xyz/api/invite/da2316d7",
+                                     "inviteUrl": "https://jinjahalgae.vercel.app/invite/da2316d7",
                                      "password": "ac08ee16"
                                    }
                                  }"""))),
