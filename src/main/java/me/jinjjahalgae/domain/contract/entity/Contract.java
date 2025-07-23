@@ -162,6 +162,10 @@ public class Contract extends BaseEntity {
 
     //감독자가 이미 있는지 검증 (수정은 감독자가 없어야 가능)
     public void validateUpdatable() {
+
+        if(this.status != ContractStatus.PENDING) {
+            throw ErrorCode.CONTRACT_STATUS_INVALID.domainException("계약 수정은 대기 상태에서만 가능합니다.");
+        }
         boolean hasSignedSupervisor = this.participations.stream()
                 .anyMatch(participation -> participation.getRole() == Role.SUPERVISOR);
         if (hasSignedSupervisor) {
