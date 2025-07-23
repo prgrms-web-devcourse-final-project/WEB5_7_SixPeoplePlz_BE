@@ -351,7 +351,6 @@ public interface ContractControllerDocs {
                         "goal": "매일 1시간 이상 운동하여 건강한 몸 만들기",
                         "penalty": "치킨 못 먹기",
                         "reward": "치킨 2번 먹기",
-                        "type": "BASIC",
                         "startDate": "2024-01-01T09:00:00Z",
                         "endDate": "2024-01-31T23:59:59Z",
                         "contractStatus": "IN_PROGRESS",
@@ -675,7 +674,7 @@ public interface ContractControllerDocs {
                     )
             ),
             @ApiResponse(
-                    responseCode = "409",
+                    responseCode = "400",
                     description = "종료된 계약 수정 시도",
                     content = @Content(
                             mediaType = "application/json",
