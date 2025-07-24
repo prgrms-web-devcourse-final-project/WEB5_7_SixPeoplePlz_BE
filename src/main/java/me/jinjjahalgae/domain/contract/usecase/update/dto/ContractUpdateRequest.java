@@ -68,5 +68,11 @@ public record ContractUpdateRequest(
         requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "type은 필수입니다.")
     @EnumValue(enumClass = ContractType.class)
-    String type
+    String type,
+
+    @Schema(description = "계약자 재서명 이미지 키",
+            example = "signature/contractor_12345.png",
+            requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank(message = "signatureImageKey는 필수입니다.")
+    String signatureImageKey
 ) {}

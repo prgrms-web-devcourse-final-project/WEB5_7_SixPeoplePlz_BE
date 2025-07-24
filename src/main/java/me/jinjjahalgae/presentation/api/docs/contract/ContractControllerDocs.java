@@ -590,7 +590,6 @@ public interface ContractControllerDocs {
                         }
                         """
                                     ),
-
                                     @ExampleObject(
                                             name = "일회성 계약 totalProof 오류",
                                             value = """
@@ -628,6 +627,26 @@ public interface ContractControllerDocs {
                           "success": false,
                           "code": "BAD_REQUEST",
                           "message": "계약 종료일은 시작일보다 늦어야 합니다."
+                        }
+                        """
+                                    ),
+                                    @ExampleObject(
+                                            name = "필수 필드 누락",
+                                            value = """
+                        {
+                            "success": false,
+                            "code": "VALIDATION_ERROR",
+                            "message": "signatureImageKey는 필수입니다."
+                        }
+                        """
+                                    ),
+                                    @ExampleObject(
+                                            name = "유효하지 않은 총 인증 횟수",
+                                            value = """
+                        {
+                            "success": false,
+                            "code": "INVALID_TOTAL_PROOF",
+                            "message": "계약 실행 횟수는 계약 기간 일을 넘길 수 없습니다."
                         }
                         """
                                     )
