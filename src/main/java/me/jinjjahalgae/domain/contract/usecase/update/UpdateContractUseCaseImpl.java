@@ -6,6 +6,11 @@ import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.contract.usecase.update.dto.ContractUpdateRequest;
+import me.jinjjahalgae.domain.participation.entity.Participation;
+import me.jinjjahalgae.domain.participation.enums.Role;
+import me.jinjjahalgae.domain.participation.mapper.ParticipationMapper;
+import me.jinjjahalgae.domain.user.User;
+import me.jinjjahalgae.domain.user.UserRepository;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
@@ -18,6 +23,8 @@ public class UpdateContractUseCaseImpl implements UpdateContractUseCase {
 
     private final ContractRepository contractRepository;
     private final EntityManager entityManager;
+    private final ParticipationMapper participationMapper;
+    private final UserRepository userRepository;
 
     @Override
     public void execute(Long userId, Long contractId, ContractUpdateRequest request) {
@@ -31,6 +38,9 @@ public class UpdateContractUseCaseImpl implements UpdateContractUseCase {
 
             //감독자 서명이 있는가?
             contract.validateUpdatable();
+
+            //기존 계약자 서명 삭제
+            contract.removeContractorSignature();
 
             //계약 수정 진행
             contract.update(
@@ -50,6 +60,15 @@ public class UpdateContractUseCaseImpl implements UpdateContractUseCase {
 
             //총 인증 횟수는 계약일 수를 넘을 수 없으며 단발성이라면 총 인증 횟수 1인지도 검사
             contract.validateTotalProof();
+
+            User user = userRepository.findByIdAndDeletedAtIsNull(userId)
+                    .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.domainException("존재하지 않는 유저입니다."));
+
+            //새로운 서명 추가
+            Participation newContractorSignature = participationMapper.toEntity(
+                    contract, user, request.signatureImageKey(), Role.CONTRACTOR, true
+            );
+            contract.addContractorSignature(newContractorSignature);
 
             entityManager.flush();
 
