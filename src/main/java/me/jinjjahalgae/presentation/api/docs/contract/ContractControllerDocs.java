@@ -73,6 +73,26 @@ public interface ContractControllerDocs {
                         """
                                     ),
                                     @ExampleObject(
+                                            name = "totalProof 유효성 실패",
+                                            value = """
+                        {
+                          "success": false,
+                          "code": "BAD_REQUEST",
+                          "message": "totalProof는 계약 기간을 초과할 수 없습니다."
+                        }
+                        """
+                                    ),
+                                    @ExampleObject(
+                                            name = "일회성 계약 totalProof 오류",
+                                            value = """
+                        {
+                          "success": false,
+                          "code": "BAD_REQUEST",
+                          "message": "일회성 계약의 totalProof는 1이어야 합니다."
+                        }
+                        """
+                                    ),
+                                    @ExampleObject(
                                             name = "날짜 유효성 실패",
                                             value = """
                         {
@@ -125,7 +145,7 @@ public interface ContractControllerDocs {
             summary = "계약 목록 조회",
             description = "사용자의 계약 목록을 역할별로 페이징하여 조회합니다. " +
                     "계약자(CONTRACTOR)로 참여한 계약과 감독자(SUPERVISOR)로 참여한 계약을 구분하여 조회하며, " +
-                    "진행중(IN_PROGRESS)과 대기중(PENDING) 계약만 반환합니다.",
+                    "진행중(IN_PROGRESS), 대기중(PENDING),결과대기중(WAIT_RESULT) 계약만 반환합니다.",
             security = { @SecurityRequirement(name = "bearerAuth") }
     )
     @ApiResponses(value = {
@@ -149,8 +169,8 @@ public interface ContractControllerDocs {
                                 "title": "매일 운동하기",
                                 "contractStatus": "IN_PROGRESS",
                                 "totalProof": 7,
-                                "startDate": "2024-01-01T09:00:00",
-                                "endDate": "2024-01-31T23:59:59",
+                                "startDate": "2024-01-01T09:00:00Z",
+                                "endDate": "2024-01-31T23:59:59Z",
                                 "reward": "치킨 먹기",
                                 "penalty": "치킨 못 먹기",
                                 "achievementRatio": "20/31",
@@ -196,8 +216,8 @@ public interface ContractControllerDocs {
                                 "title": "금연하기",
                                 "contractStatus": "PENDING",
                                 "totalProof": 7,
-                                "startDate": "2024-02-01T09:00:00",
-                                "endDate": "2024-02-29T23:59:59",
+                                "startDate": "2024-02-01T09:00:00Z",
+                                "endDate": "2024-02-29T23:59:59Z",
                                 "reward": "맛있는 음식 먹기",
                                 "penalty": "용돈 줄이기",
                                 "achievementRatio": "0/28",
@@ -331,9 +351,8 @@ public interface ContractControllerDocs {
                         "goal": "매일 1시간 이상 운동하여 건강한 몸 만들기",
                         "penalty": "치킨 못 먹기",
                         "reward": "치킨 2번 먹기",
-                        "type": "BASIC",
-                        "startDate": "2024-01-01T09:00:00",
-                        "endDate": "2024-01-31T23:59:59",
+                        "startDate": "2024-01-01T09:00:00Z",
+                        "endDate": "2024-01-31T23:59:59Z",
                         "contractStatus": "IN_PROGRESS",
                         "totalProof": 7,
                         "totalProof": 31,
@@ -523,8 +542,7 @@ public interface ContractControllerDocs {
 
     @Operation(
             summary = "계약 수정",
-            description = "기존 계약의 내용을 수정합니다. 감독자가 서명하기 전에만 수정 가능하며, 계약자만 수정할 수 있습니다. " +
-                    "날짜나 주간 인증 횟수 변경 시 총 인증 횟수가 자동으로 재계산됩니다.",
+            description = "기존 계약의 내용을 수정합니다. 감독자가 서명하기 전에만 수정 가능하며, 계약자만 수정할 수 있습니다. ",
             security = { @SecurityRequirement(name = "bearerAuth") }
     )
     @ApiResponses(value = {
@@ -563,6 +581,27 @@ public interface ContractControllerDocs {
                         """
                                     ),
                                     @ExampleObject(
+                                            name = "totalProof 유효성 실패",
+                                            value = """
+                        {
+                          "success": false,
+                          "code": "BAD_REQUEST",
+                          "message": "totalProof는 계약 기간을 초과할 수 없습니다."
+                        }
+                        """
+                                    ),
+
+                                    @ExampleObject(
+                                            name = "일회성 계약 totalProof 오류",
+                                            value = """
+                        {
+                          "success": false,
+                          "code": "BAD_REQUEST",
+                          "message": "일회성 계약의 totalProof는 1이어야 합니다."
+                        }
+                        """
+                                    ),
+                                    @ExampleObject(
                                             name = "감독자 서명 후 수정 시도",
                                             value = """
                         {
@@ -571,10 +610,31 @@ public interface ContractControllerDocs {
                           "message": "감독자가 서명한 계약은 수정할 수 없습니다."
                         }
                         """
+                                    ),
+                                    @ExampleObject(
+                                            name = "종료된 계약",
+                                            value = """
+                        {
+                            "success": false,
+                            "code": "CONTRACT_STATUS_INVALID",
+                            "message": "계약 수정은 대기 상태에서만 가능합니다."
+                        }
+                        """
+                                    ),
+                                    @ExampleObject(
+                                            name = "날짜 유효성 실패",
+                                            value = """
+                        {
+                          "success": false,
+                          "code": "BAD_REQUEST",
+                          "message": "계약 종료일은 시작일보다 늦어야 합니다."
+                        }
+                        """
                                     )
                             }
                     )
             ),
+
             @ApiResponse(
                     responseCode = "401",
                     description = "인증 실패",
@@ -889,47 +949,45 @@ public interface ContractControllerDocs {
                             examples = @ExampleObject(
                                     name = "성공 응답",
                                     value = """
-                    {
-                      "success": true,
-                      "result": {
-                        "contractId": 1,
-                        "contractUuid": "123e4567-e89b-12d3-a456-426614174000",
-                        "title": "매일 운동하기",
-                        "goal": "매일 1시간 이상 운동하여 건강한 몸 만들기",
-                        "penalty": "치킨 못 먹기",
-                        "reward": "치킨 2번 먹기",
-                        "type": "BASIC",
-                        "startDate": "2024-01-01T09:00:00",
-                        "endDate": "2024-01-31T23:59:59",
-                        "contractStatus": "IN_PROGRESS",
-                        "totalProof": 7,
-                        "totalProof": 31,
-                        "currentProof": 20,
-                        "remainingLife": 2,
-                        "achievementPercent": 64.5,
-                        "periodPercent": 45.2,
-                        "participants": [
-                          {
-                            "userId": 1,
-                            "name": "김계약",
-                            "role": "CONTRACTOR",
-                            "signatureImageKey": "contractor-signature-123.jpg"
-                          },
-                          {
-                            "userId": 2,
-                            "name": "박감독",
-                            "role": "SUPERVISOR",
-                            "signatureImageKey": "supervisor-signature-456.jpg"
-                          },
-                          {
-                            "userId": 3,
-                            "name": "이감독",
-                            "role": "SUPERVISOR",
-                            "signatureImageKey": "supervisor-signature-789.jpg"
-                          }
-                        ]
-                      }
-                    }
+                                            {
+                                                 "success": true,
+                                                 "result": {
+                                                     "contractBasicResponse": {
+                                                         "contractId": 1,
+                                                         "contractUuid": "f5481f13-6a02-4386-99c2-cc6a306d0295",
+                                                         "title": "매일 운동하기",
+                                                         "goal": "매일 30분 이상 운동하기",
+                                                         "proofPerWeek": 3,
+                                                         "penalty": "치킨 못 먹기",
+                                                         "reward": "치킨 먹기",
+                                                         "totalProof": 15,
+                                                         "totalLife": 3,
+                                                         "startDate": "2025-01-01T00:00:00Z",
+                                                         "endDate": "2025-01-31T23:59:59Z"
+                                                     },
+                                                     "type": "BASIC",
+                                                     "participants": [
+                                                         {
+                                                             "basicInfo": {
+                                                                 "userId": 1,
+                                                                 "userName": "계약자1",
+                                                                 "role": "CONTRACTOR",
+                                                                 "valid": true
+                                                             },
+                                                             "signatureImageKey": "signatures/contractor_signature_123.jpg"
+                                                         },
+                                                         {
+                                                             "basicInfo": {
+                                                                 "userId": 2,
+                                                                 "userName": "감독자1",
+                                                                 "role": "SUPERVISOR",
+                                                                 "valid": true
+                                                             },
+                                                             "signatureImageKey": "signatures/contractor_signature_124.jpg"
+                                                         }
+                                                     ]
+                                                 }
+                                             }
                     """
                             )
                     )
@@ -1034,8 +1092,8 @@ public interface ContractControllerDocs {
                             "title": "매일 운동하기",
                             "contractStatus": "COMPLETED",
                             "totalProof": 7,
-                            "startDate": "2024-01-01T09:00:00",
-                            "endDate": "2024-01-31T23:59:59",
+                            "startDate": "2024-01-01T09:00:00Z",
+                            "endDate": "2024-01-31T23:59:59Z",
                             "reward": "치킨 먹기",
                             "penalty": "치킨 못 먹기",
                             "achievementPercent": 100.0,
@@ -1047,8 +1105,8 @@ public interface ContractControllerDocs {
                             "title": "독서하기",
                             "contractStatus": "FAILED",
                             "totalProof": 3,
-                            "startDate": "2024-02-01T09:00:00",
-                            "endDate": "2024-02-29T23:59:59",
+                            "startDate": "2024-02-01T09:00:00Z",
+                            "endDate": "2024-02-29T23:59:59Z",
                             "reward": "새 책 사기",
                             "penalty": "핸드폰 시간 줄이기",
                             "achievementPercent": 45.0,
@@ -1097,8 +1155,8 @@ public interface ContractControllerDocs {
                             "title": "금연하기",
                             "contractStatus": "ABANDONED",
                             "totalProof": 7,
-                            "startDate": "2024-03-01T09:00:00",
-                            "endDate": "2024-03-31T23:59:59",
+                            "startDate": "2024-03-01T09:00:00Z",
+                            "endDate": "2024-03-31T23:59:59Z",
                             "reward": "맛있는 음식 먹기",
                             "penalty": "용돈 줄이기",
                             "achievementPercent": 30.0,
