@@ -34,8 +34,8 @@ public class StartContractsUseCaseImpl implements StartContractsUseCase {
     @Override
     @Transactional
     public void execute() {
-        Instant today = Instant.now();
-        List<Contract> pendingContracts = contractRepository.findByStatusAndStartDateOnAndOneOff(ContractStatus.PENDING, today, false);
+        Instant now = Instant.now();
+        List<Contract> pendingContracts = contractRepository.findPendingContractsToStart(now);
 
         if (pendingContracts.isEmpty()) return;
 

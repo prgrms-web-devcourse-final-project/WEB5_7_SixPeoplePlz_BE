@@ -44,7 +44,7 @@ public class ScheduleManager {
     }
 
     /**
-     * 매일 00:01 에 실행되는 스케줄러
+     * 매일 15:01 (UTC)에 실행되는 스케줄러 (KST 기준 다음날 00:01)
      *
      * - 시작일 확인 후 계약 시작
      * - 성공 실패를 판단 후 계약 종료
@@ -53,7 +53,7 @@ public class ScheduleManager {
      * - 개별 유스케이스 마다 재시도 수행
      * - 3번 수행 후 최종 실패 시 로그 출력
      */
-    @Scheduled(cron = "0 1 0 * * *" )
+    @Scheduled(cron = "0 1 15 * * *" )
     public void daySchedule() {
         // 시작일 확인 후 계약 시작
         contractJobProcessor.startContracts("start");

@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.Instant;
@@ -31,11 +32,11 @@ public class EndContractsUseCaseImpl implements EndContractsUseCase {
     @Override
     @Transactional
     public void execute() {
-        Instant today = Instant.now();
+        Instant now = Instant.now();
+        Instant before = now.minus(24, ChronoUnit.HOURS);
         // 어제 또는 이전에 종료되었어야 하는 '진행중' 또는 '결과 대기' 상태의 계약을 모두 조회
-        List<Contract> contractsToCheck = contractRepository.findContractsToEnd(
-                List.of(ContractStatus.IN_PROGRESS, ContractStatus.WAIT_RESULT), today
-        );
+        List<Contract> contractsToCheck = contractRepository.findContractsToEndBefore(
+                List.of(ContractStatus.IN_PROGRESS, ContractStatus.WAIT_RESULT), before);
 
         if (contractsToCheck.isEmpty()) return;
 
@@ -43,7 +44,7 @@ public class EndContractsUseCaseImpl implements EndContractsUseCase {
         List<Contract> waitContracts = new ArrayList<>();
         List<Contract> failContracts = new ArrayList<>();
 
-        Instant twentyFourHours = Instant.now().minusSeconds(24 * 3600);
+        Instant twentyFourHours = now.minus(24, ChronoUnit.HOURS);
 
         for (Contract contract : contractsToCheck) {
             boolean hasPendingProofs = proofRepository.existsByContractIdAndStatus(contract.getId(), ProofStatus.APPROVE_PENDING);
