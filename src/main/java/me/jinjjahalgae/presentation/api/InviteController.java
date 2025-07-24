@@ -62,9 +62,8 @@ public class InviteController implements InviteControllerDocs {
     @ResponseStatus(HttpStatus.OK)
     public CommonResponse<InviteContractInfoResponse> getContractInfo(
             @PathVariable String inviteCode,
-            @PathVariable String contractUuid,
-            @AuthenticationPrincipal CustomJwtPrincipal principal) {
-        InviteContractInfoResponse result = getInviteContractInfoUseCase.execute(contractUuid, principal.getUser());
+            @PathVariable String contractUuid) {
+        InviteContractInfoResponse result = getInviteContractInfoUseCase.execute(contractUuid);
         return CommonResponse.success(result);
     }
 }

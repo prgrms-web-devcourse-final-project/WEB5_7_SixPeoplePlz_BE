@@ -4,5 +4,5 @@ import me.jinjjahalgae.domain.invite.usecase.get.contract.dto.InviteContractInfo
 import me.jinjjahalgae.domain.user.User;
 
 public interface GetInviteContractInfoUseCase {
-    InviteContractInfoResponse execute(String contractUuid, User user);
+    InviteContractInfoResponse execute(String contractUuid);
 }
