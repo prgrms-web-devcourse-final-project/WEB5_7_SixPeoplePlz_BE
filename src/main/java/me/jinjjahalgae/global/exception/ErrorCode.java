@@ -52,7 +52,7 @@ public enum ErrorCode {
     // 초대 관련
     SUPERVISOR_ALREADY_FULL(HttpStatus.CONFLICT, "이미 5명의 감독자가 참여했습니다."),
     INVITE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않거나 만료된 초대정보 입니다."),
-    INVALID_INVITE_PASSWORD(HttpStatus.UNAUTHORIZED, "초대 비밀번호가 일치하지 않습니다."),
+    INVALID_INVITE_PASSWORD(HttpStatus.BAD_REQUEST, "초대 비밀번호가 일치하지 않습니다."),
     INVITE_ALREADY_PARTICIPATED(HttpStatus.BAD_REQUEST, "이미 참여한 계약입니다."),
     CONTRACTOR_PARTICIPATION_NOT_FOUND(HttpStatus.NOT_FOUND, "계약자의 정보가 없는 계약입니다."),
     SUPERVISOR_PARTICIPATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 계약에 감독으로 참여하고 있지 않습니다."),
