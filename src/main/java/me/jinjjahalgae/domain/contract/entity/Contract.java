@@ -160,7 +160,7 @@ public class Contract extends BaseEntity {
         }
     }
 
-    // 기존 계약자 서명 삭제 (물리적 삭제)
+    // 기존 계약자 서명 삭제
     public void removeContractorSignature() {
         this.participations.removeIf(participation ->
                 participation.getRole() == Role.CONTRACTOR);
