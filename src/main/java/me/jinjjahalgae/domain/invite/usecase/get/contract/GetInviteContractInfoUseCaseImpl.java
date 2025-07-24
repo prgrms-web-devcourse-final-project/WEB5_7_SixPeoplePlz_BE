@@ -24,7 +24,7 @@ public class GetInviteContractInfoUseCaseImpl implements GetInviteContractInfoUs
     private String SUPERVISOR_COUNT_PREFIX;
 
     @Override
-    public InviteContractInfoResponse execute(String contractUuid, User user) {
+    public InviteContractInfoResponse execute(String contractUuid) {
         Contract contract = contractRepository.findByUuid(contractUuid)
                 .orElseThrow(() -> ErrorCode.CONTRACT_NOT_FOUND.serviceException("존재하지 않는 계약입니다."));
 
@@ -33,13 +33,6 @@ public class GetInviteContractInfoUseCaseImpl implements GetInviteContractInfoUs
         Integer remaining = (Integer) redisTemplate.opsForValue().get(supervisorCountKey);
         if (remaining == null || remaining <= 0) {
             throw ErrorCode.SUPERVISOR_ALREADY_FULL.serviceException("이미 5명의 감독자가 참여했습니다.");
-        }
-
-        // 이미 참여한 사용자인지 확인
-        boolean isParticipated = participationRepository.existsByContractIdAndUserId(contract.getId(), user.getId());
-
-        if (isParticipated) {
-            throw ErrorCode.INVITE_ALREADY_PARTICIPATED.serviceException("이미 참여한 계약입니다.");
         }
 
         // 계약자 정보 조회
