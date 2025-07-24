@@ -133,7 +133,7 @@ public interface InviteControllerDocs {
             @Valid VerifyInvitePasswordRequest request);
 
 
-    @Operation(summary = "초대 계약서 상세 조회", description = "비밀번호 검증 후 계약서의 상세 정보를 조회합니다. 로그인이 필요합니다.")
+    @Operation(summary = "초대 계약서 상세 조회", description = "비밀번호 검증 후 계약서의 상세 정보를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "계약서 조회 성공",
                     content = @Content(mediaType = "application/json",
@@ -168,30 +168,6 @@ public interface InviteControllerDocs {
                             examples = @ExampleObject(name = "이미 계약에 참여한 사용자", value = """
                                  { "success": false, "code": "INVITE_ALREADY_PARTICIPATED", "message": "이미 참여한 계약입니다." }
                                  """))),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "인증 실패",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = {
-                                    @ExampleObject(name = "인증 실패", value = """
-                                    {
-                                      "success": false,
-                                      "code": "INVALID_TOKEN",
-                                      "message": "유효하지 않은 토큰입니다."
-                                    }
-                                    """),
-                                    @ExampleObject(name = "만료된 토큰", value = """
-                                    {
-                                      "success": false,
-                                      "code": "EXPIRED_TOKEN",
-                                      "message": "토큰이 만료되었습니다."
-                                    }
-                                    """)
-                            }
-                    )
-            ),
             @ApiResponse(responseCode = "404", description = "초대링크에 해당하는 계약이 없거나 계약의 계약자가 없는 경우",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
@@ -212,6 +188,5 @@ public interface InviteControllerDocs {
     })
     CommonResponse<InviteContractInfoResponse> getContractInfo(
             @Parameter(description = "초대 코드", example = "da2316d7") String inviteCode,
-            @Parameter(description = "계약 UUID", example = "36865103-5d08-4139-ba4a-b32da2316d7f") String contractUuid,
-            @Parameter(hidden = true) CustomJwtPrincipal principal);
+            @Parameter(description = "계약 UUID", example = "36865103-5d08-4139-ba4a-b32da2316d7f") String contractUuid);
 }
