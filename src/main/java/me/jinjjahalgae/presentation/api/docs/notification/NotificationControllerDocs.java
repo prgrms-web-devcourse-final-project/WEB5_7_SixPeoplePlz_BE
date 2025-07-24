@@ -39,30 +39,54 @@ public interface NotificationControllerDocs {
                 examples = @ExampleObject(
                     name = "성공 응답",
                     value = """
-                    {
-                      "success": true,
-                      "result": {
-                        "content": [
-                          {
-                            "id": 1,
-                            "type": "CONTRACT_STARTED",
-                            "content": "'홍길동'님의 '운동하기' 계약이 시작되었습니다.",
-                            "read": false,
-                            "createdAt": "2024-05-01T12:00:00Z"
-                          },
-                          {
-                            "id": 2,
-                            "type": "SUPERVISOR_ADDED",
-                            "content": "'홍길동'님이 '운동하기' 계약의 감독자로 추가되었습니다.",
-                            "read": true,
-                            "createdAt": "2024-05-01T10:30:00Z"
-                          }
-                        ],
-                        "pageable": {},
-                        "totalPages": 1,
-                        "totalElements": 2
-                      }
-                    }
+                            {
+                                "success": true,
+                                "result": {
+                                    "content": [
+                                        {
+                                            "notificationId": 13,
+                                            "type": "SUPERVISOR_WITHDRAWN",
+                                            "readStatus": false,
+                                            "content": "감독자 포기",
+                                            "targetUserId": 1,
+                                            "contractId": 1
+                                        },
+                                        {
+                                            "notificationId": 14,
+                                            "type": "CONTRACT_STARTED",
+                                            "readStatus": false,
+                                            "content": "계약 시작",
+                                            "targetUserId": 1,
+                                            "contractId": 1
+                                        }
+                                    ],
+                                    "pageable": {
+                                        "pageNumber": 0,
+                                        "pageSize": 10,
+                                        "sort": {
+                                            "empty": false,
+                                            "sorted": true,
+                                            "unsorted": false
+                                        },
+                                        "offset": 0,
+                                        "paged": true,
+                                        "unpaged": false
+                                    },
+                                    "last": true,
+                                    "totalPages": 1,
+                                    "totalElements": 2,
+                                    "size": 10,
+                                    "number": 0,
+                                    "sort": {
+                                        "empty": false,
+                                        "sorted": true,
+                                        "unsorted": false
+                                    },
+                                    "first": true,
+                                    "numberOfElements": 2,
+                                    "empty": false
+                                }
+                            }
                     """
                 )
             )

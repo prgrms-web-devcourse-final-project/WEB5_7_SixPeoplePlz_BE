@@ -949,47 +949,45 @@ public interface ContractControllerDocs {
                             examples = @ExampleObject(
                                     name = "성공 응답",
                                     value = """
-                    {
-                      "success": true,
-                      "result": {
-                        "contractId": 1,
-                        "contractUuid": "123e4567-e89b-12d3-a456-426614174000",
-                        "title": "매일 운동하기",
-                        "goal": "매일 1시간 이상 운동하여 건강한 몸 만들기",
-                        "penalty": "치킨 못 먹기",
-                        "reward": "치킨 2번 먹기",
-                        "type": "BASIC",
-                        "startDate": "2024-01-01T09:00:00Z",
-                        "endDate": "2024-01-31T23:59:59Z",
-                        "contractStatus": "IN_PROGRESS",
-                        "totalProof": 7,
-                        "totalProof": 31,
-                        "currentProof": 20,
-                        "remainingLife": 2,
-                        "achievementPercent": 64.5,
-                        "periodPercent": 45.2,
-                        "participants": [
-                          {
-                            "userId": 1,
-                            "name": "김계약",
-                            "role": "CONTRACTOR",
-                            "signatureImageKey": "contractor-signature-123.jpg"
-                          },
-                          {
-                            "userId": 2,
-                            "name": "박감독",
-                            "role": "SUPERVISOR",
-                            "signatureImageKey": "supervisor-signature-456.jpg"
-                          },
-                          {
-                            "userId": 3,
-                            "name": "이감독",
-                            "role": "SUPERVISOR",
-                            "signatureImageKey": "supervisor-signature-789.jpg"
-                          }
-                        ]
-                      }
-                    }
+                                            {
+                                                 "success": true,
+                                                 "result": {
+                                                     "contractBasicResponse": {
+                                                         "contractId": 1,
+                                                         "contractUuid": "f5481f13-6a02-4386-99c2-cc6a306d0295",
+                                                         "title": "매일 운동하기",
+                                                         "goal": "매일 30분 이상 운동하기",
+                                                         "proofPerWeek": 3,
+                                                         "penalty": "치킨 못 먹기",
+                                                         "reward": "치킨 먹기",
+                                                         "totalProof": 15,
+                                                         "totalLife": 3,
+                                                         "startDate": "2025-01-01T00:00:00Z",
+                                                         "endDate": "2025-01-31T23:59:59Z"
+                                                     },
+                                                     "type": "BASIC",
+                                                     "participants": [
+                                                         {
+                                                             "basicInfo": {
+                                                                 "userId": 1,
+                                                                 "userName": "계약자1",
+                                                                 "role": "CONTRACTOR",
+                                                                 "valid": true
+                                                             },
+                                                             "signatureImageKey": "signatures/contractor_signature_123.jpg"
+                                                         },
+                                                         {
+                                                             "basicInfo": {
+                                                                 "userId": 2,
+                                                                 "userName": "감독자1",
+                                                                 "role": "SUPERVISOR",
+                                                                 "valid": true
+                                                             },
+                                                             "signatureImageKey": "signatures/contractor_signature_124.jpg"
+                                                         }
+                                                     ]
+                                                 }
+                                             }
                     """
                             )
                     )
