@@ -13,7 +13,9 @@ import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.global.exception.ErrorCode;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -40,9 +42,9 @@ public class Contract extends BaseEntity {
 
     private String uuid; //계약 고유 uuid
 
-    private LocalDateTime startDate; //계약 시작일
+    private Instant startDate; //계약 시작일
 
-    private LocalDateTime endDate; //계약 종료일
+    private Instant endDate; //계약 종료일
 
     private String title; //목표 제목
 
@@ -73,7 +75,7 @@ public class Contract extends BaseEntity {
     private List<Participation> participations = new ArrayList<>();
 
     @Builder
-    private Contract(User user, LocalDateTime startDate, LocalDateTime endDate, String title, String goal, String penalty, String reward, int totalProof, boolean oneOff, ContractType type) {
+    private Contract(User user, Instant startDate, Instant endDate, String title, String goal, String penalty, String reward, int totalProof, boolean oneOff, ContractType type) {
         this.user = user;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -113,31 +115,37 @@ public class Contract extends BaseEntity {
     }
 
     public double calculatePeriodPercent() {
-
-        LocalDateTime now = LocalDateTime.now();
-
-        if (now.isBefore(startDate)) {
-            return 0.0; // 시작 전이면 0%
+        Instant now = Instant.now();
+        Instant start = startDate;
+        Instant end = endDate;
+        LocalDateTime nowLdt = LocalDateTime.ofInstant(now, ZoneOffset.UTC);
+        LocalDateTime startLdt = LocalDateTime.ofInstant(start, ZoneOffset.UTC);
+        LocalDateTime endLdt = LocalDateTime.ofInstant(end, ZoneOffset.UTC);
+        if (nowLdt.isBefore(startLdt)) {
+            return 0.0;
         }
-        if (now.isAfter(endDate)) {
-            return 100.0; // 종료 후면 100%
+        if (nowLdt.isAfter(endLdt)) {
+            return 100.0;
         }
-
         long totalDays = getTotalDays();
         long passedDays = getPassedDays();
-
-        return ( (double) passedDays / totalDays * 100);
+        return ((double) passedDays / totalDays * 100);
     }
 
     private long getTotalDays() {
-        return java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1;
+        LocalDateTime start = LocalDateTime.ofInstant(startDate, ZoneOffset.UTC);
+        LocalDateTime end = LocalDateTime.ofInstant(endDate, ZoneOffset.UTC);
+        return java.time.temporal.ChronoUnit.DAYS.between(start, end) + 1;
     }
 
     private long getPassedDays() {
-        LocalDateTime now = LocalDateTime.now();
-        if (now.isBefore(startDate)) return 0;
-        if (now.isAfter(endDate)) return getTotalDays();
-        return java.time.temporal.ChronoUnit.DAYS.between(startDate, now) + 1;
+        Instant now = Instant.now();
+        LocalDateTime nowLdt = LocalDateTime.ofInstant(now, ZoneOffset.UTC);
+        LocalDateTime start = LocalDateTime.ofInstant(startDate, ZoneOffset.UTC);
+        LocalDateTime end = LocalDateTime.ofInstant(endDate, ZoneOffset.UTC);
+        if (nowLdt.isBefore(start)) return 0;
+        if (nowLdt.isAfter(end)) return getTotalDays();
+        return java.time.temporal.ChronoUnit.DAYS.between(start, nowLdt) + 1;
     }
 
     // 참여 정보를 제거하는 메서드
@@ -154,6 +162,10 @@ public class Contract extends BaseEntity {
 
     //감독자가 이미 있는지 검증 (수정은 감독자가 없어야 가능)
     public void validateUpdatable() {
+
+        if(this.status != ContractStatus.PENDING) {
+            throw ErrorCode.CONTRACT_STATUS_INVALID.domainException("계약 수정은 대기 상태에서만 가능합니다.");
+        }
         boolean hasSignedSupervisor = this.participations.stream()
                 .anyMatch(participation -> participation.getRole() == Role.SUPERVISOR);
         if (hasSignedSupervisor) {
@@ -164,7 +176,7 @@ public class Contract extends BaseEntity {
     //계약 수정
     public void update(String title, String goal, String penalty, String reward,
                        int totalProof, boolean oneOff,
-                       LocalDateTime startDate, LocalDateTime endDate, ContractType type) {
+                       Instant startDate, Instant endDate, ContractType type) {
 
         this.title = title;
         this.goal = goal;
@@ -230,5 +242,29 @@ public class Contract extends BaseEntity {
     // 계약 상태가 진행중인지 검증
     public boolean isInProgress() {
         return this.status == ContractStatus.IN_PROGRESS;
+    }
+
+    //총 실행 횟수 검증
+    public void validateTotalProof() {
+        long contractDays = getTotalDays();
+
+        if (this.oneOff && this.totalProof != 1) {
+            throw ErrorCode.INVALID_ONE_OFF_TOTAL_PROOF.domainException("단발성 계약의 실행 횟수는 반드시 1이여야 합니다.");
+        }
+
+        if (this.totalProof > contractDays) {
+            throw ErrorCode.INVALID_TOTAL_PROOF.domainException("계약 실행 횟수는 계약 기간 일을 넘길 수 없습니다.");
+        }
+    }
+
+    public void validateDates() {
+        if (startDate.isAfter(endDate)) {
+            throw ErrorCode.INVALID_CONTRACT_DATES.domainException("계약 종료일은 시작일보다 늦어야 합니다.");
+        }
+    }
+
+    // 계약 상태가 결과대기인지 검증
+    public boolean isWaitResult() {
+        return this.status == ContractStatus.WAIT_RESULT;
     }
 }

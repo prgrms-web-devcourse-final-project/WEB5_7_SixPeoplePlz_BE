@@ -7,7 +7,6 @@ import me.jinjjahalgae.domain.participation.usecase.create.contractor.dto.Create
 import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.user.User;
-import me.jinjjahalgae.global.util.DateTimeConverter;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -31,7 +30,7 @@ public class ParticipationMapper {
                 participation.getImageKey(),
                 participation.getRole(),
                 participation.getValid(),
-                DateTimeConverter.toInstant(participation.getCreatedAt())
+                participation.getCreatedAt()
         );
     }
 

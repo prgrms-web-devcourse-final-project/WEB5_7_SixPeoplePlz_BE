@@ -9,6 +9,7 @@ import me.jinjjahalgae.domain.proof.entities.Proof;
 import me.jinjjahalgae.domain.proof.entities.ProofImage;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 import me.jinjjahalgae.domain.user.User;
+import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
@@ -31,8 +32,8 @@ public class ProofTestUtil {
 
     public static Contract createContract(Long id, int totalSupervisor) {
         Contract cont = Contract.builder()
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now().plusDays(30))
+                .startDate(UtcDateTimeUtil.nowAsLocalDateTime())
+                .endDate(UtcDateTimeUtil.nowAsLocalDateTime().plusDays(30))
                 .title("Test Contract " + id)
                 .goal("Test Goal")
                 .penalty("Test Penalty")
@@ -67,8 +68,8 @@ public class ProofTestUtil {
     // ------------------------------------------ slice test ----------------------------------------------
     public static Contract createContractBeforeSave(int totalSupervisor, User user) {
         Contract cont = Contract.builder()
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now().plusDays(30))
+                .startDate(UtcDateTimeUtil.nowAsLocalDateTime())
+                .endDate(UtcDateTimeUtil.nowAsLocalDateTime().plusDays(30))
                 .title("Test Contract ")
                 .goal("Test Goal")
                 .penalty("Test Penalty")

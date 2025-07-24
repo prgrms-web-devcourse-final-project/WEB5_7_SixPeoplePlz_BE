@@ -67,3 +67,18 @@ cloud:
       static: ap-northeast-2
     s3:
       bucket: ${AWS_S3_BUCKET_DEV}
+
+# 프로메테우스
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+# 파이어베이스
+firebase:
+  key-path: ${DEV_FCM_KEY_PATH}
+
+# cors
+cors:
+  origins: ${DEV_CORS_ORIGINS}

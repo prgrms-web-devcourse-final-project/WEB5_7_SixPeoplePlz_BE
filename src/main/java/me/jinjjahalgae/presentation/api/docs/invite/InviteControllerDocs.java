@@ -32,7 +32,7 @@ public interface InviteControllerDocs {
                                  {
                                    "success": true,
                                    "result": {
-                                     "inviteUrl": "https://jinjjahalgae.xyz/api/invite/da2316d7",
+                                     "inviteUrl": "https://jinjahalgae.vercel.app/invite/da2316d7",
                                      "password": "ac08ee16"
                                    }
                                  }"""))),
@@ -133,8 +133,7 @@ public interface InviteControllerDocs {
             @Valid VerifyInvitePasswordRequest request);
 
 
-    @Operation(summary = "초대 계약서 상세 조회", description = "비밀번호 검증 후 계약서의 상세 정보를 조회합니다. 로그인이 필요합니다.",
-            security = { @SecurityRequirement(name = "bearerAuth") })
+    @Operation(summary = "초대 계약서 상세 조회", description = "비밀번호 검증 후 계약서의 상세 정보를 조회합니다. 로그인이 필요합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "계약서 조회 성공",
                     content = @Content(mediaType = "application/json",
@@ -143,11 +142,12 @@ public interface InviteControllerDocs {
                                  {
                                    "success": true,
                                    "result": {
+                                     "contractId": 1,
                                      "contractorName": "홍길동",
                                      "contractorSignatureKey": "36865103-5d08-4139-ba4a-b32da2316d7f",
                                      "uuid": "36865103-5d08-4139-ba4a-b32da2316d7f",
-                                     "startDate": "2025-07-01T00:00:00",
-                                     "endDate": "2025-07-31T23:59:59",
+                                     "startDate": "2025-07-01T00:00:00Z",
+                                     "endDate": "2025-07-31T23:59:59Z",
                                      "title": "매일 아침 30분 운동하기",
                                      "goal": "한 달 동안 매일 아침 조깅을 하여 체력을 증진한다.",
                                      "penalty": "실패 시 친구에게 커피 사주기",

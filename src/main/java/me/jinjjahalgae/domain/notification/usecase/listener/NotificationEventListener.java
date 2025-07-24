@@ -7,6 +7,8 @@ import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationBa
 import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
 import me.jinjjahalgae.domain.notification.usecase.create.CreateNotificationUseCase;
 import me.jinjjahalgae.domain.notification.usecase.create.dto.NotificationCreateRequest;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -17,8 +19,17 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class NotificationEventListener {
-
-    private final CreateNotificationUseCase createNotificationUseCase;
+    /**
+     * 재시도 관련 설정 추가
+     * Exception.class, 예외가 발생하면 재시도
+     * 최대 재시도 횟수 3번 (default)
+     * 재시도 딜레이 1초
+     *   1차 시도 실패
+     *   1초 대기 -> 2차 시도 -> 실패
+     *   1초 대기 -> 3차 시도 -> 실패
+     *   예외 던짐
+     */
+    private final NotificationRetryProcessor retryProcessor;
 
     /**
      * NotificationEvent를 핸들링하는 리스너
@@ -29,17 +40,7 @@ public class NotificationEventListener {
     @Async
     @TransactionalEventListener
     public void handleNotificationEvent(NotificationEvent event) {
-        try {
-            createNotificationUseCase.execute(
-                    new NotificationCreateRequest(
-                            event.notificationType(),
-                            event.contractId(),
-                            event.actorUserId()
-                    )
-            );
-        } catch (Exception e) {
-            log.error("알림 전송 중 오류 발생: {}", e.getMessage(), e);
-        }
+        retryProcessor.processSingle(event);
     }
 
     /**
@@ -51,19 +52,6 @@ public class NotificationEventListener {
     @Async
     @TransactionalEventListener
     public void handleNotificationBatchEvent(NotificationBatchEvent event) {
-        try {
-            List<NotificationData> notificationData = event.notificationData();
-            for (NotificationData data : notificationData) {
-                createNotificationUseCase.execute(
-                        new NotificationCreateRequest(
-                                event.notificationType(),
-                                data.contractId(),
-                                data.actorUserId()
-                        )
-                );
-            }
-        } catch (Exception e) {
-            log.error("알림 전송 중 오류 발생: {}", e.getMessage(), e);
-        }
+        retryProcessor.processBatch(event);
     }
 }

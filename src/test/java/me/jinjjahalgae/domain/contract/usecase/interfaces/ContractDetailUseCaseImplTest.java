@@ -21,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import me.jinjjahalgae.domain.participation.repository.ParticipationRepository;
+import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 
 @ExtendWith(MockitoExtension.class)
 class GetContractDetailUseCaseTest {
@@ -84,14 +86,13 @@ class GetContractDetailUseCaseTest {
         // 계약 생성
         contractWithParticipants = Contract.builder()
                 .user(contractor)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now().plusDays(30))
+                .startDate(UtcDateTimeUtil.nowAsLocalDateTime())
+                .endDate(UtcDateTimeUtil.nowAsLocalDateTime().plusDays(30))
                 .title("운동하기")
                 .goal("매일 30분 운동")
                 .penalty("치킨 못 먹기")
                 .reward("치킨 먹기")
-                .life(3)
-                .proofPerWeek(3)
+                .totalProof(10)
                 .oneOff(false)
                 .type(ContractType.BASIC)
                 .build();
@@ -111,13 +112,11 @@ class GetContractDetailUseCaseTest {
                 "uuid-123",
                 "운동하기",
                 "매일 30분 운동",
-                3,
                 "치킨 못 먹기",
                 "치킨 먹기",
-                12,
-                3,
-                LocalDateTime.now(),
-                LocalDateTime.now().plusDays(30)
+                10,
+                LocalDateTime.now().toInstant(ZoneOffset.UTC),
+                LocalDateTime.now().plusDays(30).toInstant(ZoneOffset.UTC)
         );
 
         // 참여자 정보 (계약자 1명 + 감독자 3명)
@@ -125,8 +124,6 @@ class GetContractDetailUseCaseTest {
                 contractBasicResponse,
                 ContractStatus.PENDING,
                 0,
-                0,
-                3,
                 "0/12",
                 "1/31",
                 0.0,
@@ -218,21 +215,17 @@ class GetContractDetailUseCaseTest {
                 "uuid-123",
                 "운동하기",
                 "매일 30분 운동",
-                3,
                 "치킨 못 먹기",
                 "치킨 먹기",
-                12,
-                3,
-                LocalDateTime.now(),
-                LocalDateTime.now().plusDays(30)
+                10,
+                LocalDateTime.now().toInstant(ZoneOffset.UTC),
+                LocalDateTime.now().plusDays(30).toInstant(ZoneOffset.UTC)
         );
 
         // valid=false인 감독자가 포함되지 않은 응답 (필터링된 결과)
         ContractDetailResponse responseWithValidParticipantsOnly = new ContractDetailResponse(
                 contractBasicResponse,
                 ContractStatus.PENDING,
-                0,
-                0,
                 3,
                 "0/12",
                 "1/31",

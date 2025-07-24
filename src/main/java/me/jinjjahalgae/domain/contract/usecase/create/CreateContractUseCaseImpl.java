@@ -32,6 +32,13 @@ public class CreateContractUseCaseImpl implements CreateContractUseCase {
         User user = findUserById(userId);
         //계약 생성
         Contract contract = contractMapper.toEntity(user, request);
+
+        // 날짜 유효성 검사
+        contract.validateDates();
+
+        //총 인증 횟수는 계약일 수를 넘을 수 없으며 단발성이라면 총 인증 횟수 1인지도 검사
+        contract.validateTotalProof();
+
         //계약자가 계약에 서명하고 저장
         Participation contractorSignature = participationMapper.toEntity(
                 contract, user, request.signatureImageKey(), Role.CONTRACTOR, true

@@ -1,5 +1,6 @@
 package me.jinjjahalgae.domain.contract.usecase.interfaces;
 
+import jakarta.persistence.EntityManager;
 import me.jinjjahalgae.domain.contract.usecase.update.dto.ContractUpdateRequest;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractType;
@@ -34,6 +35,9 @@ class UpdateContractUseCaseTest {
 
     @Mock
     private ContractRepository contractRepository;
+
+    @Mock
+    private EntityManager entityManager;
 
     @InjectMocks
     private UpdateContractUseCaseImpl contractUpdateUseCase;

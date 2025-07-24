@@ -11,6 +11,7 @@ import me.jinjjahalgae.domain.proof.usecase.create.proof.CreateProofUseCaseImpl;
 import me.jinjjahalgae.domain.proof.usecase.create.common.ProofCreateRequest;
 import me.jinjjahalgae.domain.proof.util.ProofTestUtil;
 import me.jinjjahalgae.global.exception.AppException;
+import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -64,7 +65,7 @@ class CreateProofUseCaseUnitTest {
         when(contractRepository.existsByIdAndUserId(contractId, userId)).thenReturn(true);
         when(proofRepository.existsByContractIdAndCreatedAtToday(eq(contractId), any(), any())).thenReturn(false);
         when(contractRepository.findById(contractId)).thenReturn(Optional.of(contract));
-        when(proofRepository.save(any(Proof.class))).thenReturn(ProofTestUtil.createProof(1L, null, ProofStatus.APPROVED, contractId, null, LocalDateTime.now()));
+        when(proofRepository.save(any(Proof.class))).thenReturn(ProofTestUtil.createProof(1L, null, ProofStatus.APPROVED, contractId, null, UtcDateTimeUtil.nowAsLocalDateTime()));
         when(proofImageRepository.save(any(ProofImage.class))).thenReturn(ProofTestUtil.createProofImage());
 
         // when
@@ -135,7 +136,7 @@ class CreateProofUseCaseUnitTest {
         when(contractRepository.existsByIdAndUserId(contractId, userId)).thenReturn(true);
         when(proofRepository.existsByContractIdAndCreatedAtToday(eq(contractId), any(), any())).thenReturn(false);
         when(contractRepository.findById(contractId)).thenReturn(Optional.of(contract));
-        when(proofRepository.save(any(Proof.class))).thenReturn(ProofTestUtil.createProof(1L, null, ProofStatus.APPROVED, contractId, null, LocalDateTime.now()));
+        when(proofRepository.save(any(Proof.class))).thenReturn(ProofTestUtil.createProof(1L, null, ProofStatus.APPROVED, contractId, null, UtcDateTimeUtil.nowAsLocalDateTime()));
         when(proofImageRepository.save(any(ProofImage.class))).thenReturn(ProofTestUtil.createProofImage());
 
         // when
@@ -154,7 +155,7 @@ class CreateProofUseCaseUnitTest {
         when(contractRepository.existsByIdAndUserId(contractId, userId)).thenReturn(true);
         when(proofRepository.existsByContractIdAndCreatedAtToday(eq(contractId), any(), any())).thenReturn(false);
         when(contractRepository.findById(contractId)).thenReturn(Optional.of(contract));
-        when(proofRepository.save(any(Proof.class))).thenReturn(ProofTestUtil.createProof(1L, null, ProofStatus.APPROVED, contractId, null, LocalDateTime.now()));
+        when(proofRepository.save(any(Proof.class))).thenReturn(ProofTestUtil.createProof(1L, null, ProofStatus.APPROVED, contractId, null, UtcDateTimeUtil.nowAsLocalDateTime()));
         when(proofImageRepository.save(any(ProofImage.class))).thenReturn(ProofTestUtil.createProofImage());
 
         // when

@@ -1,14 +1,15 @@
 package me.jinjjahalgae.domain.auth.usecase.refresh;
 
 import lombok.RequiredArgsConstructor;
-import me.jinjjahalgae.domain.auth.Auth;
-import me.jinjjahalgae.domain.auth.AuthRepository;
+import me.jinjjahalgae.domain.auth.entity.Auth;
+import me.jinjjahalgae.domain.auth.repository.AuthRepository;
 import me.jinjjahalgae.domain.auth.mapper.AuthMapper;
 import me.jinjjahalgae.domain.auth.usecase.refresh.dto.RefreshRequest;
 import me.jinjjahalgae.domain.auth.usecase.refresh.dto.RefreshResponse;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import me.jinjjahalgae.global.security.jwt.JwtTokenProvider;
 import me.jinjjahalgae.global.security.jwt.Token;
+import me.jinjjahalgae.domain.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RefreshUseCaseImpl implements RefreshUseCase {
     private final AuthRepository authRepository;
+    private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthMapper authMapper;
 
@@ -29,6 +31,10 @@ public class RefreshUseCaseImpl implements RefreshUseCase {
 
         // userId를 refreshToken에서 추출
         Long userId = jwtTokenProvider.getUserIdFromToken(refreshToken);
+
+        // 탈퇴한 유저면 예외
+        userRepository.findByIdAndDeletedAtIsNull(userId)
+            .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.domainException("존재하지 않거나 탈퇴한 유저입니다."));
 
         // userId로 auth 테이블 조회
         Auth auth = authRepository.findByUserId(userId)

@@ -13,11 +13,7 @@ import me.jinjjahalgae.domain.proof.usecase.getlist.common.ProofSimpleResponse;
 import me.jinjjahalgae.domain.proof.usecase.get.detail.dto.ProofDetailResponse;
 import me.jinjjahalgae.domain.proof.usecase.get.recent.dto.ProofRecentResponse;
 import me.jinjjahalgae.domain.proof.usecase.getlist.supervisorlist.dto.SupervisorProofListResponse;
-import me.jinjjahalgae.global.util.DateTimeConverter;
-
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class ProofMapper {
@@ -73,7 +69,7 @@ public class ProofMapper {
                 images,
                 proof.getComment(),
                 proof.getStatus(),
-                DateTimeConverter.toInstant(proof.getCreatedAt()),
+                proof.getCreatedAt(),
                 proof.getProofId() != null,
                 feedbackResponses,
                 proof.getId()
@@ -96,7 +92,7 @@ public class ProofMapper {
                 imageKey,
                 proof.getComment(),
                 proof.getStatus(),
-                DateTimeConverter.toInstant(proof.getCreatedAt()),
+                proof.getCreatedAt(),
                 proof.getProofId() != null,
                 proof.getId()
         );
@@ -124,7 +120,7 @@ public class ProofMapper {
                 secondImageKey,
                 thirdImageKey,
                 proof.getComment(),
-                DateTimeConverter.toInstant(proof.getCreatedAt()),
+                proof.getCreatedAt(),
                 proof.getStatus(),
                 proof.getProofId() != null,
                 proof.getId()
@@ -137,7 +133,7 @@ public class ProofMapper {
      * @param reProof 재인증 (없으면 null)
      * @return {@link ContractorProofListResponse}
      */
-    public static ContractorProofListResponse toContractorListResponse(Proof proof, Proof reProof, LocalDateTime endDate) {
+    public static ContractorProofListResponse toContractorListResponse(Proof proof, Proof reProof, Instant endDate) {
         ProofSimpleResponse orgResponse = toSimpleResponse(proof);
         ProofSimpleResponse reProofResponse = null;
 
@@ -147,12 +143,12 @@ public class ProofMapper {
 
         Instant rejectedAt = null;
         if(proof.getStatus().equals(ProofStatus.REJECTED)) {
-            rejectedAt = DateTimeConverter.toInstant(proof.getUpdatedAt());
+            rejectedAt = proof.getUpdatedAt();
         }
 
         return new ContractorProofListResponse(
-                DateTimeConverter.toInstant(proof.getCreatedAt()),
-                DateTimeConverter.toInstant(endDate),
+                proof.getCreatedAt(),
+                endDate,
                 orgResponse,
                 rejectedAt,
                 reProofResponse
@@ -176,7 +172,7 @@ public class ProofMapper {
         }
 
         return new SupervisorProofListResponse(
-                DateTimeConverter.toInstant(proof.getCreatedAt()),
+                proof.getCreatedAt(),
                 orgResponse,
                 orgStatus,
                 reProofResponse,

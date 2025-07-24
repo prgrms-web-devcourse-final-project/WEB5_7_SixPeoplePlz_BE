@@ -7,6 +7,7 @@ import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.contract.usecase.get.title.dto.ContractTitleInfoResponse;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.global.exception.AppException;
+import me.jinjjahalgae.global.util.UtcDateTimeUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -54,8 +55,8 @@ class ContractTitleInfoUseCaseTest {
                 .penalty("치킨 못 먹기")
                 .reward("치킨 먹기")
                 .totalProof(21)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now().plusDays(30))
+                .startDate(UtcDateTimeUtil.nowAsLocalDateTime())
+                .endDate(UtcDateTimeUtil.nowAsLocalDateTime().plusDays(30))
                 .type(ContractType.BASIC)
                 .oneOff(false)
                 .build();

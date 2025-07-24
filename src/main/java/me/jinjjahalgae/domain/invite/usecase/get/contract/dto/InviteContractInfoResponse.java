@@ -30,11 +30,12 @@ import java.util.List;
         description = "초대 링크를 통해 조회한 계약 정보 DTO",
         example = """
         {
+          "contractId": 1,
           "contractorName": "홍길동",
           "contractorSignatureKey": "36865103-5d08-4139-ba4a-b32da2316d7f",
           "uuid": "36865103-5d08-4139-ba4a-b32da2316d7f",
-          "startDate": "2025-07-01T00:00:00",
-          "endDate": "2025-07-31T23:59:59",
+          "startDate": "2025-07-01T00:00:00Z",
+          "endDate": "2025-07-31T23:59:59Z",
           "title": "매일 아침 30분 운동하기",
           "goal": "한 달 동안 매일 아침 조깅을 하여 체력을 증진한다.",
           "penalty": "실패 시 친구에게 커피 사주기",
@@ -57,6 +58,9 @@ import java.util.List;
         """
 )
 public record InviteContractInfoResponse(
+        @Schema(description = "계약 ID")
+        Long contractId,
+
         @Schema(description = "계약자 이름")
         String contractorName,
 

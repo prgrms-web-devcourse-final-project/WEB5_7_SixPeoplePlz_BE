@@ -34,6 +34,6 @@ public record CreateContractorParticipationResponse(
         @Schema(description = "서명 유효 여부", example = "true")
         Boolean valid,
 
-        @Schema(description = "서명 일시", example = "2024-01-01T09:00:00")
+        @Schema(description = "서명 일시", example = "2024-01-01T09:00:00Z")
         Instant createdAt
 ) { }

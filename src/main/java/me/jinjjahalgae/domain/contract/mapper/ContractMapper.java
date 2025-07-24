@@ -13,7 +13,6 @@ import me.jinjjahalgae.domain.participation.entity.Participation;
 import me.jinjjahalgae.domain.participation.mapper.ParticipationMapper;
 import me.jinjjahalgae.domain.participation.usecase.common.ParticipantSimpleResponse;
 import me.jinjjahalgae.domain.user.User;
-import me.jinjjahalgae.global.util.DateTimeConverter;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -27,8 +26,8 @@ public class ContractMapper {
     public Contract toEntity(User user, CreateContractRequest request) {
         Contract contract = Contract.builder()
                 .user(user)
-                .startDate(DateTimeConverter.toLocalDateTime(request.startDate()))
-                .endDate(DateTimeConverter.toLocalDateTime(request.endDate()))
+                .startDate(request.startDate())
+                .endDate(request.endDate())
                 .title(request.title())
                 .goal(request.goal())
                 .penalty(request.penalty())
@@ -49,8 +48,8 @@ public class ContractMapper {
                 contract.getUuid(),
                 contract.getTitle(),
                 contract.getStatus(),
-                DateTimeConverter.toInstant(contract.getStartDate()),
-                DateTimeConverter.toInstant(contract.getEndDate()),
+                contract.getStartDate(),
+                contract.getEndDate(),
                 contract.getReward(),
                 contract.getPenalty(),
                 contract.calculateAchievementRatio(), // 5/10 형태
@@ -69,8 +68,8 @@ public class ContractMapper {
                 contract.getPenalty(),
                 contract.getReward(),
                 contract.getTotalProof(),
-                DateTimeConverter.toInstant(contract.getStartDate()),
-                DateTimeConverter.toInstant(contract.getEndDate())
+                contract.getStartDate(),
+                contract.getEndDate()
         );
     }
 

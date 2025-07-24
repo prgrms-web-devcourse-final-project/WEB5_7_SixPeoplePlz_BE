@@ -6,6 +6,8 @@ import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
+import me.jinjjahalgae.domain.notification.model.NotificationData;
+import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationBatchEvent;
 import me.jinjjahalgae.domain.notification.usecase.listener.event.NotificationEvent;
 import me.jinjjahalgae.domain.proof.enums.ProofStatus;
 import me.jinjjahalgae.domain.proof.repository.ProofRepository;
@@ -13,10 +15,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.Instant;
 
 @Slf4j
 @Service
@@ -30,11 +31,10 @@ public class EndContractsUseCaseImpl implements EndContractsUseCase {
     @Override
     @Transactional
     public void execute() {
-        LocalDate yesterday = LocalDate.now().minusDays(1);
-
+        Instant today = Instant.now();
         // 어제 또는 이전에 종료되었어야 하는 '진행중' 또는 '결과 대기' 상태의 계약을 모두 조회
         List<Contract> contractsToCheck = contractRepository.findContractsToEnd(
-                List.of(ContractStatus.IN_PROGRESS, ContractStatus.WAIT_RESULT), yesterday
+                List.of(ContractStatus.IN_PROGRESS, ContractStatus.WAIT_RESULT), today
         );
 
         if (contractsToCheck.isEmpty()) return;
@@ -43,7 +43,7 @@ public class EndContractsUseCaseImpl implements EndContractsUseCase {
         List<Contract> waitContracts = new ArrayList<>();
         List<Contract> failContracts = new ArrayList<>();
 
-        LocalDateTime twentyFourHours = LocalDateTime.now().minusHours(24);
+        Instant twentyFourHours = Instant.now().minusSeconds(24 * 3600);
 
         for (Contract contract : contractsToCheck) {
             boolean hasPendingProofs = proofRepository.existsByContractIdAndStatus(contract.getId(), ProofStatus.APPROVE_PENDING);
@@ -65,36 +65,32 @@ public class EndContractsUseCaseImpl implements EndContractsUseCase {
             waitContracts.add(contract);
         }
 
-        // 분류된 계약들을 상태별로 일괄 업데이트 및 이벤트 발행
+        // 성공 계약 일괄 업데이트 및 batch 알림
         if (!completeContracts.isEmpty()) {
             List<Long> successIds = completeContracts.stream().map(Contract::getId).toList();
             contractRepository.bulkUpdateStatus(successIds, ContractStatus.COMPLETED);
-
-            completeContracts.forEach(contract ->
-                    eventPublisher.publishEvent(new NotificationEvent(
-                            NotificationType.CONTRACT_ENDED_SUCCESS,
-                            contract.getId(),
-                            contract.getUser().getId()
-                    ))
-            );
+            createBatchNotificationsToParticipants(completeContracts, NotificationType.CONTRACT_ENDED_SUCCESS);
         }
 
+        // 결과 대기 계약 일괄 업데이트
         if (!waitContracts.isEmpty()) {
             List<Long> waitIds = waitContracts.stream().map(Contract::getId).toList();
             contractRepository.bulkUpdateStatus(waitIds, ContractStatus.WAIT_RESULT);
         }
 
+        // 실패 계약 일괄 업데이트 및 batch 알림
         if (!failContracts.isEmpty()) {
             List<Long> failIds = failContracts.stream().map(Contract::getId).toList();
             contractRepository.bulkUpdateStatus(failIds, ContractStatus.FAILED);
-
-            failContracts.forEach(contract ->
-                    eventPublisher.publishEvent(new NotificationEvent(
-                            NotificationType.CONTRACT_ENDED_FAIL,
-                            contract.getId(),
-                            contract.getUser().getId()
-                    ))
-            );
+            createBatchNotificationsToParticipants(failContracts, NotificationType.CONTRACT_ENDED_FAIL);
         }
+    }
+
+    private void createBatchNotificationsToParticipants(List<Contract> contracts, NotificationType type) {
+        List<NotificationData> notificationDataList = contracts.stream()
+                .map(contract -> new NotificationData(contract.getId(), contract.getUser().getId()))
+                .toList();
+
+        eventPublisher.publishEvent(new NotificationBatchEvent(type, notificationDataList));
     }
 }

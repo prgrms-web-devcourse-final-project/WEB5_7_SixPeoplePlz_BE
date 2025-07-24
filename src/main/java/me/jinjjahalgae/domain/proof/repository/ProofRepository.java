@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,8 +35,8 @@ AND p.createdAt < :endOfDay
 """)
     boolean existsByContractIdAndCreatedAtToday(
             @Param("contractId") Long contractId,
-            @Param("startOfDay") LocalDateTime startOfDay,
-            @Param("endOfDay") LocalDateTime endOfDay
+            @Param("startOfDay") Instant startOfDay,
+            @Param("endOfDay") Instant endOfDay
     );
 
     /**
@@ -59,8 +59,8 @@ AND p.proofId IS NOT NULL
 """)
     boolean existsReProofByContractIdAndCreatedAtToday(
             @Param("contractId") Long contractId,
-            @Param("startOfDay") LocalDateTime startOfDay,
-            @Param("endOfDay") LocalDateTime endOfDay
+            @Param("startOfDay") Instant startOfDay,
+            @Param("endOfDay") Instant endOfDay
     );
 
     /**
@@ -121,7 +121,7 @@ AND p.createdAt <= :endDate
 AND p.proofId IS NULL
 ORDER BY p.createdAt ASC
 """)
-    List<Long> findOriginalProofIdsByMonth(@Param("contractId")Long contractId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    List<Long> findOriginalProofIdsByMonth(@Param("contractId")Long contractId, @Param("startDate") Instant startDate, @Param("endDate") Instant endDate);
 
     /**
      * 계약자용 해당 달의 모든 재인증 id를 가져오는 쿼리
@@ -160,8 +160,8 @@ AND f.userId = :userId
 ORDER BY p.createdAt ASC
 """)
     List<Long> findOriginalProofIdsByMonthForSupervisor(@Param("contractId")Long contractId,
-                                                        @Param("startDate") LocalDateTime startDate,
-                                                        @Param("endDate") LocalDateTime endDate,
+                                                        @Param("startDate") Instant startDate,
+                                                        @Param("endDate") Instant endDate,
                                                         @Param("userId") Long userId);
 
     /**
@@ -204,8 +204,8 @@ AND p.createdAt BETWEEN :startDate AND :endDate
     int countByContractIdAndStatusAndCreatedAtBetween(
             @Param("contractId") Long contractId,
             @Param("status") ProofStatus status,
-            @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate
+            @Param("startDate") Instant startDate,
+            @Param("endDate") Instant endDate
     );
 
     /**
@@ -223,8 +223,8 @@ AND p.proofId IS NULL
 AND p.createdAt BETWEEN :startDate AND :endDate
 """)
     List<Proof> findOriginalProofsBetween(@Param("contractId") Long contractId, 
-                                          @Param("startDate") LocalDateTime startDate, 
-                                          @Param("endDate") LocalDateTime endDate);
+                                          @Param("startDate") Instant startDate, 
+                                          @Param("endDate") Instant endDate);
 
     /**
      * 주어진 원본 인증 id 목록에 해당하는 모든 재인증을 가져오는 쿼리
@@ -236,7 +236,7 @@ AND p.createdAt BETWEEN :startDate AND :endDate
 
     @Query("SELECT p FROM Proof p WHERE p.createdAt <= :deadline AND p.status = 'APPROVE_PENDING'")
     Page<Proof> findProofsPendingOver24Hours(
-            @Param("deadline") LocalDateTime deadline,
+            @Param("deadline") Instant deadline,
             Pageable pageable
     );
 
@@ -273,5 +273,5 @@ FROM Proof p
 WHERE p.contractId = :contractId AND p.proofId IS NULL
 AND p.status = 'REJECTED' AND p.updatedAt >= :twentyFourHours
 """)
-    int countRecentRejectedProofs(@Param("contractId") Long contractId, @Param("twentyFourHours") LocalDateTime twentyFourHours);
+    int countRecentRejectedProofs(@Param("contractId") Long contractId, @Param("twentyFourHours") Instant twentyFourHours);
 }

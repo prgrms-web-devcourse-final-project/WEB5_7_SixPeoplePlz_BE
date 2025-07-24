@@ -60,7 +60,7 @@ public class ProcessProofStatusUseCaseImpl implements ProcessProofStatusUseCase 
             }
 
             // "단발 계약일 때" 인증 결과에 따라 즉시 계약 상태 처리 + 알림 전송
-            if (contract.isOneOff() && contract.isInProgress()) {
+            if (contract.isOneOff() && (contract.isInProgress() || contract.isWaitResult())) {
                 if(proof.isApproved()) {
                     contract.complete();
 

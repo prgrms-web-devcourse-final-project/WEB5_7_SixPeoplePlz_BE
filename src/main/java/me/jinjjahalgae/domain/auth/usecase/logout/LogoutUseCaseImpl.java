@@ -1,8 +1,8 @@
 package me.jinjjahalgae.domain.auth.usecase.logout;
 
 import lombok.RequiredArgsConstructor;
-import me.jinjjahalgae.domain.auth.Auth;
-import me.jinjjahalgae.domain.auth.AuthRepository;
+import me.jinjjahalgae.domain.auth.entity.Auth;
+import me.jinjjahalgae.domain.auth.repository.AuthRepository;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

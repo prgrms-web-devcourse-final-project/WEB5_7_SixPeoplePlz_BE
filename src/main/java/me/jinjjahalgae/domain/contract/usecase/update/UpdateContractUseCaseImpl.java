@@ -7,7 +7,6 @@ import me.jinjjahalgae.domain.contract.enums.ContractType;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.contract.usecase.update.dto.ContractUpdateRequest;
 import me.jinjjahalgae.global.exception.ErrorCode;
-import me.jinjjahalgae.global.util.DateTimeConverter;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,10 +40,16 @@ public class UpdateContractUseCaseImpl implements UpdateContractUseCase {
                     request.reward(),
                     request.totalProof(),
                     request.oneOff(),
-                    DateTimeConverter.toLocalDateTime(request.startDate()),
-                    DateTimeConverter.toLocalDateTime(request.endDate()),
+                    request.startDate(),
+                    request.endDate(),
                     ContractType.valueOf(request.type())
             );
+
+            // 날짜 유효성 검사
+            contract.validateDates();
+
+            //총 인증 횟수는 계약일 수를 넘을 수 없으며 단발성이라면 총 인증 횟수 1인지도 검사
+            contract.validateTotalProof();
 
             entityManager.flush();
 

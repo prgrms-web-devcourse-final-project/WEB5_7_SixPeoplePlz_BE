@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import me.jinjjahalgae.domain.proof.usecase.create.common.ProofCreateRequest;
 import me.jinjjahalgae.domain.proof.usecase.get.await.dto.ProofAwaitResponse;
@@ -26,7 +27,8 @@ public interface ProofControllerDocs {
 
     @Operation(
             summary = "인증 생성",
-            description = "요청한 데이터로 인증 객체를 생성하여 저장"
+            description = "요청한 데이터로 인증 객체를 생성하여 저장",
+            security = {@SecurityRequirement(name = "bearerAuth")}
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -64,12 +66,12 @@ public interface ProofControllerDocs {
                                             """
                                     ),
                                     @ExampleObject(
-                                            name = "시작 전 계약에 인증을 생성하려는 경우",
+                                            name = "진행중인 계약이 아닌 경우",
                                             value = """
                                             {
                                               "success": false,
-                                              "code": "CONTRACT_NOT_STARTED",
-                                              "message": "계약 시작 전에는 인증을 생성할 수 없습니다."
+                                              "code": "CONTRACT_MUST_IN_PROGRESS",
+                                              "message": "계약 진행중에만 인증 생성이 가능합니다."
                                             }
                                             """
                                     )
@@ -177,7 +179,8 @@ public interface ProofControllerDocs {
 
     @Operation(
             summary = "재인증 생성",
-            description = "요청한 데이터로 재인증 객체를 생성하여 저장 (계약 종료 2일 전부터는 재인증 요청이 불가능)"
+            description = "요청한 데이터로 재인증 객체를 생성하여 저장",
+            security = {@SecurityRequirement(name = "bearerAuth")}
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -215,12 +218,12 @@ public interface ProofControllerDocs {
                                             """
                                     ),
                                     @ExampleObject(
-                                            name = "시작 전 계약에 인증을 생성하려는 경우",
+                                            name = "진행중인 계약이 아닌 경우",
                                             value = """
                                             {
                                               "success": false,
-                                              "code": "CONTRACT_NOT_STARTED",
-                                              "message": "계약 시작 전에는 인증을 생성할 수 없습니다."
+                                              "code": "CONTRACT_MUST_IN_PROGRESS",
+                                              "message": "계약 진행중에만 인증 생성이 가능합니다."
                                             }
                                             """
                                     )
@@ -335,7 +338,8 @@ public interface ProofControllerDocs {
 
     @Operation(
             summary = "대기중인 인증들 조회",
-            description = "승인/거절 처리를 해야하는 대기중인 인증 데이터를 응답에 담아 반환 (대기중인 인증이 여러 개일 수 있음)"
+            description = "승인/거절 처리를 해야하는 대기중인 인증 데이터를 응답에 담아 반환 (대기중인 인증이 여러 개일 수 있음)",
+            security = {@SecurityRequirement(name = "bearerAuth")}
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -356,7 +360,7 @@ public interface ProofControllerDocs {
                                           "secondImageKey": null,
                                           "thirdImageKey": null,
                                           "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
-                                          "createdAt": "2025-07-09T19:30:00+09:00",
+                                          "createdAt": "2025-07-09T00:34:38Z",
                                           "status": "APPROVE_PENDING",
                                           "reProof": false,
                                           "proofId": 11
@@ -366,7 +370,7 @@ public interface ProofControllerDocs {
                                           "secondImageKey": "1134abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                           "thirdImageKey": "4567abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                           "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
-                                          "createdAt": "2025-07-08T19:30:00+09:00",
+                                          "createdAt": "2025-07-08T00:34:38Z",
                                           "status": "APPROVE_PENDING",
                                           "reProof": false,
                                           "proofId": 10
@@ -452,7 +456,8 @@ public interface ProofControllerDocs {
 
     @Operation(
             summary = "최근 인증 조회",
-            description = "최근 3개의 인증의 데이터를 응답에 담아 반환 (0~3개 응답 예정)"
+            description = "최근 3개의 인증의 데이터를 응답에 담아 반환 (0~3개 응답 예정)",
+            security = {@SecurityRequirement(name = "bearerAuth")}
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -471,7 +476,7 @@ public interface ProofControllerDocs {
                                           {
                                             "imageKey": "1234abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
-                                            "createdAt": "2025-07-09T19:30:00+09:00",
+                                            "createdAt": "2025-07-09T00:34:38Z",
                                             "status": "APPROVE_PENDING",
                                             "reProof": false,
                                             "proofId": 12
@@ -479,7 +484,7 @@ public interface ProofControllerDocs {
                                           {
                                             "imageKey": "3453abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
-                                            "createdAt": "2025-07-08T19:30:00+09:00",
+                                            "createdAt": "2025-07-08T00:34:38Z",
                                             "status": "APPROVED",
                                             "reProof": false,
                                             "proofId": 11
@@ -487,7 +492,7 @@ public interface ProofControllerDocs {
                                           {
                                             "imageKey": "3453abcd-5678-efgh-ijkl-9012mnopqrst.jpg",
                                             "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
-                                            "createdAt": "2025-07-07T19:30:00+09:00",
+                                            "createdAt": "2025-07-07T00:34:38Z",
                                             "status": "APPROVED",
                                             "reProof": false,
                                             "proofId": 10
@@ -557,7 +562,8 @@ public interface ProofControllerDocs {
 
     @Operation(
             summary = "인증 상세 조회",
-            description = "인증에 대한 상세 정보를 응답에 담아 반환"
+            description = "인증에 대한 상세 정보를 응답에 담아 반환",
+            security = {@SecurityRequirement(name = "bearerAuth")}
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -580,21 +586,21 @@ public interface ProofControllerDocs {
                                         ],
                                         "comment": "6시에 헬스장 가서 7시30분까지 운동했습니다.",
                                         "status": "REJECTED",
-                                        "createdAt": "2025-07-09T13:30:00",
+                                        "createdAt": "2025-07-09T00:34:38Z",
                                         "reProof": false,
                                         "feedbacks": [
                                           {
-                                            "createdAt": "2025-07-09T13:30:00",
+                                            "createdAt": "2025-07-09T00:34:38Z",
                                             "status": "APPROVED",
                                             "comment": "확인했습니다!"
                                           },
                                           {
-                                            "createdAt": "2025-07-09T14:55:00",
+                                            "createdAt": "2025-07-09T00:34:38Z",
                                             "status": "REJECTED",
                                             "comment": "사진만 찍고 온거 아님?"
                                           },
                                           {
-                                            "createdAt": "2025-07-09T16:00:00",
+                                            "createdAt": "2025-07-09T00:34:38Z",
                                             "status": "REJECTED",
                                             "comment": null
                                           }
@@ -685,7 +691,8 @@ public interface ProofControllerDocs {
 
     @Operation(
             summary = "계약자용 인증 목록 조회",
-            description = "한 달에 대한 인증 정보를 응답에 담아 반환"
+            description = "한 달에 대한 인증 정보를 응답에 담아 반환",
+            security = {@SecurityRequirement(name = "bearerAuth")}
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -808,6 +815,24 @@ public interface ProofControllerDocs {
 
 
                     )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "계약이 존재하지 않음",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "존재하지 않는 계약 id로 요청한 경우",
+                                    value = """
+                                    {
+                                      "success": false,
+                                      "code": "CONTRACT_NOT_FOUND",
+                                      "message": "존재하지 않는 계약입니다."
+                                    }
+                                    """
+                            )
+                    )
             )
     })
     CommonResponse<List<ContractorProofListResponse>> getContractorProofList(
@@ -819,7 +844,8 @@ public interface ProofControllerDocs {
 
     @Operation(
             summary = "감독자용 인증 목록 조회",
-            description = "한 달에 대한 처리 완료된 인증 정보를 응답에 담아 반환 (대기중인 인증은 반환 X)"
+            description = "한 달에 대한 처리 완료된 인증 정보를 응답에 담아 반환 (대기중인 인증은 반환 X)",
+            security = {@SecurityRequirement(name = "bearerAuth")}
     )
     @ApiResponses(value = {
             @ApiResponse(

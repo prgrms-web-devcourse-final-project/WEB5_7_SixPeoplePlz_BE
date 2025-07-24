@@ -1,8 +1,8 @@
 package me.jinjjahalgae.domain.proof.usecase.schedule;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public interface CheckExpiredProofUseCase {
 
-    void execute(LocalDateTime now);
+    void execute(Instant now);
 }
