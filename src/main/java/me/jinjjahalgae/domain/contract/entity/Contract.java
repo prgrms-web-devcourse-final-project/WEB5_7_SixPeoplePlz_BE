@@ -160,6 +160,17 @@ public class Contract extends BaseEntity {
         }
     }
 
+    // 기존 계약자 서명 삭제
+    public void removeContractorSignature() {
+        this.participations.removeIf(participation ->
+                participation.getRole() == Role.CONTRACTOR);
+    }
+
+    // 새로운 계약자 서명 추가
+    public void addContractorSignature(Participation newSignature) {
+        this.participations.add(newSignature);
+    }
+
     //감독자가 이미 있는지 검증 (수정은 감독자가 없어야 가능)
     public void validateUpdatable() {
 
