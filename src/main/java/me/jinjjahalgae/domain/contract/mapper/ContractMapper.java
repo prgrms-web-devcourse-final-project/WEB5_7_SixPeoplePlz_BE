@@ -42,7 +42,7 @@ public class ContractMapper {
         return contract;
     }
 
-    public ContractListResponse toListResponse(Contract contract) {
+    public ContractListResponse toListResponse(Contract contract, boolean todayProofExist) {
         return new ContractListResponse(
                 contract.getId(),
                 contract.getUuid(),
@@ -55,7 +55,8 @@ public class ContractMapper {
                 contract.calculateAchievementRatio(), // 5/10 형태
                 contract.calculatePeriodRatio(), // 15/30 형태
                 contract.calculateAchievementPercent(), //횟수 달성률
-                contract.calculatePeriodPercent() //기간 달성률
+                contract.calculatePeriodPercent(), //기간 달성률
+                todayProofExist
         );
     }
 
@@ -73,7 +74,7 @@ public class ContractMapper {
         );
     }
 
-    public ContractDetailResponse toDetailResponse(Contract contract) {
+    public ContractDetailResponse toDetailResponse(Contract contract, boolean todayProofExist) {
 
         ContractBasicResponse basicResponse = toBasicResponse(contract);
         return new ContractDetailResponse(
@@ -84,7 +85,8 @@ public class ContractMapper {
                 contract.calculatePeriodRatio(),
                 contract.calculateAchievementPercent(),
                 contract.calculatePeriodPercent(),
-                mapToParticipantSimpleResponse(contract)
+                mapToParticipantSimpleResponse(contract),
+                todayProofExist
         );
     }
     private List<ParticipantSimpleResponse> mapToParticipantSimpleResponse(Contract contract) {

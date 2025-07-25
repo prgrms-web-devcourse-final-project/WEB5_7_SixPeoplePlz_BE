@@ -1,6 +1,7 @@
 package me.jinjjahalgae.domain.proof.usecase.create.proof;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.contract.entity.Contract;
 import me.jinjjahalgae.domain.contract.enums.ContractStatus;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
@@ -19,11 +20,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CreateProofUseCaseImpl implements CreateProofUseCase {
@@ -102,9 +101,11 @@ public class CreateProofUseCaseImpl implements CreateProofUseCase {
 
     // 계약에 오늘자 인증이 존재하는 지 확인하는 메서드
     private boolean todayProofExist(Long contractId) {
-        LocalDate today = UtcDateTimeUtil.nowAsLocalDate();
-        Instant startOfDay = today.atStartOfDay(ZoneOffset.UTC).toInstant();
-        Instant endOfDay = today.plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant();
+        ZoneId seoulZone = ZoneId.of("Asia/Seoul");
+        LocalDate today = ZonedDateTime.now(seoulZone).toLocalDate();
+        Instant startOfDay = today.atStartOfDay(seoulZone).toInstant();
+        Instant endOfDay = today.plusDays(1).atStartOfDay(seoulZone).toInstant();
+
         return proofRepository.existsByContractIdAndCreatedAtToday(contractId, startOfDay, endOfDay);
     }
 }

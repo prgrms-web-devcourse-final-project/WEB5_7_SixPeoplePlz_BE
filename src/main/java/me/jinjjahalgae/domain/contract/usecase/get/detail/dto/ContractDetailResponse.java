@@ -39,5 +39,8 @@ import me.jinjjahalgae.domain.contract.enums.ContractStatus;
         double periodPercent,
 
         @Schema(description = "참여자 정보", example = "참여자 정보")
-        List<ParticipantSimpleResponse> participants //참여한 유저 정보
+        List<ParticipantSimpleResponse> participants, //참여한 유저 정보
+
+        @Schema(description = "오늘자 인증 존재 여부 (오늘자 인증이 없으면 false)", example = "false")
+        boolean todayProofExist
 ) {}

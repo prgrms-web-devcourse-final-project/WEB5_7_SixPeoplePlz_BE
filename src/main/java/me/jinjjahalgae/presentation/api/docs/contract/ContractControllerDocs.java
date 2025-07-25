@@ -176,7 +176,8 @@ public interface ContractControllerDocs {
                                 "achievementRatio": "20/31",
                                 "periodRatio": "15/31",
                                 "achievementPercent": 64.5,
-                                "periodPercent": 48.4
+                                "periodPercent": 48.4,
+                                "todayProofExist": false
                               }
                             ],
                             "pageable": {
@@ -379,7 +380,8 @@ public interface ContractControllerDocs {
                             "role": "SUPERVISOR",
                             "signatureImageKey": "supervisor-signature-789.jpg"
                           }
-                        ]
+                        ],
+                        "todayProofExist": false
                       }
                     }
                     """

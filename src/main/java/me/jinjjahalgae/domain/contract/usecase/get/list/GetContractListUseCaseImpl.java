@@ -7,11 +7,16 @@ import me.jinjjahalgae.domain.contract.mapper.ContractMapper;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.contract.usecase.get.list.dto.ContractListResponse;
 import me.jinjjahalgae.domain.participation.enums.Role;
+import me.jinjjahalgae.domain.proof.repository.ProofRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
@@ -19,6 +24,7 @@ import java.util.List;
 public class GetContractListUseCaseImpl implements GetContractListUseCase {
 
     private final ContractRepository contractRepository;
+    private final ProofRepository proofRepository;
     private final ContractMapper contractMapper;
 
     @Override
@@ -39,7 +45,19 @@ public class GetContractListUseCaseImpl implements GetContractListUseCase {
         }
 
         return contractPage
-                .map(contractMapper::toListResponse);
+                .map(contract -> {
+                    boolean todayProofExist = todayProofExist(contract.getId());
+                    return contractMapper.toListResponse(contract, todayProofExist);
+                });
+    }
+
+    private boolean todayProofExist(Long contractId) {
+        ZoneId seoulZone = ZoneId.of("Asia/Seoul");
+        LocalDate today = ZonedDateTime.now(seoulZone).toLocalDate();
+        Instant startOfDay = today.atStartOfDay(seoulZone).toInstant();
+        Instant endOfDay = today.plusDays(1).atStartOfDay(seoulZone).toInstant();
+
+        return proofRepository.existsByContractIdAndCreatedAtToday(contractId, startOfDay, endOfDay);
     }
 }
 
