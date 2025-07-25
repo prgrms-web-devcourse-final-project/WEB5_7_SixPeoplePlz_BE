@@ -39,9 +39,23 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
     @Query("SELECT c FROM Contract c WHERE c.status = :status AND c.startDate = :date AND c.oneOff = :oneOff")
     List<Contract> findByStatusAndStartDateOnAndOneOff(@Param("status") ContractStatus status, @Param("date") Instant date, @Param("oneOff") boolean oneOff);
 
+    // UTC를 기준으로 시작 시간이 지난 모든 PENDING 상태의 계약 조회 (단건 제외)
+    @Query("SELECT c FROM Contract c WHERE c.status = 'PENDING' AND c.oneOff = false AND c.startDate <= :now")
+    List<Contract> findPendingContractsToStart(@Param("now") Instant now);
+
     // 종료일로 진행중 계약 조회
     @Query("SELECT c FROM Contract c WHERE c.status = :status AND c.endDate = :date AND c.oneOff = :oneOff")
     List<Contract> findByStatusAndEndDateOnAndOneOff(@Param("status") ContractStatus status, @Param("date") Instant date, @Param("oneOff") boolean oneOff);
+
+    // UTC를 기준으로 종료 시간이 지난 IN_PROGRESS, WAIT_RESULT 상태의 계약 조회  (단건 제외)
+    @Query("""
+        SELECT c
+        FROM Contract c
+        WHERE c.status IN :statuses
+        AND c.oneOff = false
+        AND c.endDate <= :before
+    """)
+    List<Contract> findContractsToEndBefore(@Param("statuses") List<ContractStatus> statuses, @Param("before") Instant before);
 
     // 시작일로 대기중인 일반(단발이 아닌) 계약 조회
     @Query("SELECT c FROM Contract c WHERE c.status = :status AND c.startDate = :date AND c.oneOff = false")
