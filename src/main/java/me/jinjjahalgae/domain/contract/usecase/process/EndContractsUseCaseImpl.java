@@ -32,11 +32,13 @@ public class EndContractsUseCaseImpl implements EndContractsUseCase {
     @Override
     @Transactional
     public void execute() {
+        log.info("계약 종료 처리를 시작합니다.");
         Instant now = Instant.now();
         Instant before = now.minus(24, ChronoUnit.HOURS);
         // 어제 또는 이전에 종료되었어야 하는 '진행중' 또는 '결과 대기' 상태의 계약을 모두 조회
         List<Contract> contractsToCheck = contractRepository.findContractsToEndBefore(
                 List.of(ContractStatus.IN_PROGRESS, ContractStatus.WAIT_RESULT), before);
+        log.info("종료일이 된 계약 {}건을 발견했습니다.", contractsToCheck.size());
 
         if (contractsToCheck.isEmpty()) return;
 
@@ -66,9 +68,12 @@ public class EndContractsUseCaseImpl implements EndContractsUseCase {
             waitContracts.add(contract);
         }
 
+        log.info("종료 계약 분류 결과: [성공: {}건], [실패: {}건], [결과 대기: {}건]", completeContracts.size(), failContracts.size(), waitContracts.size());
+
         // 성공 계약 일괄 업데이트 및 batch 알림
         if (!completeContracts.isEmpty()) {
             List<Long> successIds = completeContracts.stream().map(Contract::getId).toList();
+            log.info("{}건의 계약을 '성공' 상태로 변경합니다. Contract IDs: {}", successIds.size(), successIds);
             contractRepository.bulkUpdateStatus(successIds, ContractStatus.COMPLETED);
             createBatchNotificationsToParticipants(completeContracts, NotificationType.CONTRACT_ENDED_SUCCESS);
         }
@@ -76,15 +81,19 @@ public class EndContractsUseCaseImpl implements EndContractsUseCase {
         // 결과 대기 계약 일괄 업데이트
         if (!waitContracts.isEmpty()) {
             List<Long> waitIds = waitContracts.stream().map(Contract::getId).toList();
+            log.info("{}건의 계약을 '결과 대기' 상태로 변경합니다. Contract IDs: {}", waitIds.size(), waitIds);
             contractRepository.bulkUpdateStatus(waitIds, ContractStatus.WAIT_RESULT);
         }
 
         // 실패 계약 일괄 업데이트 및 batch 알림
         if (!failContracts.isEmpty()) {
             List<Long> failIds = failContracts.stream().map(Contract::getId).toList();
+            log.info("{}건의 계약을 '실패' 상태로 변경합니다. Contract IDs: {}", failIds.size(), failIds);
             contractRepository.bulkUpdateStatus(failIds, ContractStatus.FAILED);
             createBatchNotificationsToParticipants(failContracts, NotificationType.CONTRACT_ENDED_FAIL);
         }
+
+        log.info("계약 종료 처리를 성공적으로 완료했습니다.");
     }
 
     private void createBatchNotificationsToParticipants(List<Contract> contracts, NotificationType type) {
