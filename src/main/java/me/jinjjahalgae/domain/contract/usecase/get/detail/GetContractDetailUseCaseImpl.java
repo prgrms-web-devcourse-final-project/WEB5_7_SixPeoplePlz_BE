@@ -6,9 +6,15 @@ import me.jinjjahalgae.domain.contract.mapper.ContractMapper;
 import me.jinjjahalgae.domain.contract.repository.ContractRepository;
 import me.jinjjahalgae.domain.contract.usecase.get.detail.dto.ContractDetailResponse;
 import me.jinjjahalgae.domain.participation.repository.ParticipationRepository;
+import me.jinjjahalgae.domain.proof.repository.ProofRepository;
 import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +24,7 @@ public class GetContractDetailUseCaseImpl implements GetContractDetailUseCase {
     private final ContractRepository contractRepository;
     private final ContractMapper contractMapper;
     private final ParticipationRepository participationRepository;
+    private final ProofRepository proofRepository;
 
     /// 본인이 계약자인 계약 개요 카드에 보이는 정보
     @Override
@@ -31,6 +38,17 @@ public class GetContractDetailUseCaseImpl implements GetContractDetailUseCase {
             throw ErrorCode.ACCESS_DENIED.serviceException("계약에 접근권한 없음");
         }
 
-        return contractMapper.toDetailResponse(contract);
+        boolean todayProofExist = todayProofExist(contract.getId());
+
+        return contractMapper.toDetailResponse(contract, todayProofExist);
+    }
+
+    private boolean todayProofExist(Long contractId) {
+        ZoneId seoulZone = ZoneId.of("Asia/Seoul");
+        LocalDate today = ZonedDateTime.now(seoulZone).toLocalDate();
+        Instant startOfDay = today.atStartOfDay(seoulZone).toInstant();
+        Instant endOfDay = today.plusDays(1).atStartOfDay(seoulZone).toInstant();
+
+        return proofRepository.existsByContractIdAndCreatedAtToday(contractId, startOfDay, endOfDay);
     }
 }

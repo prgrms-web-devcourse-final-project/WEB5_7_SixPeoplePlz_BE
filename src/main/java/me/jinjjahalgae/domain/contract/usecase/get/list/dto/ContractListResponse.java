@@ -48,5 +48,8 @@ public record ContractListResponse(
         double achievementPercent, // 계산해서 제공
 
         @Schema(description = "기간 달성률", example = "75.0")
-        double periodPercent      // 계산해서 제공
+        double periodPercent,      // 계산해서 제공
+
+        @Schema(description = "오늘자 인증 존재 여부 (오늘자 인증이 없으면 false)", example = "false")
+        boolean todayProofExist
 ) {}
