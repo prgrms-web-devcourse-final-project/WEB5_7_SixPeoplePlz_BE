@@ -55,7 +55,7 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
         AND c.oneOff = false
         AND c.endDate <= :before
     """)
-    List<Contract> findContractsToEndBefore(@Param("statuses") List<ContractStatus> statuses, @Param("cutoffTime") Instant before);
+    List<Contract> findContractsToEndBefore(@Param("statuses") List<ContractStatus> statuses, @Param("before") Instant before);
 
     // 시작일로 대기중인 일반(단발이 아닌) 계약 조회
     @Query("SELECT c FROM Contract c WHERE c.status = :status AND c.startDate = :date AND c.oneOff = false")

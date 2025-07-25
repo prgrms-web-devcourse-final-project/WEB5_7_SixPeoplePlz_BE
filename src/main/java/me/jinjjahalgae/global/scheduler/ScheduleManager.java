@@ -55,6 +55,8 @@ public class ScheduleManager {
      */
     @Scheduled(cron = "0 1 15 * * *" )
     public void daySchedule() {
+        log.info("[Scheduler] 하루 스케줄러 시작. 현재 UTC 시간: {}", Instant.now());
+
         // 시작일 확인 후 계약 시작
         contractJobProcessor.startContracts("start");
 
