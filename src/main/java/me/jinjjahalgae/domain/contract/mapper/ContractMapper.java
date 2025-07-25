@@ -42,7 +42,7 @@ public class ContractMapper {
         return contract;
     }
 
-    public ContractListResponse toListResponse(Contract contract, boolean todayProofExist) {
+    public ContractListResponse toListResponse(Contract contract, Boolean todayProofExist) {
         return new ContractListResponse(
                 contract.getId(),
                 contract.getUuid(),

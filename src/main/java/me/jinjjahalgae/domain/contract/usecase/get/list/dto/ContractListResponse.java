@@ -51,5 +51,5 @@ public record ContractListResponse(
         double periodPercent,      // 계산해서 제공
 
         @Schema(description = "오늘자 인증 존재 여부 (오늘자 인증이 없으면 false)", example = "false")
-        boolean todayProofExist
+        Boolean todayProofExist
 ) {}

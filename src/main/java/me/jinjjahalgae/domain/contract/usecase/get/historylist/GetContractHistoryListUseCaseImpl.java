@@ -64,6 +64,8 @@ public class GetContractHistoryListUseCaseImpl implements GetContractHistoryList
         );
 
         // mapper에서 mapping해서 리턴
-        return contracts.map(contractMapper::toListResponse);
+        return contracts.map(contract -> {
+            return contractMapper.toListResponse(contract, null);
+        });
     }
 }
