@@ -69,7 +69,7 @@ public class StartContractsUseCaseImpl implements StartContractsUseCase {
                     ))
             );
 
-            contractRepository.deleteAllInBatch(deleteContracts);
+            contractRepository.deleteAll(deleteContracts);
         }
 
         // 처리된 계약의 redis 정보 일괄 삭제
