@@ -19,10 +19,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 
 @Service
 @RequiredArgsConstructor
@@ -107,9 +104,10 @@ public class CreateReProofUseCaseImpl implements CreateReProofUseCase {
 
     // 계약에 오늘자 재인증이 존재하는 지 확인하는 메서드
     private boolean todayReProofExist(Long contractId) {
-        LocalDate today = UtcDateTimeUtil.nowAsLocalDate();
-        Instant startOfDay = today.atStartOfDay(ZoneOffset.UTC).toInstant();
-        Instant endOfDay = today.plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant();
+        ZoneId seoulZone = ZoneId.of("Asia/Seoul");
+        LocalDate today = ZonedDateTime.now(seoulZone).toLocalDate();
+        Instant startOfDay = today.atStartOfDay(seoulZone).toInstant();
+        Instant endOfDay = today.plusDays(1).atStartOfDay(seoulZone).toInstant();
         return proofRepository.existsReProofByContractIdAndCreatedAtToday(contractId, startOfDay, endOfDay);
     }
 
