@@ -14,10 +14,7 @@ import me.jinjjahalgae.global.exception.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.YearMonth;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -56,11 +53,13 @@ public class GetSupervisorProofListUseCaseImpl implements GetSupervisorProofList
             throw ErrorCode.ACCESS_DENIED.domainException("계약에 대한 접근 권한이 없습니다.");
         }
 
+        ZoneId zone = ZoneId.of("Asia/Seoul");
+
         // 달의 시작일 00:00:00
-        Instant startDate = LocalDateTime.of(year, month, 1, 0, 0).toInstant(ZoneOffset.UTC);
+        Instant startDate = LocalDateTime.of(year, month, 1, 0, 0).atZone(zone).toInstant();
 
         // 달의 마지막 날 23:59:59.999999999
-        Instant endDate = LocalDateTime.of(year, month, YearMonth.of(year, month).lengthOfMonth(), 23, 59, 59, 999999999).toInstant(ZoneOffset.UTC);
+        Instant endDate = LocalDateTime.of(year, month, YearMonth.of(year, month).lengthOfMonth(), 23, 59, 59, 999999999).atZone(zone).toInstant();
 
         // 한 달에 해당하는 원본 인증 id들 (감독자가 피드백을 한 것만)
         List<Long> proofIds = proofRepository.findOriginalProofIdsByMonthForSupervisor(contractId, startDate, endDate, userId);

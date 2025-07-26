@@ -52,6 +52,7 @@ public class ContractMapper {
                 contract.getEndDate(),
                 contract.getReward(),
                 contract.getPenalty(),
+                contract.isOneOff(),
                 contract.calculateAchievementRatio(), // 5/10 형태
                 contract.calculatePeriodRatio(), // 15/30 형태
                 contract.calculateAchievementPercent(), //횟수 달성률
