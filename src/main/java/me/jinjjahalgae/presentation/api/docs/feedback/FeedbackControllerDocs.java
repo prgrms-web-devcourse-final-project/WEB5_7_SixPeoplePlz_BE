@@ -48,16 +48,6 @@ public interface FeedbackControllerDocs {
                             schema = @Schema(implementation = ErrorResponse.class),
                             examples = {
                                 @ExampleObject(
-                                    name = "comment 누락",
-                                    value = """
-                                    {
-                                      "success": false,
-                                      "code": "BAD_REQUEST",
-                                      "message": "comment는 필수입니다."
-                                    }
-                                    """
-                                ),
-                                @ExampleObject(
                                     name = "status 누락",
                                     value = """
                                     {

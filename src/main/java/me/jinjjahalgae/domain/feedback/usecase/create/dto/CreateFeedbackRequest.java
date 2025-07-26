@@ -19,13 +19,12 @@ public record CreateFeedbackRequest(
                 requiredMode = Schema.RequiredMode.NOT_REQUIRED,
                 example = "솔직히 이거 노인정"
         )
-        @NotBlank(message = "comment는 필수입니다.")
         @Size(max = 100, message = "comment는 100자 이하여야 합니다.")
         String comment,
 
         @Schema(
                 description = "피드백 상태 (APPROVED, REJECTED)",
-                requiredMode = Schema.RequiredMode.NOT_REQUIRED,
+                requiredMode = Schema.RequiredMode.REQUIRED,
                 example = "REJECTED"
         )
         @NotBlank(message = "status는 필수입니다.")
