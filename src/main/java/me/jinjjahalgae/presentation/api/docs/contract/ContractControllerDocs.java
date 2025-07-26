@@ -173,6 +173,7 @@ public interface ContractControllerDocs {
                                 "endDate": "2024-01-31T23:59:59Z",
                                 "reward": "치킨 먹기",
                                 "penalty": "치킨 못 먹기",
+                                "oneOff": false,
                                 "achievementRatio": "20/31",
                                 "periodRatio": "15/31",
                                 "achievementPercent": 64.5,
@@ -221,6 +222,7 @@ public interface ContractControllerDocs {
                                 "endDate": "2024-02-29T23:59:59Z",
                                 "reward": "맛있는 음식 먹기",
                                 "penalty": "용돈 줄이기",
+                                "oneOff": false,
                                 "achievementRatio": "0/28",
                                 "periodRatio": "0/28",
                                 "achievementPercent": 0.0,
@@ -352,6 +354,7 @@ public interface ContractControllerDocs {
                         "goal": "매일 1시간 이상 운동하여 건강한 몸 만들기",
                         "penalty": "치킨 못 먹기",
                         "reward": "치킨 2번 먹기",
+                        "oneOff": false,
                         "startDate": "2024-01-01T09:00:00Z",
                         "endDate": "2024-01-31T23:59:59Z",
                         "contractStatus": "IN_PROGRESS",
@@ -1119,6 +1122,7 @@ public interface ContractControllerDocs {
                             "endDate": "2024-01-31T23:59:59Z",
                             "reward": "치킨 먹기",
                             "penalty": "치킨 못 먹기",
+                            "oneOff": false,
                             "achievementPercent": 100.0,
                             "periodPercent": 100.0
                           },
@@ -1132,6 +1136,7 @@ public interface ContractControllerDocs {
                             "endDate": "2024-02-29T23:59:59Z",
                             "reward": "새 책 사기",
                             "penalty": "핸드폰 시간 줄이기",
+                            "oneOff": false,
                             "achievementPercent": 45.0,
                             "periodPercent": 100.0
                           }
@@ -1182,6 +1187,7 @@ public interface ContractControllerDocs {
                             "endDate": "2024-03-31T23:59:59Z",
                             "reward": "맛있는 음식 먹기",
                             "penalty": "용돈 줄이기",
+                            "oneOff": false,
                             "achievementPercent": 30.0,
                             "periodPercent": 60.0
                           }

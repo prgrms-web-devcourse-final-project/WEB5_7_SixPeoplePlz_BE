@@ -39,6 +39,9 @@ public record ContractListResponse(
         @Schema(description = "벌칙", example = "치킨 못 먹기")
         String penalty,
 
+        @Schema(description = "단발성 계약 여부", example = "false")
+        boolean oneOff,
+
         @Schema(description = "현재 인증 횟수 / 총 인증 횟수", example = "5/10")
         String achievementRatio,
 
