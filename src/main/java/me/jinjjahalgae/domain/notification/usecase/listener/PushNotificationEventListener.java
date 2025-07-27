@@ -5,19 +5,18 @@ import lombok.extern.slf4j.Slf4j;
 import me.jinjjahalgae.domain.auth.entity.FcmToken;
 import me.jinjjahalgae.domain.auth.repository.FcmTokenRepository;
 import me.jinjjahalgae.domain.notification.usecase.listener.event.PushNotificationSendEvent;
-import me.jinjjahalgae.global.fcm.FcmService;
+import me.jinjjahalgae.global.notification.PushNotificationService;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class PushNotificationEventListener {
-    private final FcmService fcmService;
+    private final PushNotificationService pushNotificationService;
     private final FcmTokenRepository fcmTokenRepository;
 
     // PushNotificationSendEvent를 핸들링하여 FCM 푸시 알림을 전송
@@ -45,6 +44,6 @@ public class PushNotificationEventListener {
         }
 
         // 멀티캐스트 메시지로 한 번에 전송
-        fcmService.sendMulticastNotification(allTokens, event.title(), event.body());
+        pushNotificationService.sendMulticastNotification(allTokens, event.title(), event.body());
     }
 }
