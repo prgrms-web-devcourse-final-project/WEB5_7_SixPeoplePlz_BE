@@ -63,6 +63,7 @@ jobs:
             -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
             -e AWS_S3_BUCKET_DEV=${{ secrets.AWS_S3_BUCKET_DEV }} \
             -e DEV_CORS_ORIGINS=${{ secrets.DEV_CORS_ORIGINS }} \
+            -e DEV_FCM_KEY_PATH=${{ secrets.DEV_FCM_KEY_PATH }} \
             ${{ env.IMAGE_NAME }}:latest
 
       - name: 사용하지 않아서 붕뜬 도커 이미지 정리

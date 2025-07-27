@@ -27,7 +27,7 @@ public interface AuthControllerDocs {
 
     @Operation(
             summary = "소셜 로그인 (Body 방식)",
-            description = "소셜 플랫폼의 Access Token으로 로그인/회원가입을 처리하고, 자체 JWT를 응답 Body에 담아 반환합니다. <br> - 현재 provider는 **[KAKAO | NAVER]** 만 허용됩니다.<br> - accessToken 만료시간 30분<br> - refreshToken 만료시간 30일"
+            description = "소셜 플랫폼의 Access Token으로 로그인/회원가입을 처리하고, 자체 JWT를 응답 Body에 담아 반환합니다. <br> - provider는 **[KAKAO | NAVER]** 만 허용됩니다.<br> - accessToken 만료시간 30분<br> - refreshToken 만료시간 30일<br> - fcmToken은 선택사항이며, 제공 시 푸시 알림에 사용됩니다."
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -51,7 +51,7 @@ public interface AuthControllerDocs {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "잘못된 요청 (provider 누락 또는 accessToken 누락 등)",
+                    description = "잘못된 요청 (provider, accessToken 누락 등)",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
@@ -98,12 +98,12 @@ public interface AuthControllerDocs {
             )
     })
     CommonResponse<SocialLoginResponse> socialLoginForBody(
-            @Parameter(description = "소셜 로그인 정보", required = true) SocialLoginRequest req
+            @Parameter(description = "소셜 로그인 정보 (provider: KAKAO|NAVER, accessToken: 소셜 AccessToken, fcmToken: [선택] FCM 토큰)", required = true) SocialLoginRequest req
     );
 
     @Operation(
             summary = "소셜 로그인 (Cookie 방식)",
-            description = "소셜 플랫폼의 Access Token으로 로그인/회원가입을 처리하고, 자체 JWT를 HttpOnly 쿠키에 담아 반환합니다. 응답 Body에는 **성공 메시지만 포함** 됩니다. <br> - 현재 provider는 **[KAKAO | NAVER]** 만 허용됩니다. <br> - accessToken 만료시간 30분<br> - refreshToken 만료시간 30일"
+            description = "소셜 플랫폼의 Access Token으로 로그인/회원가입을 처리하고, 자체 JWT를 HttpOnly 쿠키에 담아 반환합니다. 응답 Body에는 **성공 메시지만 포함** 됩니다. <br> - provider는 **[KAKAO | NAVER]** 만 허용됩니다. <br> - accessToken 만료시간 30분<br> - refreshToken 만료시간 30일<br> - fcmToken은 선택사항이며, 제공 시 푸시 알림에 사용됩니다."
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -124,7 +124,7 @@ public interface AuthControllerDocs {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "잘못된 요청 (provider 또는 accessToken 누락 등)",
+                    description = "잘못된 요청 (provider, accessToken 누락 등)",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class),
@@ -171,7 +171,7 @@ public interface AuthControllerDocs {
             )
     })
     CommonResponse<String> socialLoginForCookie(
-            @Parameter(description = "소셜 로그인 정보", required = true) SocialLoginRequest req,
+            @Parameter(description = "소셜 로그인 정보 (provider: KAKAO|NAVER, accessToken: 소셜 AccessToken, fcmToken: [선택] FCM 토큰)", required = true) SocialLoginRequest req,
             HttpServletResponse servletResponse
     );
 
