@@ -43,3 +43,6 @@ application-local.yml
 /mysql-data
 /redis-data
 /letsencrypt
+
+
+jjhg-fcm-key.json
