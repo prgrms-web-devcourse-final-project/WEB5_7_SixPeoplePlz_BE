@@ -24,7 +24,7 @@ spring:
   # JPA 설정
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:

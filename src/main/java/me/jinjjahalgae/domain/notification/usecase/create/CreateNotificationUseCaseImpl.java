@@ -8,11 +8,13 @@ import me.jinjjahalgae.domain.notification.entities.Notification;
 import me.jinjjahalgae.domain.notification.enums.NotificationType;
 import me.jinjjahalgae.domain.notification.repository.NotificationRepository;
 import me.jinjjahalgae.domain.notification.usecase.create.dto.NotificationCreateRequest;
+import me.jinjjahalgae.domain.notification.usecase.listener.event.PushNotificationSendEvent;
 import me.jinjjahalgae.domain.participation.usecase.get.validinfo.ParticipantInfoResponse;
 import me.jinjjahalgae.domain.participation.enums.Role;
 import me.jinjjahalgae.domain.participation.usecase.get.validinfo.GetValidParticipantInfoByContractIdUseCase;
 import me.jinjjahalgae.domain.user.usecase.get.myinfo.GetMyInfoUseCase;
 import me.jinjjahalgae.global.exception.ErrorCode;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,9 +29,10 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
     private final NotificationRepository notificationRepository;
     private final ContractRepository contractRepository;
 
-    // Impl이 아닌 인터페이스를 타입으로 가져옴
     private final GetValidParticipantInfoByContractIdUseCase getValidParticipantInfo;
     private final GetMyInfoUseCase getMyInfo;
+
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional // 트랜잭션 생성
     @Override
@@ -147,6 +150,24 @@ public class CreateNotificationUseCaseImpl implements CreateNotificationUseCase 
 
         log.info("생성된 알림 수 : " + notificationList.size());
         log.info("생성된 메세지 : " + message);
+
+        // FCM 발송
+        if (!targetUserList.isEmpty()) {
+            List<Long> targetUserIds = targetUserList.stream()
+                    .map(ParticipantInfoResponse::userId)
+                    .toList();
+
+            // PushNotificationSendEvent 발행
+            PushNotificationSendEvent pushEvent = new PushNotificationSendEvent(
+                    targetUserIds,
+                    "진짜할게", // 푸시 알림 제목 (앱 이름 등)
+                    message      // 푸시 알림 내용
+            );
+
+            eventPublisher.publishEvent(pushEvent);
+
+            log.info("PushNotificationSendEvent 발행. 대상자 수: {}", targetUserIds.size());
+        }
     }
 
     /// 계약과 관련된 유저 중 유효한 감독자만 필터링 해서 반환
