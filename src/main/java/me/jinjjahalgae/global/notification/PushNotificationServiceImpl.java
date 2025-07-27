@@ -3,6 +3,8 @@ package me.jinjjahalgae.global.notification;
 import com.google.firebase.messaging.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -13,7 +15,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PushNotificationServiceImpl implements PushNotificationService {
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
 
     /**
      * 단일 기기로 알림을 전송
@@ -45,6 +47,11 @@ public class PushNotificationServiceImpl implements PushNotificationService {
         log.info("Expo 푸시 알림 발송 요청. 대상 토큰 수: {}", tokens.size());
 
         ExpoPushRequest expoRequest = new ExpoPushRequest(tokens, title, body);
+
+        // WebClient 인스턴스를 직접 생성
+        WebClient webClient = webClientBuilder
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
 
         // WebClient로 Expo 서버에 비동기 POST 요청
         webClient.post()
