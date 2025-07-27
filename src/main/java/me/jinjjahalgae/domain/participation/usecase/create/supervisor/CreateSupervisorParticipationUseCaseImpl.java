@@ -93,8 +93,8 @@ public class CreateSupervisorParticipationUseCaseImpl implements CreateSuperviso
 
         // 만약 단발성 계약이면 바로 시작처리
         if (contract.isOneOff()) {
-            // 감독자 수를 1로 설정하고 계약 시작
-            contract.start(1);
+            // 감독자 수를 1로 설정하고 계약 시작 (시작일, 종료일 이 시점으로 재갱신 - 지금부터 24시간동안 계약진행)
+            contract.startOneOffContract(1);
 
             // 계약 시작 알림 발송 - 모든 참여자에게 전송
             // 계약자에게 알림

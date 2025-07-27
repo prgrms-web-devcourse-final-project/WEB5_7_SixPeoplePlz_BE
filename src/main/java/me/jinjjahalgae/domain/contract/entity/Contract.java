@@ -205,6 +205,13 @@ public class Contract extends BaseEntity {
         this.totalSupervisor = finalSupervisorCount;
         this.status = ContractStatus.IN_PROGRESS;
     }
+    // 단발성 계약 시작 (시작/종료 시간 갱신)
+    public void startOneOffContract(int finalSupervisorCount) {
+        this.totalSupervisor = finalSupervisorCount;
+        this.status = ContractStatus.IN_PROGRESS;
+        this.startDate = Instant.now();
+        this.endDate = this.startDate.plus(24, java.time.temporal.ChronoUnit.HOURS);
+    }
 
     // 계약 성공 처리
     public void complete() {
