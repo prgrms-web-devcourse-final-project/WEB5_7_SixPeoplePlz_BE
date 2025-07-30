@@ -60,52 +60,61 @@ public class CreateSupervisorParticipationUseCaseImpl implements CreateSuperviso
 
         // 감독자 자리가 다 찼는지 확인
         String supervisorCountKey = SUPERVISOR_COUNT_PREFIX + contract.getId();
-        Integer remaining = (Integer) redisTemplate.opsForValue().get(supervisorCountKey);
-        if (remaining != null) {
-            if (remaining <= 0) {
-                throw ErrorCode.SUPERVISOR_ALREADY_FULL.serviceException("이미 5명의 감독자가 참여했습니다.");
-            }
-        } else {
+
+        // 자리 감소
+        Long remaining = redisTemplate.opsForValue().decrement(supervisorCountKey);
+
+        // 감소시킨 후의 값을 확인
+        if (remaining == null) {
             throw ErrorCode.INVITE_NOT_FOUND.serviceException("존재하지 않거나 만료된 초대정보 입니다.");
         }
+        if (remaining < 0) {
+            // 자리가 없는데 차감된 경우 다시 증가시켜 놓고 예외를 발생
+            redisTemplate.opsForValue().increment(supervisorCountKey);
+            throw ErrorCode.SUPERVISOR_ALREADY_FULL.serviceException("이미 5명의 감독자가 참여했습니다.");
+        }
 
-        // 새로운 참여 정보 생성
-        Participation newParticipation = Participation.builder()
-                .contract(contract)
-                .user(user)
-                .imageKey(request.imageKey())
-                .role(Role.SUPERVISOR)
-                .valid(true)
-                .build();
+        try {
+            // 새로운 참여 정보 생성
+            Participation newParticipation = Participation.builder()
+                    .contract(contract)
+                    .user(user)
+                    .imageKey(request.imageKey())
+                    .role(Role.SUPERVISOR)
+                    .valid(true)
+                    .build();
 
-        // 계약에 참여 정보 추가 및 감독자 수 증가
-        contract.addParticipation(newParticipation);
+            // 계약에 참여 정보 추가 및 감독자 수 증가
+            contract.addParticipation(newParticipation);
 
-        // 감독자 참여 알림 전송
-        eventPublisher.publishEvent(new NotificationEvent(
-                NotificationType.SUPERVISOR_ADDED,
-                contractId,
-                user.getId()
-        ));
-
-        // redis의 해당 계약 감독자 자리 감소
-        redisTemplate.opsForValue().decrement(supervisorCountKey); // decr 연산으로 원자성 보장
-
-        // 만약 단발성 계약이면 바로 시작처리
-        if (contract.isOneOff()) {
-            // 감독자 수를 1로 설정하고 계약 시작 (시작일, 종료일 이 시점으로 재갱신 - 지금부터 24시간동안 계약진행)
-            contract.startOneOffContract(1);
-
-            // 계약 시작 알림 발송 - 모든 참여자에게 전송
-            // 계약자에게 알림
+            // 감독자 참여 알림 전송
             eventPublisher.publishEvent(new NotificationEvent(
-                    NotificationType.CONTRACT_STARTED,
-                    contract.getId(),
-                    contract.getUser().getId()
+                    NotificationType.SUPERVISOR_ADDED,
+                    contractId,
+                    user.getId()
             ));
 
-            // 초대 정보 삭제
-            deleteInviteInfoUseCase.execute(contract.getId());
+            // 만약 단발성 계약이면 바로 시작처리
+            if (contract.isOneOff()) {
+                // 감독자 수를 1로 설정하고 계약 시작 (시작일, 종료일 이 시점으로 재갱신 - 지금부터 24시간동안 계약진행)
+                contract.startOneOffContract(1);
+
+                // 계약 시작 알림 발송 - 모든 참여자에게 전송
+                // 계약자에게 알림
+                eventPublisher.publishEvent(new NotificationEvent(
+                        NotificationType.CONTRACT_STARTED,
+                        contract.getId(),
+                        contract.getUser().getId()
+                ));
+
+                // 초대 정보 삭제
+                deleteInviteInfoUseCase.execute(contract.getId());
+            }
+
+        } catch (Exception exception) {
+            // 트랜잭션 중 예외 발생 시 감소시켰던 Redis 카운터 복구
+            redisTemplate.opsForValue().increment(supervisorCountKey);
+            throw exception;
         }
     }
 }
