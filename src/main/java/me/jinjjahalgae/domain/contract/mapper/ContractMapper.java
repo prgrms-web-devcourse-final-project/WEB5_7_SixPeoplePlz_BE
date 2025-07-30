@@ -69,6 +69,7 @@ public class ContractMapper {
                 contract.getGoal(),
                 contract.getPenalty(),
                 contract.getReward(),
+                contract.isOneOff(),
                 contract.getTotalProof(),
                 contract.getStartDate(),
                 contract.getEndDate()

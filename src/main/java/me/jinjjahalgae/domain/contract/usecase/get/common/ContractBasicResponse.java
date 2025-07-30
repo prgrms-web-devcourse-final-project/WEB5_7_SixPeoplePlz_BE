@@ -23,6 +23,9 @@ public record ContractBasicResponse (
         @Schema(description = "보상", example = "치킨 먹기")
         String reward, //보상
 
+        @Schema(description = "단발성 계약 여부", example = "false")
+        boolean oneOff,
+
         @Schema(description = "총 인증 수", example = "10")
         int totalProof, // 총 필요한 인증 수
 
