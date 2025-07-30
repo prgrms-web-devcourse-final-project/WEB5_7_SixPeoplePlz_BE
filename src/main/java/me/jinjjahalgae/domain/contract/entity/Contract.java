@@ -16,6 +16,7 @@ import me.jinjjahalgae.global.exception.ErrorCode;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -115,21 +116,45 @@ public class Contract extends BaseEntity {
     }
 
     public double calculatePeriodPercent() {
-        Instant now = Instant.now();
-        Instant start = startDate;
-        Instant end = endDate;
-        LocalDateTime nowLdt = LocalDateTime.ofInstant(now, ZoneOffset.UTC);
-        LocalDateTime startLdt = LocalDateTime.ofInstant(start, ZoneOffset.UTC);
-        LocalDateTime endLdt = LocalDateTime.ofInstant(end, ZoneOffset.UTC);
-        if (nowLdt.isBefore(startLdt)) {
-            return 0.0;
-        }
-        if (nowLdt.isAfter(endLdt)) {
+        if (status == ContractStatus.COMPLETED ||
+                status == ContractStatus.FAILED ||
+                status == ContractStatus.ABANDONED ||
+                status == ContractStatus.WAIT_RESULT) {
             return 100.0;
         }
-        long totalDays = getTotalDays();
-        long passedDays = getPassedDays();
-        return ((double) passedDays / totalDays * 100);
+
+        if (status == ContractStatus.IN_PROGRESS) {
+            LocalDateTime startLdt = LocalDateTime.ofInstant(this.startDate, ZoneOffset.UTC);
+            LocalDateTime endLdt = LocalDateTime.ofInstant(this.endDate, ZoneOffset.UTC);
+            LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
+
+            if (startLdt.isEqual(endLdt)) {
+                endLdt = endLdt.plusHours(24);
+            }
+
+            if (startLdt.isAfter(endLdt)) {
+                return 0.0;
+            }
+
+            if (now.isBefore(startLdt)) {
+                return 0.0;
+            }
+
+            if (now.isAfter(endLdt)) {
+                return 100.0;
+            }
+
+            long totalDuration = ChronoUnit.MILLIS.between(startLdt, endLdt);
+            if (totalDuration <= 0) {
+                return 100.0;
+            }
+
+            long elapsedDuration = ChronoUnit.MILLIS.between(startLdt, now);
+
+            return ((double) elapsedDuration / totalDuration) * 100.0;
+        }
+
+        return 0.0;
     }
 
     private long getTotalDays() {
