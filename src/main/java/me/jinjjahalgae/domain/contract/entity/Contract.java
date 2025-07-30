@@ -128,6 +128,10 @@ public class Contract extends BaseEntity {
             LocalDateTime endLdt = LocalDateTime.ofInstant(this.endDate, ZoneOffset.UTC);
             LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 
+            if (startLdt.isEqual(endLdt)) {
+                endLdt = endLdt.plusHours(24);
+            }
+
             if (startLdt.isAfter(endLdt)) {
                 return 0.0;
             }
