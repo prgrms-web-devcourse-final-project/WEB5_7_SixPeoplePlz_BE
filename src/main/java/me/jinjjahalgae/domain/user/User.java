@@ -42,4 +42,13 @@ public class User extends BaseEntity {
     public void delete(Instant deletedAt) {
         this.deletedAt = deletedAt;
     }
+
+    public void reactivate() {
+        this.deletedAt = null;
+    }
+
+    public void updateProfile(String name, String nickname) {
+        this.name = name;
+        this.nickname = nickname;
+    }
 }

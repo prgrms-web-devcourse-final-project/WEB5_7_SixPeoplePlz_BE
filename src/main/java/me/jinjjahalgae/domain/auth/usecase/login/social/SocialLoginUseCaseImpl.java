@@ -14,6 +14,7 @@ import me.jinjjahalgae.domain.auth.strategy.SocialLogin;
 import me.jinjjahalgae.domain.auth.strategy.SocialLoginFactory;
 import me.jinjjahalgae.domain.user.User;
 import me.jinjjahalgae.domain.user.UserRepository;
+import me.jinjjahalgae.global.exception.ErrorCode;
 import me.jinjjahalgae.global.security.jwt.JwtTokenProvider;
 import me.jinjjahalgae.global.security.jwt.Token;
 import org.springframework.stereotype.Service;
@@ -57,6 +58,17 @@ public class SocialLoginUseCaseImpl implements SocialLoginUseCase {
         if (optionalAuth.isPresent()) {
             // 이미 가입된 유저인 경우 로그인
             auth = optionalAuth.get();
+
+            User user = userRepository.findById(auth.getUserId())
+                    .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.serviceException("유저를 찾을 수 없습니다."));
+
+            // 탈퇴한 유저면 재가입
+            if (user.getDeletedAt() != null) {
+                user.reactivate();
+
+                user.updateProfile(socialProfile.name(), socialProfile.nickname());
+            }
+
         } else {
             // 가입되지 않은 유저인 경우 신규 회원가입
             User newUser = User.builder()
