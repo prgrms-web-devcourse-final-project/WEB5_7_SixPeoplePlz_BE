@@ -10,7 +10,13 @@
 사용자가 스스로 목표를 설정하고 지인을 감독자로 초대하여, 객관적인 검증을 통해 목표 달성률을 높이는 것을 목표로 합니다.
 
 <p align="center">
-images
+  <img src="https://github.com/user-attachments/assets/4ae9e2cc-bbb5-47c1-a642-3ae8b6edab65" alt="1" width="21%">
+  &nbsp;
+  <img src="https://github.com/user-attachments/assets/eefde38e-6ed3-4177-9fa6-e49251fe5ada" alt="2" width="21%">
+  &nbsp;
+  <img src="https://github.com/user-attachments/assets/c4782609-beb5-432c-941d-b3a440d76256" alt="3" width="21%">
+  &nbsp;
+  <img src="https://github.com/user-attachments/assets/e94ac032-57c1-4c6c-afde-9ee29df6b628" alt="4" width="21%">
 </p>
 
 <br>
@@ -43,16 +49,13 @@ images
 -   **Prometheus & Grafana**: 애플리케이션 모니터링 및 메트릭 수집
 
 ## ERD
-
-image
+<img width="1160" height="702" alt="진짜할게" src="https://github.com/user-attachments/assets/34e36ff7-7a23-41ed-9fce-705b226b93f7" />
 
 ## 시스템 아키텍쳐
-
-image
+<img width="1572" height="760" alt="JJHG" src="https://github.com/user-attachments/assets/e2ec0752-52c3-4b07-8e6a-9887f41378ec" />
 
 ## WAS 아키텍쳐
-
-image
+<img width="511" height="721" alt="진짜할게 WAS" src="https://github.com/user-attachments/assets/b0ccbfd4-df14-419b-8d1d-9c0afea5aa4d" />
 
 ## 핵심 기능
 
